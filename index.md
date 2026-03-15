@@ -55,6 +55,7 @@ A library to rig boneless and morphless 3D models. **WIP.**
 Videos of work-in-progress and earlier attempts at TSL rigging. Click on a snapshot
 to go to an X post with a video and (sometimes) a link to live demo.
 
+[<img width="31%" src="https://boytchev.github.io/disfigure/examples/snapshots/quaternions-prototype.jpg">](https://x.com/PavelBoytchev/status/2032835719077433470)
 [<img width="31%" src="https://boytchev.github.io/disfigure/examples/snapshots/rigging-scanned-model.jpg">](https://x.com/PavelBoytchev/status/1926542790655160595)
 [<img width="31%" src="https://boytchev.github.io/disfigure/examples/snapshots/example-rigged-skeleton.jpg">](https://x.com/PavelBoytchev/status/1926331170486096017)
 [<img width="31%" src="https://boytchev.github.io/disfigure/examples/snapshots/example-liquid-metal.jpg">](https://x.com/PavelBoytchev/status/1921696049770447185)

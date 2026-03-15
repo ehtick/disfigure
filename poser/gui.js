@@ -161,9 +161,6 @@ if ( USE_ENV_MAP ) {
 
 
 
-var axis1 = new THREE.AxesHelper( 60 );
-var axis2 = new THREE.AxesHelper( 60 );
-
 
 var options = {
 	animate: false,
@@ -242,6 +239,8 @@ function addCuttingPlanes( dims, model ) {
 
 function updateDebug() {
 
+	if ( !debugSpace ) return;
+
 	if ( debugSpace instanceof LocusX && !( debugSpace instanceof LocusT ) ) {
 
 		//		debug.minY = debugSpace.minX.value ?? debugSpace.minX;
@@ -281,10 +280,14 @@ function createGui( ) {
 
 
 	folder.add( model.space.select, 'value', {
-		Torso: 0,
-		' &#x22B8; Head': 1, ' &#x22B8; Chest': 2, ' &#x22B8; Waist': 3,
-		Leg: 11, ' &#x22B8; Thigh': 12, ' &#x22B8; Knee': 13, ' &#x22B8; Shin': 14, ' &#x22B8; Ankle': 15, ' &#x22B8; Foot': 16,
-		Arm: 21, ' &#x22B8; Elbow': 22, ' &#x22B8; Forearm': 23, ' &#x22B8; Wrist': 24,
+		None: 0,
+		Torso: 1,
+		' &#x22B8; Head': 2, ' &#x22B8; Chest': 3, ' &#x22B8; Waist': 4,
+		'L-Leg': 13, ' &#x22B8; L-Thigh': 15, ' &#x22B8; L-Knee': 17, ' &#x22B8; L-Shin': 19, ' &#x22B8; L-Ankle': 21, ' &#x22B8; L-Foot': 23,
+		'L-Arm': 5, ' &#x22B8; L-Elbow': 7, ' &#x22B8; L-Forearm': 9, ' &#x22B8; L-Wrist': 11,
+
+		'R-Leg': 14, ' &#x22B8; R-Thigh': 16, ' &#x22B8; R-Knee': 18, ' &#x22B8; R-Shin': 20, ' &#x22B8; R-Ankle': 22, ' &#x22B8; R-Foot': 24,
+		'R-Arm': 6, ' &#x22B8; R-Elbow': 8, ' &#x22B8; R-Forearm': 10, ' &#x22B8; R-Wrist': 12,
 	} ).name( 'Heatmap' ).onChange( showPivotPoint );
 
 	if ( DEBUG ) {
@@ -599,83 +602,9 @@ function showPivotPoint( index ) {
 
 	if ( !DEBUG ) return;
 
-	model.add( axis1 );
-	if ( index<10 )
-		model.remove( axis2 );
-	else
-		model.add( axis2 );
+	console.log( 'showPivotPoint', index );
 
-	var space = model.space;
-	switch ( index ) {
-
-		case 1:
-			debugSpace = space.head;
-			axis1.position.copy( space.head.pivot.value );
-			break;
-		case 2:
-			debugSpace = space.chest;
-			axis1.position.copy( space.chest.pivot.value );
-			break;
-		case 3:
-			debugSpace = space.waist;
-			axis1.position.copy( space.waist.pivot.value );
-			break;
-
-		case 11:
-			debugSpace = space.l_leg;
-			axis1.position.copy( space.l_leg.pivot.value );
-			axis2.position.copy( space.r_leg.pivot.value );
-			break;
-		case 12:
-			debugSpace = space.l_thigh;
-			axis1.position.copy( space.l_thigh.pivot.value );
-			axis2.position.copy( space.r_thigh.pivot.value );
-			break;
-		case 14:
-			debugSpace = space.l_shin;
-			axis1.position.copy( space.l_shin.pivot.value );
-			axis2.position.copy( space.r_shin.pivot.value );
-			break;
-		case 13:
-			debugSpace = space.l_knee;
-			axis1.position.copy( space.l_knee.pivot.value );
-			axis2.position.copy( space.r_knee.pivot.value );
-			break;
-		case 15:
-			debugSpace = space.l_ankle;
-			axis1.position.copy( space.l_ankle.pivot.value );
-			axis2.position.copy( space.r_ankle.pivot.value );
-			break;
-		case 16:
-			debugSpace = space.l_foot;
-			axis1.position.copy( space.l_foot.pivot.value );
-			axis2.position.copy( space.r_foot.pivot.value );
-			break;
-
-		case 21:
-			debugSpace = space.l_arm;
-			axis1.position.copy( space.l_arm.pivot.value );
-			axis2.position.copy( space.r_arm.pivot.value );
-			break;
-		case 22:
-			debugSpace = space.l_elbow;
-			axis1.position.copy( space.l_elbow.pivot.value );
-			axis2.position.copy( space.r_elbow.pivot.value );
-			break;
-		case 23:
-			debugSpace = space.l_forearm;
-			axis1.position.copy( space.l_forearm.pivot.value );
-			axis2.position.copy( space.r_forearm.pivot.value );
-			break;
-		case 24:
-			debugSpace = space.l_wrist;
-			axis1.position.copy( space.l_wrist.pivot.value );
-			axis2.position.copy( space.r_wrist.pivot.value );
-			break;
-
-		default: model.remove( axis1 ); model.remove( axis2 );
-
-	}
+	//	var space = model.space;
 
 	updateDebug();
 	updateGUI();
@@ -687,7 +616,7 @@ function showPivotPoint( index ) {
 function changePivotPoint( ) {
 
 	var space = model.space[ DEBUG_NAME ];
-
+	/*
 	space.pivot.value.x = debug.x;
 	space.pivot.value.y = debug.y;
 	space.pivot.value.z = debug.z;
@@ -708,6 +637,7 @@ function changePivotPoint( ) {
 
 	model.material.needsUpdate = true;
 	model.update( );
+*/
 
 }
 
@@ -740,8 +670,8 @@ if ( DEBUG ) {
 
 	setTimeout( ()=>{
 
-		showPivotPoint( DEBUG_JOINT );
-		changePivotPoint();
+		//showPivotPoint( DEBUG_JOINT );
+		//changePivotPoint();
 
 	}, 500 );
 
