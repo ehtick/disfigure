@@ -1,166 +1,12 @@
-// disfigure v0.0.21
+// disfigure v0.0.25
 
-import { Color, WebGPURenderer, PCFSoftShadowMap, Scene, PerspectiveCamera, DirectionalLight, Mesh, CircleGeometry, MeshLambertMaterial, CanvasTexture, Vector3, PlaneGeometry, MeshPhysicalNodeMaterial, Euler, MathUtils, Group, Matrix3 } from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { Fn, mat3, vec3, mix, positionGeometry, vec2, float, rotate, If, transformNormalToView, normalGeometry, min, select, uniform } from 'three/tsl';
-import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
+import { WebGPURenderer, PCFSoftShadowMap, Scene, Color, PerspectiveCamera, DirectionalLight, Object3D, Mesh, CircleGeometry, MeshLambertMaterial, CanvasTexture, InstancedMesh, MeshStandardNodeMaterial, DataTexture, RGBAFormat, FloatType, TextureNode, EventDispatcher, Euler, Quaternion } from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import Stats from 'three/addons/libs/stats.module.js';
-
-// simple material based on color, roughness and metalness
-
-var tslSimpleMaterial = Fn( ( { color, roughness, metalness } ) => {
-
-	return mat3(
-		color,
-		vec3( roughness, metalness, 0 ),
-		vec3( 0, 0, 0 )
-	);
-
-}, { color: 'vec3', roughness: 'float', metalness: 'float', return: 'mat3' } ); // tslSimpleMaterial
-
-
-
-// check whether a value is between two values
-
-var between = Fn( ( { value, fromValue, toValue } ) => {
-
-	return value.greaterThanEqual( fromValue ).and( value.lessThanEqual( toValue ) );
-
-}, { value: 'float', fromValue: 'float', toValue: 'float', return: 'float' } ); // between
-
-
-
-// mix two mat3'savePreferences
-
-var mixMat3 = Fn( ([ matA, matB, k ]) => {
-
-	return mat3(
-		mix( matA[ 0 ], matB[ 0 ], k ),
-		mix( matA[ 1 ], matB[ 1 ], k ),
-		vec3( 0, 0, 0 ),
-	);
-
-}, { matA: 'mat3', matB: 'mat3', k: 'float', return: 'mat3' } ); // mixMat3
-
-
-
-// convert Three.js color to vec3
-
-var _color = new Color();
-
-function toVec3( color ) {
-
-	_color.set( color );
-
-	return vec3( ..._color );
-
-} // toVec3
-
-
-
-// generates latex matrix
-
-function latex( color ) {
-
-	return tslSimpleMaterial( toVec3( color ), 0.2, 0.3 );
-
-} // latex
-
-
-
-// generates velour matrix
-
-function velour( color ) {
-
-	return tslSimpleMaterial( toVec3( color ).mul( 1.5 ), 1, 1 );
-
-} // velour
-
-
-
-// generates bands of two materials
-
-var bands = Fn( ( { matA, matB, width=float( 0.1 ), options={} } ) => {
-
-	var { balance, blur, angle, polar, x, z } = options;
-
-	var k, p;
-
-	if ( polar ) {
-
-		p = positionGeometry.xz.sub( vec2( x??0, z??0 ) );
-		k = p.y.atan( p.x ).div( float( width ).mul( 2 ) ).cos();
-
-	} else {
-
-		p = rotate( positionGeometry.xy, ( angle??0 ) * Math.PI/180 );
-		k = p.y.div( width, 1/Math.PI ).cos();
-
-	}
-
-	if ( balance??0 ) k = k.add( balance );
-
-	blur = blur??0.00001;
-	if ( blur ) k = k.smoothstep( -blur, blur );
-
-	return mixMat3( matA, matB, k );
-
-} ); // bands
-
-
-
-// generates a slice through a body
-
-var slice = Fn( ( { from, to, options={} } )=>{
-
-	var p = positionGeometry.toVar();
-
-	var axes = 'yxzyx',
-		idx = 0;
-
-	if ( options.side ) idx=1;
-	if ( options.front ) idx=2;
-
-	if ( options.angle ) p[ axes[ idx ] ].addAssign( p[ axes[ idx+1 ] ].mul( Math.tan( options.angle*Math.PI/180 ) ) );
-	if ( options.sideAngle ) p[ axes[ idx ] ].addAssign( p[ axes[ idx+2 ] ].mul( Math.tan( options.sideAngle*Math.PI/180 ) ) );
-
-	var value = p[ axes[ idx ] ];
-
-	if ( options.wave ) {
-
-		var w = p[ axes[ idx+1 ] ].mul( float( Math.PI ).div( options.width??Math.PI ) ).cos().toVar();
-		var dWave = float( options.sharpness??0 ).mix( w, w.acos().mul( -2/Math.PI ).sub( 1 ) ).mul( options.wave, 0.5 );
-
-		value = value.add( dWave );
-
-	}
-
-	if ( options.symmetry ) value = value.abs();
-
-	return between( value, from, to );
-
-} ); // slice
-
-
-
-var compileClothing = Fn( ([ clothingData ]) => {
-
-	var mat = mat3( clothingData[ 0 ]);
-
-	for ( /*MUST*/let i=1; i<clothingData.length; i+=2 ) {
-
-		If( clothingData[ i ], ()=>{
-
-			mat.assign( clothingData[ i+1 ]);
-
-		} );
-
-	}
-
-	return mat;
-
-} );
+import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
+import { Fn, If, vec4, select, positionGeometry, mat3, normalGeometry, vec3, array, instanceIndex, ivec2, step, Loop, int, transformNormalToView, vertexStage } from 'three/tsl';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { SimplifyModifier } from 'three/addons/modifiers/SimplifyModifier.js';
 
 // number generators
 
@@ -190,104 +36,6 @@ function random( min=-1, max=1 ) {
 	return min + ( max-min )*Math.random( );
 
 }
-
-
-
-// general DOF=3 rotator, used for most joints
-var jointRotateMat= Fn( ([ pos, pivot, matrix, locus ])=>{
-
-	var p = pos.sub( pivot ).mul( matrix ).add( pivot );
-	return mix( pos, p, locus );
-
-} );//, {pos:'vec3',pivot:'vec3',matrix:'mat3',locus:'float',return:'vec3'} );
-
-
-
-// general DOF=3 rotator, used for most joints
-var jointNormalMat= Fn( ([ pos, pivot, matrix, locus ])=>{ // eslint-disable-line no-unused-vars
-
-	var p = pos.mul( matrix );
-	return mix( pos, p, locus );
-
-} );//, {pos:'vec3',pivot:'vec3',matrix:'mat3',locus:'float',return:'vec3'} );
-
-
-
-// calculate vertices of bent body surface
-function tslPositionNode( joints ) {
-
-	return disfigure( joints, jointRotateMat, positionGeometry );
-
-}
-
-
-
-// calculate normals of bent body surface
-function tslNormalNode( joints ) {
-
-	return transformNormalToView( disfigure( joints, jointNormalMat, normalGeometry ).normalize() );
-
-}
-
-
-// implement the actual body bending
-var disfigure = Fn( ([ joints, fn, p ])=>{
-
-	var p = p.toVar( ),
-		space = joints.space;
-
-
-	function chain( items ) {
-
-		for ( var item of items )
-			p.assign( fn( p, space[ item ].pivot, joints[ item ].umatrix, space[ item ].locus() ) );
-
-	}
-
-
-	// LEFT-UPPER BODY
-
-	If( space.l_arm.locus( ), ()=>{
-
-		chain([ 'l_wrist', 'l_forearm', 'l_elbow', 'l_arm' ]);
-
-	} );
-
-
-	// RIGHT-UPPER BODY
-
-	If( space.r_arm.locus( ), ()=>{
-
-		chain([ 'r_wrist', 'r_forearm', 'r_elbow', 'r_arm' ]);
-
-	} );
-
-
-	// LEFT-LOWER BODY
-
-	If( space.l_leg.locus( ), ()=>{
-
-		chain([ 'l_foot', 'l_ankle', 'l_shin', 'l_knee', 'l_thigh', 'l_leg' ]);
-
-	} );
-
-
-	// RIGHT-LOWER BODY
-
-	If( space.r_leg.locus( ), ()=>{
-
-		chain([ 'r_foot', 'r_ankle', 'r_shin', 'r_knee', 'r_thigh', 'r_leg' ]);
-
-	} );
-
-
-	// CENTRAL BODY AXIS
-
-	chain([ 'head', 'chest', 'waist', 'torso' ]);
-
-	return p;
-
-} ); // disfigure
 
 var renderer, scene, camera, light, cameraLight, controls, ground, userAnimationLoop, stats, everybody = [];
 
@@ -344,7 +92,7 @@ class World {
 				light.shadow.camera.right = 5;
 				light.shadow.camera.top = 5;
 				light.shadow.camera.bottom = -5;
-				light.shadow.normalBias = 0.01;
+				light.shadow.normalBias = -0.01;
 				light.autoUpdate = false;
 				light.castShadow = true;
 
@@ -354,7 +102,7 @@ class World {
 
 			cameraLight = new DirectionalLight( 'white', 1.4 );
 			cameraLight.position.z = 100;
-			cameraLight.target = scene;
+			cameraLight.target = new Object3D();
 			camera.add( cameraLight );
 			scene.add( camera );
 
@@ -413,6 +161,7 @@ class World {
 
 
 
+
 class AnimateEvent extends Event {
 
 	#target;
@@ -441,9 +190,17 @@ var animateEvent = new AnimateEvent( );
 // default animation loop that dispatches animation events
 // to the window and to each body in the scene
 
+var loader = document.getElementById( 'loader' );
+
 function defaultAnimationLoop( time ) {
 
 	try {
+
+		if ( loader ) {
+
+			loader.style.display = 'none'; loader = undefined;
+
+		}
 
 		animateEvent.time = time;
 
@@ -451,16 +208,22 @@ function defaultAnimationLoop( time ) {
 
 		everybody.forEach( ( p )=>{
 
-			p.update( );
+			p.update(); // todo call update only on changed figures
 			p.dispatchEvent( animateEvent );
 
 		} );
 
 		if ( userAnimationLoop ) userAnimationLoop( time );
 
-		if ( controls ) controls.update( );
+		if ( controls ) {
+
+			controls.update( );
+			cameraLight.target.position.copy( controls.target );
+
+		}
 
 		if ( stats ) stats.update( );
+
 
 		renderer.render( scene, camera );
 
@@ -484,702 +247,656 @@ function setAnimationLoop( animationLoop ) {
 
 }
 
-console.time( 'TSL' );
+const EQ = 54; // number of vec4 per figure, 0..51 are quaternions, 52 is position, 53 is user data
+const EQ_POS = 52; // 52 is vec4 for position
 
 
 
-// hide the spinner when the TSL's of all models are compiled
-// or if some predefined time had ellapsed
+var rotateByQuaternion = Fn( ([ p, q ])=>{
 
-var spinnerCounter = 0,
-	spinner = document.getElementById( 'spinner' );
+	return p.add( q.xyz.cross( q.xyz.cross( p ).add( q.w.mul( p ) ) ).mul( 2 ) );
 
-function loader$1( ) {
-
-	spinnerCounter++;
-	//	console.timeLog('TSL',spinnerCounter);
-	if ( spinner && spinnerCounter >= everybody.length*12 ) {
-
-		console.timeLog( 'TSL', spinnerCounter );
-		spinner.style.display = 'none';
-
-	}
-
-}
-
-if ( spinner ) {
-
-	setTimeout( ()=>spinner.style.display = 'none', 10000 );
-
-}
+}, { return: 'vec3', p: 'vec3', q: 'vec4' } );
 
 
 
-// generate oversmooth function
-const smoother = Fn( ([ edge, value ])=>{
+var disfigureMatrix = Fn( ([ mat, pivot, quat, k ])=>{
 
-	return value.smoothstep( edge.x, edge.y ).smoothstep( 0, 1 ).smoothstep( 0, 1 );
+	var newMat = mat.toVar();
 
-}, { edge: 'vec2', value: 'float', return: 'float' } );
+	// if k>0 the 'matrix' must be updated
+	If( k.greaterThan( 0 ), () => {
+
+		var q = quat.toVar();
+
+		// if k<1 the quaternion's rotation must be 'divided'
+		If( k.lessThan( 1 ), ()=>{
+
+			var len = quat.xyz.length().toVar();
+
+			If( len.lessThan( 1e-5 ), ()=>{
+
+				q.assign( vec4( 0, 0, 0, 1 ) );
+
+			} ).
+
+				Else( ()=>{
+
+					var acos = k.mul( quat.w.acos() ).toVar();
+					q.assign( vec4( quat.xyz.div( len ).mul( acos.sin() ), acos.cos() ) );
+
+				} );
+
+		} ); // k<1
+
+		newMat.element( 0 ).assign( rotateByQuaternion( mat.element( 0 ).sub( pivot ), q ).add( pivot ) );
+		newMat.element( 1 ).assign( rotateByQuaternion( mat.element( 1 ), q ) );
+
+	} ); // k>0
+
+	return newMat;
+
+}, { return: 'mat3', mat: 'mat3', pivot: 'vec3', quat: 'vec4', k: 'float' } );
 
 
 
-var tslLocusY = Fn( ([ pos, pivot, rangeY, slope ])=>{
-
-	var y = pos.y,
-		z = pos.z;
-
-	y = y.add( z.sub( pivot.z ).div( slope ) );
-
-	return smoother( rangeY, y );
-
-}, { pos: 'vec3', pivot: 'vec3', rangeY: 'vec2', slope: 'float', return: 'float' } ); // tslLocusY
+var layout = { pos: 'vec3', range: 'vec4', return: 'float' };
 
 
 
-var tslLocusX = Fn( ([ pos, rangeX ])=>{
-
-	return smoother( rangeX, pos.x );
-
-}, { pos: 'vec3', rangeX: 'vec2', return: 'float' } ); // tslLocusX
+var gradientX = Fn( ([ pos, range ])=>pos.x.add( pos.y.mul( range.z ) ).smoothstep( range.x, range.y ), layout );
 
 
 
-var tslLocusXY = Fn( ([ pos, pivot, rangeX, rangeY ])=>{
+var gradientY = Fn( ([ pos, range ])=>pos.y.add( pos.z.mul( range.z ) ).smoothstep( range.x, range.y ), layout );
+
+
+
+var gradientYT = Fn( ([ pos, range, slope ])=>{
+
+	return pos.z.add( pos.x.mul( slope ) ).smoothstep( range.z, range.w );
+
+}, { pos: 'vec3', range: 'vec4', slope: 'float', return: 'float' } );
+
+
+
+var gradientLeg = Fn( ([ pos, range, range2 ])=>{
+
+	var y = pos.y.sub( pos.x.abs().mul( 1/5 ) );
+	var ofs = select( range2.x.equal( 1 ), pos.z.add( 0.05 ).abs().mul( 1/2 ), pos.z.mul( 1/6 ) );
+
+	return pos.x.smoothstep( 0, range2.y )
+		.mul( y.smoothstep( range.x.sub( ofs ), range.y ).smoothstep( 0, 1 ).pow( 2 ) )
+		.add( pos.x.smoothstep( 0, range2.y.div( 10 ) ).mul( y.smoothstep( range.z, range.w ) ) )
+		.clamp( 0, 1 )
+	;
+
+}, { return: 'float', pos: 'vec3', range: 'vec4', range2: 'vec2' } );
+
+
+
+var gradientArm = Fn( ([ pos, pivot, range ])=>{
 
 	var x = pos.x,
 		y = pos.y;
 
-	var dx = y.sub( pivot.y ).div( 4, x.sign() );
+	var dx = y.sub( pivot.y ).div( 4, select( x.greaterThan( 0 ), 1, -1 ) );
 
-	return smoother( rangeX, x.add( dx ) )
-		.mul( min(
-			y.smoothstep( rangeY.x, mix( rangeY.x, rangeY.y, 0.2 ) ),
-			y.smoothstep( rangeY.y, mix( rangeY.y, rangeY.x, 0.2 ) ),
-		) )
-		.pow( 2 );
+	return x.add( dx ).smoothstep( range.x, range.y ).smoothstep( 0, 1 )
+		.mul( y.step( range.z ).oneMinus() );
 
-}, { pos: 'vec3', pivot: 'vec3', rangeX: 'vec2', rangeY: 'vec2', return: 'float' } ); // tslLocusX
+}, { pos: 'vec3', pivot: 'vec3', range: 'vec4', return: 'float' } );
 
 
 
-var tslLocusT = Fn( ([ pos, pivot, rangeX, rangeY, grown ])=>{
-
-	var x = pos.x,
-		y = pos.y,
-		z = pos.z;
-
-	var s = vec3( x.mul( 2.0 ), y, z.min( 0 ) )
-		.sub( vec3( 0, pivot.y, 0 ) )
-		.length()
-		.smoothstep( 0, float( 0.13 ).div( float( grown ).add( 1 ) ) )
-		.pow( 10 );
-
-	var yy = y.sub( x.abs().mul( 1/5 ) );
-
-	yy = yy.add( select( grown.equal( 1 ), z.abs().mul( 1/2 ), z.mul( 1/6 ) ) );
-
-	return s
+var gradientXT = Fn( ([ pos, range, slope ])=>
+	pos.x.add( pos.z.mul( slope ) )
+		.smoothstep( range.x, range.y )
 		.mul(
-			x.smoothstep( rangeX.x, rangeX.y ),
-			smoother( rangeY, yy ).pow( 2 ),
-		);
+			pos.z.smoothstep( range.z.sub( 0.0001 ), range.z.add( 0.0001 ) ),
+			pos.z.smoothstep( range.w.add( 0.0001 ), range.w.sub( 0.0001 ) )
+		)
+, { pos: 'vec3', range: 'vec4', slope: 'float', return: 'float' } );
 
-}, { pos: 'vec3', pivot: 'vec3', rangeX: 'vec2', rangeY: 'vec2', grown: 'float', return: 'float' } ); // tslLocusX
 
 
+var disfigureBody = Fn( ([ poolData, figureData ])=>{
 
-class Locus {
+	var p = positionGeometry.toVar( ),
+		m = mat3( p, normalGeometry.normalize(), vec3( 0 ) ).toVar( );
 
-	constructor( pivot ) {
+	var pivots = array( figureData.pivots ).toConst( 'pivots' ),
+		ranges = array( figureData.ranges ).toConst( 'ranges' ),
+		extras = array( figureData.extras ).toConst( 'extras' );
 
-		this.pivot = new Vector3( ...pivot );
-		this.isRight = false;
+	var instanceIndexEQ = instanceIndex.mul( EQ ).toVar();
 
-	} // Locus.constructor
+	var getQuatAddr = Fn( ([ instanceIndexEQ, propIndex, texSize ])=>{
 
-	mirror( ) {
+		var offset = instanceIndexEQ.add( propIndex ).toVar();
+		return ivec2( offset.mod( texSize ), offset.div( texSize ) );
 
-		this.isRight = true;
+	}, { return: 'ivec2', instanceIndex: 'int', propIndex: 'int', texSize: 'int' } );
 
-		this.pivot.x *= -1;
+	var q = Fn( ([ propIndex ])=> poolData.quatTexNode.load( getQuatAddr( instanceIndexEQ, propIndex, poolData.TEXTURE_SIZE ) ) );
 
-		if ( this.rangeX ) {
 
-			if ( Object.hasOwn( this.rangeX, 'value' ) ) {
+	var isLeft = step( p.x, 0 ).toVar( ),
+		isDown = p.y.lessThan( pivots.element( 2 ).y ).toVar( ), //chest
+		isHand = p.x.abs().greaterThan( pivots.element( 16 ).x ); // wrist
 
-				// for Three.js r180 and earlier
-				this.rangeX.value.x *= -1;
-				this.rangeX.value.y *= -1;
 
-			} else {
+	var disP = ( i, gradient ) => m.assign( disfigureMatrix( m, pivots.element( i ), q( i ), gradient ) ),
+		disY = ( i ) => m.assign( disfigureMatrix( m, pivots.element( i ), q( i ), gradientY( p, ranges.element( i ) ) ) ),
+		disX = ( i ) => m.assign( disfigureMatrix( m, pivots.element( i ), q( i ), gradientX( p, ranges.element( i ) ) ) ),
+		disT = ( i ) => m.assign( disfigureMatrix( m, pivots.element( i ), q( i ), gradientXT( p, ranges.element( i ), 0 ) ) );
 
-				// for Three.js r181 and possibly later
-				this.rangeX.node.value.x *= -1;
-				this.rangeX.node.value.y *= -1;
+	var pick = ( left, right )=>isLeft.mul( right-left ).add( left ).toVar();
+	//	var pick = (left,right)=>select(p.x.greaterThan(0),left,right).toVar();
 
-			}
+	If( isDown, ()=>{
 
-		}
+		// process legs
 
-		return this;
+		let start = pick( 4, 10 ),
+			end = start.add( 5 ).toVar();
+		let leg = pick( 0, 1 );
 
-	} // Locus.mirror
+		// foot ankle shin knee thigh
+		Loop( { start: start, end: end }, ( { i } ) => disY( i ) );
 
-} // Locus
+		// leg
+		disP( end, gradientLeg( p, ranges.element( end ), extras.element( leg ).xy ) );
 
+	} ).Else( ()=>{
 
+		// process hands
+		If( isHand, ()=>{
 
-// define a horizontal planar locus that can tilt fowrard (i.e. around X axix,
-// towards the screen); vertically it is from minY to maxY, horizontally it is
-// infinite; areas outside rangeX are consider inside the locus
-class LocusY extends Locus {
+			let thumb = pick( 24, 26 );
+			let thumb2 = pick( 2, 3 );
 
-	constructor( pivot, rangeY, angle=0 ) {
+			disP( thumb, gradientXT( p, ranges.element( thumb ), extras.element( thumb2 ).x ) );
+			thumb.addAssign( 1 );
+			disP( thumb, gradientYT( p, ranges.element( thumb ), extras.element( thumb2 ).y ) );
 
-		super( pivot );
+			let start = pick( 28, 40 ),
+				end = start.add( 12 );
 
-		this.rangeY = vec2( ...rangeY );
-		this.slope = Math.tan( ( 90-angle ) * Math.PI/180 );
+			// index, middle, ring, pinky
+			Loop( { start: start, end: end }, ( { i } ) => disT( i ) );
 
-	} // constructor
+		} );
 
-	locus( ) {
+		// process arms
 
-		return tslLocusY( positionGeometry, this.pivot, this.rangeY, this.slope );
+		let start = pick( 16, 20 ),
+			end = start.add( 3 );
 
-	} // locus
+		// wrist forearm elbow
+		Loop( { start: start, end: end }, ( { i } ) => disX( i ) );
 
-} // LocusY
+		// arm
+		disP( end, gradientArm( p, pivots.element( end ), ranges.element( end ) ) );
 
+	} );
 
 
-// define a vertical planar locus, perpendicular to X; vertically infinite,
-// horizontally from minX to maxX
-class LocusX extends Locus {
 
-	constructor( pivot, rangeX ) {
+	//	process torso
 
-		super( pivot );
+	Loop( { end: int( 4 ) }, ( { i } ) => disY( i ) );
 
-		this.rangeX = vec2( ...rangeX );
 
-	} // constructor
+	// footer
+	//m.element( 0 ).addAssign( q( EQ_POS ) );
+	m.element( 1 ).assign( transformNormalToView( m.element( 1 ) ).normalize() );
 
-	locus( ) {
+	return m;//.debug();
 
-		return tslLocusX( positionGeometry, this.rangeX );
+} );
 
-	} // locus
+// path to GLB models
 
-} // LocusX
-
-
-
-// define a rectangular locus, from minX to maxX, from minY to maxY, but infinite along Z
-class LocusXY extends LocusX {
-
-	constructor( pivot, rangeX, rangeY ) {
-
-		super( pivot, rangeX );
-
-		this.rangeY = vec2( ...rangeY );
-
-	} // constructor
-
-	locus( ) {
-
-		loader$1();
-
-		return tslLocusXY( positionGeometry, this.pivot, this.rangeX, this.rangeY );
-
-	} // locus
-
-} // LocusXY
-
-
-
-// define custom locus specifically for hips
-class LocusT extends LocusXY {
-
-	constructor( pivot, rangeX, rangeY, grown=0 ) {
-
-		super( pivot, rangeX, rangeY );
-
-		this.grown = grown;
-
-	} // constructor
-
-	locus( ) {
-
-		return tslLocusT( positionGeometry, this.pivot, this.rangeX, this.rangeY, this.grown );
-
-	} // locus
-
-} // LocusT
-
-
-
-// the definition of a space around a model including properties of individual
-// subspaces that simulate joints
-class Space {
-
-	constructor( bodyPartsDef ) {
-
-		var centrals = { head: LocusY, chest: LocusY, waist: LocusY, torso: LocusY },
-			symmetricals = { knee: LocusY, ankle: LocusY, shin: LocusY, thigh: LocusY, foot: LocusY, leg: LocusT, elbow: LocusX, forearm: LocusX, wrist: LocusX, arm: LocusXY };
-
-		for ( var name in centrals )
-			this[ name ] = new ( centrals[ name ])( ...bodyPartsDef[ name ]);
-
-		for ( var name in symmetricals ) {
-
-			this[ 'l_'+name ] = new ( symmetricals[ name ])( ...bodyPartsDef[ name ]);
-			this[ 'r_'+name ] = new ( symmetricals[ name ])( ...bodyPartsDef[ name ]).mirror();
-
-		}
-
-	} // Space.constructor
-
-} // Space
-
-var loader = new GLTFLoader();
-
-
-
-// path to models as GLB files
-const MODEL_PATH = import.meta.url
-	.replace( '/src/body.js', '/assets/models/' )
+const ASSETS_PATH = import.meta.url
+	.replace( '/src/assets.js', '/assets/models/' )
 	.replace( '/dist/disfigure.js', '/assets/models/' )
 	.replace( '/dist/disfigure.min.js', '/assets/models/' );
 
 
 
-// dummy vars
-var _v = new Vector3();
+// preloading names of skeleton joints
+
+const JOINTS = ( await fetch( ASSETS_PATH+'body.json' ).then( r => r.json() ) ).joints;
 
 
 
-var toDeg = x => x * 180 / Math.PI,
-	toRad = x => x / 180 * Math.PI,
-	toRound = x => Math.round( 100*x )/100;
 
+/**
+ * Loads a GLB model and optionally simplifies its geometry.
+ *
+ * The model must have a single mesh with geometry as the first child
+ * of `gltf.scene`.
+ *
+ * @param {string} url - Full URL of the GLB model file.
+ * @param {number} [lowpoly=0] - Geometry simplification factor.
+ *        Mapped linearly [0 to 1]→[0% to 75%]
+ *        - `lowpoly = 0` → keeps the original geometry
+ *        - `lowpoly = 1` → removes ~75% of the geometry
+ * @returns {Promise<BufferGeometry>} Promise for the geometry.
+ */
+function loadGLTF( url, lowpoly = 0 ) {
 
+	return new GLTFLoader().loadAsync( ASSETS_PATH+url ).then( gltf => {
 
-function getset( object, name, axis, sign ) {
+		// get the geometry and vertex count to remove
 
-	Object.defineProperty( object, name, {
-		get() {
+		var geometry = gltf.scene.children[ 0 ].geometry,
+			vertices = Math.floor( geometry.attributes.position.count * lowpoly * 0.75 );
 
-			return toDeg( sign*object.rotation[ axis ]);
+		// simplify the geometry if needed
 
-		},
-		set( value ) {
+		if ( vertices > 0 ) {
 
-			object.rotation[ axis ] = toRad( sign*value );
-			object.quaternion.setFromEuler( object.rotation, false );
+			var simplified = new SimplifyModifier().modify( geometry, vertices );
+			geometry.dispose();
+			geometry = simplified;
 
 		}
-	} );
+
+		return geometry;
+
+	} ); // then
+
+} // loadGLTF
+
+
+
+/**
+ * Loads a JSON model description (skeleton data).
+ *
+ * Loads pivot points, ranges and extra data. All coordinate arrays
+ * are automatically converted to Three.js TSL vectors (`vec3` / `vec4`).
+ *
+ * @param {string} url - Full URL of the JSON file.
+ * @returns {Promise<object>} Promise for an object with:
+ *                            - `pivots`: `vec3[]`
+ *                            - `ranges`: `vec4[]`
+ *                            - `extras`: `vec4[]`
+ */
+function loadJSON( url ) {
+
+	return fetch( ASSETS_PATH+url ).then( r =>
+
+		r.json().then( data => {
+
+			// convert arrays into array of vectors
+
+			data.pivots = data.pivots.map( x => vec3( ...x ) );
+			data.ranges = data.ranges.map( x => vec4( ...x ) );
+			data.extras = data.extras.map( x => vec4( ...x ) );
+
+			return data;
+
+		} )
+
+	); // then
+
+} // loadJSON
+
+/**
+ * A custom version of TextureNode that eliminates TSL code for `flipY` and
+ * all UV transformations, including multiplication with UV matrix. I didn't
+ * find a better way to do this. Sorry.
+ *
+ * @augments TextureNode
+ */
+class DataTextureNode extends TextureNode {
+
+	getTransformedUV( uvNode ) {
+
+		return uvNode;
+
+	}
+
+	setupUV( builder, uvNode ) {
+
+		return uvNode;
+
+	}
+
+} // DataTextureNode
+
+
+
+/**
+ * A class representing an instanced mesh with TSL material.
+ * The data for rigging is stored in a square data texture.
+ *
+ * @augments InstancedMesh
+ */
+class Pool extends InstancedMesh {
+
+	constructor( url, MAX_BODIES, lowpoly, useVertexStage ) {
+
+		// create an empty instance mesh
+
+		var material = new MeshStandardNodeMaterial( );
+
+		super( null, material, MAX_BODIES );
+
+		this.count = 0;
+		this.castShadow = true;
+		this.receiveShadow = true;
+		this.frustumCulled = false;
+
+		// create a square data texture that can hold data for at least
+		// MAX_BODIES bodies - each body needs EQ number of vec4-s
+
+		this.TEXTURE_SIZE = Math.ceil( Math.sqrt( MAX_BODIES*EQ ) );
+
+		this.dataArray = new Float32Array( 4*this.TEXTURE_SIZE**2 );
+
+		this.quatTexture = new DataTexture(
+			this.dataArray,
+			this.TEXTURE_SIZE, // width
+			this.TEXTURE_SIZE, // height
+			RGBAFormat,
+			FloatType
+		);
+
+		this.quatTexNode = new DataTextureNode( this.quatTexture );
+
+		// asynchronously load the geometry, the skeleton data, hook
+		// shaders to material nodes and add the instance to the scene
+
+		Promise.all([
+			loadGLTF( url+'.glb', lowpoly ),
+			loadJSON( url+'.json' )
+		]).then( ([ geometry, data ])=>{
+
+			this.geometry = geometry;
+			this.data = data;
+
+			var disfigure = disfigureBody( this, data );
+			material.positionNode = disfigure.element( 0 );
+			if ( useVertexStage )
+				material.normalNode = vertexStage( disfigure.element( 1 ) );
+			else
+				material.normalNode = disfigure.element( 1 );
+
+			this.onLoad();
+
+			scene.add( this );
+
+		} );
+
+	} // Pool.constructor
+
+
+
+	setQ( figure, joint, vec4 ) {
+
+		vec4.toArray( this.dataArray, ( EQ*figure+joint )*4 );
+
+	} // Pool.setQ
+
+
+
+	setXYZ( figure, joint, x, y, z, w=1 ) {
+
+		var base = ( EQ*figure+joint )*4;
+		this.dataArray[ base++ ] = x;
+		this.dataArray[ base++ ] = y;
+		this.dataArray[ base++ ] = z;
+		this.dataArray[ base++ ] = w;
+
+	} // Pool.setXYZ
+
+
+
+	onLoad() {
+	} // Pool.onLoad
+
+
+
+	getBody( ) {
+
+		if ( this.count >= this.instanceMatrix.count ) throw ( 'Too many bodies' );
+
+		return this.count++;
+
+	} // Pool.getBody
+
+}
+
+// degrees-radian conversion
+var toDeg = x => x * 180 / Math.PI,
+	toRad = x => x / 180 * Math.PI;
+
+
+
+// global unique identifier for bodies
+var uid = 0;
+
+
+
+class EulerDegrees extends Euler {
+
+	constructor( signX, signY, signZ ) {
+
+		super();
+		this.signX = signX;
+		this.signY = signY;
+		this.signZ = signZ;
+		this.quaternion = new Quaternion();
+		this.needsUpdate = true;
+
+	}
+
+	set( x, y, z ) {
+
+		this.x = x;
+		this.y = y;
+		this.z = z;
+
+	}
+
+	set x( n ) {
+
+		super.x = toRad( this.signX*n );
+		this.needsUpdate = true;
+
+	}
+
+	set y( n ) {
+
+		super.y = toRad( this.signY*n );
+		this.needsUpdate = true;
+
+	}
+
+	set z( n ) {
+
+		super.z = toRad( this.signZ*n );
+		this.needsUpdate = true;
+
+	}
+
+	get x( ) {
+
+		return toDeg( this.signX*super.x );
+
+	}
+
+	get y( ) {
+
+		return toDeg( this.signY*super.y );
+
+	}
+
+	get z( ) {
+
+		return toDeg( this.signZ*super.z );
+
+	}
+
+	get q( ) {
+
+		if ( this.needsUpdate ) {
+
+			this.quaternion.setFromEuler( this );
+			this.needsUpdate = false;
+
+		}
+
+		return this.quaternion;
+
+	}
 
 }
 
 
-class Joint extends Group {
+class Body extends EventDispatcher {
 
-	constructor( model, parent, space, bendAxis, turnAxis, tiltAxis, bendSign, turnSign, tiltSign, order='XZY' ) {
+	constructor( pool ) {
 
 		super();
 
-		this.model = model;
-		this.model.joints.push( this );
-		this.space = space;
-		this.umatrix = uniform( new Matrix3() );
-		this.rotation.reorder( order );
+		this.pool = pool;
+		this.id = pool.getBody();
+		this.uid = uid++;
 
-		getset( this, 'bend', bendAxis, bendSign );
-		getset( this, 'turn', turnAxis, turnSign );
-		getset( this, 'tilt', tiltAxis, tiltSign );
-		getset( this, 'forward', bendAxis, bendSign );
-		getset( this, 'straddle', tiltAxis, tiltSign );
+		this.eulers = [];
 
-		( parent??model ).add( this );
+		for ( var i=0; i<EQ; i++ ) {
 
-	}
+			this.eulers.push( new EulerDegrees( ...JOINTS[ i ].signs ) );
 
+			this[ JOINTS[ i ].name ] = this.eulers[ i ];
 
-	attach( mesh, x, y, z ) {
+		}
 
-		if ( mesh.parent ) mesh = mesh.clone();
-
-		if ( typeof x !== 'undefined' )
-			mesh.position.set( x, y, z );
-
-		this.add( mesh );
-
-	}
-
-
-	point( x, y, z ) {
-
-		_v.set( x, y, z );
-		return this.localToWorld( _v );
-
-	}
-
-	lockTo( localX, localY, localZ, globalX, globalY, globalZ ) {
-
-		this.model.position.set( 0, 0, 0 );
-
-		_v = this.point( localX, localY, localZ ); // local
-		this.model.position.sub( _v );
-
-		_v.set( globalX, globalY, globalZ ); // global
-		this.model.position.add( _v );
-
-	} // Joint.lockTo
-
-
-
-
-} // Joint
-
-
-
-
-var dummyGeometry = new PlaneGeometry(),
-	_uid = 1;
-
-
-class Disfigure extends Mesh {
-
-	constructor( figure, height ) {
-
-		var url = MODEL_PATH+figure.URL,
-			space = figure.SPACE,
-			geometryHeight = figure.HEIGHT;
-
-		super( dummyGeometry );
-
-
-		// unique number for each body, used to make their motions different
-		this.url = url;
-		this.uid = _uid;
-		_uid += 1 + 10*Math.random();
-
-		this.castShadow = true;
-		this.receiveShadow = true;
-
-		this.joints = [];
-		this.height = height??geometryHeight;
-
-		this.scale.setScalar( this.height / geometryHeight );
-
-		loader.load( this.url, ( gltf )=>{
-
-			this.geometry = gltf.scene.children[ 0 ].geometry;
-
-		} );
-
-		// create the space around the model
-		this.space = new Space( space );
-
-		this.torso = new Joint( this, null, this.space.torso, 'x', 'y', 'z', 1, 1, -1 );
-		this.waist = new Joint( this, this.torso, this.space.waist, 'x', 'y', 'z', 1, 1, -1 );
-		this.chest = new Joint( this, this.waist, this.space.chest, 'x', 'y', 'z', 1, 1, -1 );
-		this.head = new Joint( this, this.chest, this.space.head, 'x', 'y', 'z', 1, 1, -1 );
-
-		this.l_leg = new Joint( this, this.torso, this.space.l_leg, 'x', 'y', 'z', -1, 1, 1, 'ZYX' );
-		this.l_thigh = new Joint( this, this.l_leg, this.space.l_thigh, 'x', 'y', 'z', 0, 1, 0 );
-		this.l_knee = new Joint( this, this.l_thigh, this.space.l_knee, 'x', 'y', 'z', 1, 0, -1 );
-		this.l_shin = new Joint( this, this.l_knee, this.space.l_shin, 'x', 'y', 'z', 0, 1, 0 );
-		this.l_ankle = new Joint( this, this.l_shin, this.space.l_ankle, 'x', 'y', 'z', 1, 0, 1 );
-		this.l_foot = new Joint( this, this.l_ankle, this.space.l_foot, 'x', 'y', 'z', 1, 0, 0 );
-
-		this.r_leg = new Joint( this, this.torso, this.space.r_leg, 'x', 'y', 'z', -1, -1, -1, 'ZYX' );
-		this.r_thigh = new Joint( this, this.r_leg, this.space.r_thigh, 'x', 'y', 'z', 0, -1, 0 );
-		this.r_knee = new Joint( this, this.r_thigh, this.space.r_knee, 'x', 'y', 'z', 1, 0, 1 );
-		this.r_shin = new Joint( this, this.r_knee, this.space.r_shin, 'x', 'y', 'z', 0, -1, 0 );
-		this.r_ankle = new Joint( this, this.r_shin, this.space.r_ankle, 'x', 'y', 'z', 1, 0, -1 );
-		this.r_foot = new Joint( this, this.r_ankle, this.space.r_foot, 'x', 'y', 'z', 1, 0, 0 );
-
-		this.l_arm = new Joint( this, this.chest, this.space.l_arm, 'y', 'x', 'z', -1, 1, -1, 'ZYX' );
-		this.l_elbow = new Joint( this, this.l_arm, this.space.l_elbow, 'y', 'x', 'z', -1, 0, 0 );
-		this.l_forearm = new Joint( this, this.l_elbow, this.space.l_forearm, 'z', 'x', 'y', 0, 1, 0 );
-		this.l_wrist = new Joint( this, this.l_forearm, this.space.l_wrist, 'z', 'x', 'y', -1, 0, -1 );
-
-		this.r_arm = new Joint( this, this.chest, this.space.r_arm, 'y', 'x', 'z', 1, 1, 1, 'ZYX' );
-		this.r_elbow = new Joint( this, this.r_arm, this.space.r_elbow, 'y', 'x', 'z', 1, 0, 0 );
-		this.r_forearm = new Joint( this, this.r_elbow, this.space.r_forearm, 'z', 'x', 'y', 0, 1, 0 );
-		this.r_wrist = new Joint( this, this.r_forearm, this.space.r_wrist, 'z', 'x', 'y', 1, 0, 1 );
-
-		// sets the materials of the model hooking them to TSL functions
-		this.material = new MeshPhysicalNodeMaterial( {
-			positionNode: tslPositionNode( this ),
-			normalNode: tslNormalNode( this ),
-			colorNode: vec3( 0.99, 0.65, 0.49 ),
-			metalness: 0,
-			roughness: 0.6,
-		} );
-
-		this.castShadow = true;
-		this.receiveShadow = true;
-
-		// register the model
 		everybody.push( this );
-		if ( scene ) scene.add( this );
 
-		this.l_arm.straddle = this.r_arm.straddle = 65;
-		this.l_elbow.bend = this.r_elbow.bend = 20;
+	}
 
-		// define bones positions
-		for ( var name in this.space )
-			if ( this[ name ])
-				this[ name ].position.copy( this.space[ name ].pivot );
+	setPosition( x, y, z ) {
 
-		// fix positions, because they are accumulated
-		this.reposition( this.torso );
+		var array = this.pool.instanceMatrix.array,
+			index = this.id * 16+12;
 
-	} // Disfigure.constructor
+		array[ index++ ] = x;
+		array[ index++ ] = y;
+		array[ index++ ] = z;
 
+		this.pool.instanceMatrix.needsUpdate = true;
 
-	reposition( bone ) {
+		//this.pool.setXYZ( this.id, EQ_POS, x, y, z );
+		//this.pool.quatTexture.needsUpdate = true;
 
-		for ( var child of bone.children )
-			this.reposition( child );
-
-		bone.position.sub( bone.parent.position );
-
-	} // Skeleton.reposition
-
+	}
 
 	update( ) {
 
-		for ( var joint of this.joints ) {
+		for ( var i=0; i<EQ-2; i++ )
+			this.pool.setQ( this.id, i, this.eulers[ i ].q );
+		this.pool.quatTexture.needsUpdate = true;
 
-			var s = joint.matrix.elements;
-			joint.umatrix.value.set( s[ 0 ], s[ 1 ], s[ 2 ], s[ 4 ], s[ 5 ], s[ 6 ], s[ 8 ], s[ 9 ], s[ 10 ]);
+	}
 
-		}
-
-	} // Disfigure.update
-
-
-
-	get posture() {
-
-		var angles = [];
-
-		for ( var joint of this.joints )
-			angles.push( joint.rotation.x, joint.rotation.y, joint.rotation.z );
-
-		var position = [ ...this.position ];
-		var rotation = [ ...this.rotation ];
-
-		return {
-			version: 8,
-			position: position.map( x=>toRound( x ) ),
-			rotation: rotation,
-			angles: angles.map( x=>toRound( toDeg( x ) ) ) };
-
-	} // Disfigure.posture
+} // Body
 
 
 
-	get postureString() {
+class Man extends Body {
 
-		return JSON.stringify( this.posture );
+	static pool = null;
+	static count = 10; // max number of men
+	static lowpoly = 0; // lowpoly-ness, 0=original, 1.0 remove 75%
+	static vertexStage = false; // true for faster but uglier normals
 
-	} // Disfigure.postureString
+	constructor( ) {
 
+		if ( Man.pool == null ) {
 
-
-	set posture( data ) {
-
-		if ( data.version !=8 )
-			console.error( 'Incompatible posture version' );
-
-		var angles = data.angles.map( x=>toRad( x ) );
-
-		this.position.set( ...data.position );
-		this.rotation.set( ...data.rotation );
-
-		var i = 0;
-		for ( var joint of this.joints )
-			joint.rotation.set( angles[ i++ ], angles[ i++ ], angles[ i++ ]);
-
-		this.update();
-		this.updateMatrixWorld( true );
-
-
-	} // Disfigure.posture
-
-
-	blend( postureA, postureB, k ) {
-
-		function lerp( a, b ) {
-
-			var c = [];
-			for ( var i=0; i<a.length; i++ )
-				c[ i ] = MathUtils.lerp( a[ i ], b[ i ], k );
-
-			return c;
+			Man.pool = new Pool( 'man', Man.count, Man.lowpoly, Man.vertexStage );
 
 		}
 
-		var eulerA = new Euler( ...postureA.rotation ),
-			eulerB = new Euler( ...postureB.rotation );
-		eulerA.reorder( eulerB.order );
+		super( Man.pool );
 
-		var posture = {
-			version: postureA.version,
-			position: lerp( postureA.position, postureB.position ),
-			rotation: new Euler(
-				...lerp([ eulerA.x, eulerA.y, eulerA.z ],
-							 [ eulerB.x, eulerB.y, eulerB.z ])
-			),
-			angles: lerp( postureA.angles, postureB.angles ),
-		};
+		this.material = Man.pool.material; // expose to outside
 
-		this.posture = posture;
+		this.l_arm.z = this.r_arm.z = -75;
+		this.l_elbow.y = this.r_elbow.y = -20;
+		this.l_leg.z = this.r_leg.z = 10;
+		this.l_ankle.z = this.r_ankle.z = -10;
+		this.l_ankle.x = this.r_ankle.x = 3;
 
-	} // Disfigure.blend
+		this.setPosition( 0, -0.012, 0 );
 
-
-	dress( clothingData ) {
-
-		var clothes = compileClothing( clothingData ).toVar();
-
-		this.material.colorNode = clothes[ 0 ].xyz.clamp( 0, 1 );
-		this.material.roughnessNode = clothes[ 1 ].x;
-		this.material.metalnessNode = clothes[ 1 ].y;
-
-	} // Disfigure.dress
-
-
-} // Disfigure
-
-
-
-class Man extends Disfigure {
-
-	static URL = 'man.glb';
-	static HEIGHT = 1.795;
-	static SPACE = {
-
-		// TORSO
-		head: [[ 0, 1.566, -0.066 ], [ 1.495, 1.647 ], 30 ],
-		chest: [[ 0, 1.177, -0.014 ], [ 0.777, 1.658 ], 0, [ 0.072, 0.538 ]],
-		waist: [[ 0, 1.014, -0.016 ], [ 0.547, 1.498 ]],
-		torso: [[ 0, 1.014, -0.016 ], [ -3, -2 ]],
-
-		// LEGS
-		leg: [[ 0.074, 0.970, -0.034 ], [ -4e-3, 0.004 ], [ 1.229, 0.782 ]],
-		thigh: [[ 0.070, 0.737, -0.034 ], [ 1.247, 0.242 ]],
-		knee: [[ 0.090, 0.504, -0.041 ], [ 0.603, 0.382 ], 20 ],
-		ankle: [[ 0.074, 0.082, -2e-3 ], [ 0.165, 0.008 ], -10 ],
-		shin: [[ 0.092, 0.360, -0.052 ], [ 0.762, -0.027 ]],
-		foot: [[ 0.074, 0.026, 0.022 ], [ 0.190, -0.342 ], 120 ],
-
-		// ARMS
-		elbow: [[ 0.427, 1.453, -0.072 ], [ 0.413, 0.467 ]],
-		forearm: [[ 0.550, 1.453, -0.068 ], [ 0.083, 0.879 ]],
-		wrist: [[ 0.673, 1.462, -0.072 ], [ 0.635, 0.722 ]],
-		arm: [[ 0.153, 1.408, -0.072 ], [ 0.054, 0.269 ], [ 1.067, 1.616 ]],
-
-	};
-
-	constructor( height ) {
-
-		super( Man, height );
-
-		this.l_leg.straddle = this.r_leg.straddle = 5;
-		this.l_ankle.tilt = this.r_ankle.tilt = -5;
-		this.l_ankle.bend = this.r_ankle.bend = 3;
-
-	} // Man.constructor
+	}
 
 } // Man
 
 
 
-class Woman extends Disfigure {
+class Woman extends Body {
 
-	static URL = 'woman.glb';
-	static HEIGHT = 1.691;
-	static SPACE = {
+	static pool = null;
+	static count = 10; // max number of women
+	static lowpoly = 0; // lowpoly-ness, 0=original, 1.0 remove 75%
+	static vertexStage = false; // true for faster but uglier normals
 
-		// TORSO
-		head: [[ 0.001, 1.471, -0.049 ], [ 1.395, 1.551 ], 30 ],
-		chest: [[ 0.001, 1.114, -0.012 ], [ 0.737, 1.568 ], 0, [ 0.069, 0.509 ]],
-		waist: [[ 0.001, 0.961, -0.014 ], [ 0.589, 1.417 ]],
-		torso: [[ 0.001, 0.961, -0.014 ], [ -1.696, -1.694 ]],
+	constructor( ) {
 
-		// LEGS
-		leg: [[ 0.071, 0.920, -0.031 ], [ -2e-3, 0.005 ], [ 1.163, 0.742 ]],
-		thigh: [[ 0.076, 0.7, -0.031 ], [ 1.180, 0.233 ]],
-		knee: [[ 0.086, 0.480, -0.037 ], [ 0.573, 0.365 ], 20 ],
-		shin: [[ 0.088, 0.337, -0.047 ], [ 0.724, -0.059 ]],
-		ankle: [[ 0.076, 0.083, -5e-3 ], [ 0.161, 0.014 ], -10 ],
-		foot: [[ 0.076, 0.031, 0.022 ], [ 0.184, -0.316 ], 120 ],
+		if ( Woman.pool == null ) {
 
-		// ARMS
-		elbow: [[ 0.404, 1.375, -0.066 ], [ 0.390, 0.441 ]],
-		forearm: [[ 0.506, 1.375, -0.063 ], [ 0.093, 0.805 ]],
-		wrist: [[ 0.608, 1.375, -0.056 ], [ 0.581, 0.644 ]],
-		arm: [[ 0.137, 1.338, -0.066 ], [ 0.052, 0.233 ], [ 1.011, 1.519 ]],
+			Woman.pool = new Pool( 'woman', Woman.count, Woman.lowpoly, Woman.vertexStage );
 
-	};
+		}
 
-	constructor( height ) {
+		super( Woman.pool );
 
-		super( Woman, height );
+		this.material = Woman.pool.material; // expose to outside
 
-		this.l_leg.straddle = this.r_leg.straddle = -2.9;
-		this.l_ankle.tilt = this.r_ankle.tilt = 2.9;
-		this.l_ankle.bend = this.r_ankle.bend = 3;
+		this.l_arm.z = this.r_arm.z = -90;
+		this.l_elbow.y = this.r_elbow.y = 0;
+		this.l_leg.z = this.r_leg.z = -3;
+		this.l_ankle.z = this.r_ankle.z = 3;
+		this.l_ankle.x = this.r_ankle.x = 3;
 
-	} // Woman.constructor
+	}
 
 } // Woman
 
 
 
-class Child extends Disfigure {
+class Child extends Body {
 
-	static URL = 'child.glb';
-	static HEIGHT = 1.352;
-	static SPACE = {
+	static pool = null;
+	static count = 10; // max number of children
+	static lowpoly = 0; // lowpoly-ness, 0=original, 1.0 remove 75%
+	static vertexStage = false; // true for faster but uglier normals
 
-		// TORSO
-		head: [[ 0, 1.149, -0.058 ], [ 1.091, 1.209 ], 30 ],
-		chest: [[ 0, 0.865, -0.013 ], [ 0.566, 1.236 ], 0, [ 0.054, 0.406 ]],
-		waist: [[ 0, 0.717, -0.024 ], [ 0.385, 1.130 ]],
-		torso: [[ 0, 0.717, -0.024 ], [ -1.354, -1.353 ]],
+	constructor( ) {
 
-		// LEGS
-		leg: [[ 0.054, 0.704, -0.027 ], [ -1e-3, 0.001 ], [ 0.845, 0.581 ], 1 ],
-		thigh: [[ 0.062, 0.547, -0.021 ], [ 0.946, 0.189 ]],
-		knee: [[ 0.068, 0.389, -0.031 ], [ 0.468, 0.299 ], 20 ],
-		shin: [[ 0.069, 0.272, -0.048 ], [ 0.581, -0.045 ]],
-		ankle: [[ 0.073, 0.065, -0.033 ], [ 0.109, 0.044 ], -10 ],
-		foot: [[ 0.073, 0.027, -6e-3 ], [ 0.112, -0.271 ], 120 ],
+		if ( Child.pool == null ) {
 
-		// ARMS
-		elbow: [[ 0.337, 1.072, -0.09 ], [ 0.311, 0.369 ]],
-		forearm: [[ 0.438, 1.074, -0.094 ], [ 0.073, 0.642 ]],
-		wrist: [[ 0.538, 1.084, -0.091 ], [ 0.519, 0.553 ]],
-		arm: [[ 0.108, 1.072, -0.068 ], [ 0.041, 0.185 ], [ 0.811, 1.217 ]],
+			Child.pool = new Pool( 'child', Child.count, Child.lowpoly, Child.vertexStage );
 
-	};
+		}
 
-	constructor( height ) {
+		super( Child.pool );
 
-		super( Child, height );
+		this.material = Child.pool.material; // expose to outside
 
+		this.l_arm.x = this.r_arm.x = -10;
+		this.l_arm.z = this.r_arm.z = -80;
 		this.l_ankle.bend = this.r_ankle.bend = 3;
 
-	} // Child.constructor
+	}
 
 } // Child
 
@@ -1192,4 +909,4 @@ class Child extends Disfigure {
 
 console.log( '\n%c\u22EE\u22EE\u22EE Disfigure\n%chttps://boytchev.github.io/disfigure/\n', 'color: navy', 'font-size:80%' );
 
-export { Child, Man, Woman, World, bands, camera, cameraLight, chaotic, controls, everybody, ground, latex, light, random, regular, renderer, scene, setAnimationLoop, slice, velour };
+export { Child, EQ, EQ_POS, Man, Pool, Woman, World, camera, cameraLight, chaotic, controls, disfigureBody, disfigureMatrix, everybody, gradientArm, gradientLeg, gradientX, gradientXT, gradientY, gradientYT, ground, light, random, regular, renderer, scene, setAnimationLoop };

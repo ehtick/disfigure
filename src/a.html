@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Three.js r183 - Reverse Depth Buffer (ES Modules)</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; }
+        #info {
+            position: absolute; top: 10px; left: 10px; color: #fff; background: rgba(0,0,0,0.7);
+            padding: 12px; border-radius: 6px; font-family: Arial, sans-serif; pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+<div id="info">Press <b>R</b> to toggle reverseDepthBuffer<br>Watch for z-fighting on the distant grid</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.183.0/build/three.module.js"
+  }
+}
+</script>
+
+<script type="module">
+    import * as THREE from 'three';
+
+    let useReverse = true;
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x112233);
+
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100000);
+    camera.position.set(0, 10, 100);
+
+    function createRenderer(reverse) {
+        const renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            reversedDepthBuffer: reverse          // ← correct flag in r183
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        return renderer;
+    }
+
+    let renderer = createRenderer(useReverse);
+    document.body.appendChild(renderer.domElement);
+
+    // Lights
+    scene.add(new THREE.HemisphereLight(0x88aaff, 0x334422, 1.4));
+    const sun = new THREE.DirectionalLight(0xffffff, 1);
+    sun.position.set(50, 100, 30);
+    scene.add(sun);
+
+    // Close box
+    const box = new THREE.Mesh(
+        new THREE.BoxGeometry(10, 10, 10),
+        new THREE.MeshPhongMaterial({ color: 0x00aaff, shininess: 30 })
+    );
+    box.position.y = 8;
+//    scene.add(box);
+
+    // Distant high-frequency grid to provoke precision issues
+    const plane = new THREE.Mesh(
+        new THREE.PlaneGeometry(2000, 2000, 400, 400),
+        new THREE.MeshPhongMaterial({ 
+            color: 0x446644, 
+            shininess: 0,
+            flatShading: true 
+        })
+    );
+    //plane.rotation.x = -Math.PI / 2;
+    plane.position.z = -1200;
+    scene.add(plane);
+
+    // Slightly offset plane to force z-fighting in normal mode
+    const plane2 = plane.clone();
+    plane2.position.z = -1200.4;
+    plane2.material = plane.material.clone();
+    plane2.material.color.setHex(0xaa6644);
+    scene.add(plane2);
+
+    // Box edges
+    const edges = new THREE.EdgesGeometry(box.geometry);
+    box.add(new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xffffff })));
+
+    // Toggle with R key (recreates renderer because the flag is init-only)
+    window.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() !== 'r') return;
+
+        useReverse = !useReverse;
+
+        document.body.removeChild(renderer.domElement);
+        renderer.dispose();
+
+        renderer = createRenderer(useReverse);
+        document.body.appendChild(renderer.domElement);
+
+        document.getElementById('info').innerHTML = 
+            `Mode: <b>${useReverse ? 'REVERSE DEPTH BUFFER' : 'NORMAL DEPTH BUFFER'}</b><br>Press R to toggle`;
+    });
+
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    const clock = new THREE.Clock();
+
+    function animate() {
+        requestAnimationFrame(animate);
+        const t = clock.getElapsedTime();
+
+        box.rotation.y = t * 0.4;
+
+        // Slow movement to make fighting visible
+        camera.position.x = Math.sin(t * 0.1) * 12;
+        camera.lookAt(0, 5, -6000);
+
+        renderer.render(scene, camera);
+    }
+
+    animate();
+</script>
+</body>
+</html>

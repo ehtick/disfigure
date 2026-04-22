@@ -1,42 +1,15 @@
 ﻿
 // disfigure
+//
+// Non-core functionality for creating a predefined 3D world.
+// This is mainly done to make concise demos and examples.
 
 
 
-import { CanvasTexture, CircleGeometry, Color, DirectionalLight, Mesh, MeshLambertMaterial, Object3D, PCFSoftShadowMap, PerspectiveCamera, Scene, WebGPURenderer } from 'three';
+import { CanvasTexture, CircleGeometry, Color, DirectionalLight, Mesh, MeshLambertMaterial, PCFSoftShadowMap, PerspectiveCamera, Scene, WebGPURenderer } from 'three';
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import Stats from 'three/addons/libs/stats.module.js';
 
-import { SimplexNoise } from "three/addons/math/SimplexNoise.js";
-
-// number generators
-
-var simplex = new SimplexNoise( );
-
-// generate chaotic but random sequence of numbers in [min.max]
-function chaotic( time, offset=0, min=-1, max=1 ) {
-
-	return min + ( max-min )*( simplex.noise( time, offset )+1 )/2;
-
-}
-
-
-
-// generate repeated sequence of numbers in [min.max]
-function regular( time, offset=0, min=-1, max=1 ) {
-
-	return min + ( max-min )*( Math.sin( time+offset )+1 )/2;
-
-}
-
-
-
-// generate random sequence of numbers in [min.max]
-function random( min=-1, max=1 ) {
-
-	return min + ( max-min )*Math.random( );
-
-}
 
 var renderer, scene, camera, light, cameraLight, controls, ground, userAnimationLoop, stats, everybody = [];
 
@@ -93,7 +66,7 @@ class World {
 				light.shadow.camera.right = 5;
 				light.shadow.camera.top = 5;
 				light.shadow.camera.bottom = -5;
-				light.shadow.normalBias = -0.01;
+				light.shadow.normalBias = 0.01;
 				light.autoUpdate = false;
 				light.castShadow = true;
 
@@ -103,7 +76,7 @@ class World {
 
 			cameraLight = new DirectionalLight( 'white', 1.4 );
 			cameraLight.position.z = 100;
-			cameraLight.target = new Object3D();
+			cameraLight.target = scene;
 			camera.add( cameraLight );
 			scene.add( camera );
 
@@ -162,7 +135,6 @@ class World {
 
 
 
-
 class AnimateEvent extends Event {
 
 	#target;
@@ -191,17 +163,9 @@ var animateEvent = new AnimateEvent( );
 // default animation loop that dispatches animation events
 // to the window and to each body in the scene
 
-var loader = document.getElementById( 'loader' );
-
 function defaultAnimationLoop( time ) {
 
 	try {
-
-		if ( loader ) {
-
-			loader.style.display = 'none'; loader = undefined;
-
-		}
 
 		animateEvent.time = time;
 
@@ -209,22 +173,16 @@ function defaultAnimationLoop( time ) {
 
 		everybody.forEach( ( p )=>{
 
-			p.update(); // todo call update only on changed figures
+			p.update( );
 			p.dispatchEvent( animateEvent );
 
 		} );
 
 		if ( userAnimationLoop ) userAnimationLoop( time );
 
-		if ( controls ) {
-
-			controls.update( );
-			cameraLight.target.position.copy( controls.target );
-
-		}
+		if ( controls ) controls.update( );
 
 		if ( stats ) stats.update( );
-
 
 		renderer.render( scene, camera );
 
@@ -250,4 +208,4 @@ function setAnimationLoop( animationLoop ) {
 
 
 
-export { World, renderer, scene, camera, light, cameraLight, controls, ground, everybody, setAnimationLoop, chaotic, regular, random };
+export { World, renderer, scene, camera, light, cameraLight, controls, ground, everybody, setAnimationLoop };

@@ -803,6 +803,7 @@ It is a set of the following options:
 - *ground* &ndash; boolean, if true, ground is created
 - *shadows* &ndash; boolean, if true, shadows are created
 - *stats* &ndash; boolean, if true, stats panel is created
+- *inspector* &ndash; boolean, if true, inspector panel is created
 - *antialias* &ndash; boolean, if false, antialias is turned off (this may speed up animations in slow GPUs)
 
 ```js

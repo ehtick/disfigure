@@ -1,6 +1,6 @@
 ﻿
 
-var THREEJS = 'three@0.184.0';
+var THREEJS = 'three@0.183.0';
 var CDN = 'https://cdn.jsdelivr.net/npm';
 
 
@@ -33,7 +33,8 @@ var importMap = `
 			"three/webgpu": "${CDN}/${THREEJS}/build/three.webgpu.min.js",
 			"three/tsl": "${CDN}/${THREEJS}/build/three.tsl.min.js",
 			"three/addons/": "${CDN}/${THREEJS}/examples/jsm/",
-			"disfigure": "../src/disfigure.js"
+			"disfigure": "../src/disfigure.js",
+			"label": "./font.js"
 		}
 	}
 `;

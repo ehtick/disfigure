@@ -1,0 +1,108 @@
+﻿
+// disfigure assets loaders
+//
+// provides functions to handle loading of 3D models and their metadata
+//
+// JOINT						→ names and rotation direction of joints
+// loadGLTF(url, lowpoly = 0)	→ loads and optionally simplifies a GLB model
+// loadJSON(url)				→ loads JSON skeleton description
+
+
+
+import { vec3, vec4 } from 'three/tsl';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { SimplifyModifier } from 'three/addons/modifiers/SimplifyModifier.js';
+
+
+
+// path to GLB models
+
+const ASSETS_PATH = import.meta.url
+	.replace( '/src/assets.js', '/assets/models/' )
+	.replace( '/dist/disfigure.js', '/assets/models/' )
+	.replace( '/dist/disfigure.min.js', '/assets/models/' );
+
+
+
+// preloading names of skeleton joints
+
+const JOINTS = ( await fetch( ASSETS_PATH+'body.json' ).then( r => r.json() ) ).joints;
+
+
+
+
+/**
+ * Loads a GLB model and optionally simplifies its geometry.
+ *
+ * The model must have a single mesh with geometry as the first child
+ * of `gltf.scene`.
+ *
+ * @param {string} url - Full URL of the GLB model file.
+ * @param {number} [lowpoly=0] - Geometry simplification factor.
+ *        Mapped linearly [0 to 1]→[0% to 75%]
+ *        - `lowpoly = 0` → keeps the original geometry
+ *        - `lowpoly = 1` → removes ~75% of the geometry
+ * @returns {Promise<BufferGeometry>} Promise for the geometry.
+ */
+function loadGLTF( url, lowpoly = 0 ) {
+
+	return new GLTFLoader().loadAsync( ASSETS_PATH+url ).then( gltf => {
+
+		// get the geometry and vertex count to remove
+
+		var geometry = gltf.scene.children[ 0 ].geometry,
+			vertices = Math.floor( geometry.attributes.position.count * lowpoly * 0.75 );
+
+		// simplify the geometry if needed
+
+		if ( vertices > 0 ) {
+
+			var simplified = new SimplifyModifier().modify( geometry, vertices );
+			geometry.dispose();
+			geometry = simplified;
+
+		}
+
+		return geometry;
+
+	} ); // then
+
+} // loadGLTF
+
+
+
+/**
+ * Loads a JSON model description (skeleton data).
+ *
+ * Loads pivot points, ranges and extra data. All coordinate arrays
+ * are automatically converted to Three.js TSL vectors (`vec3` / `vec4`).
+ *
+ * @param {string} url - Full URL of the JSON file.
+ * @returns {Promise<object>} Promise for an object with:
+ *                            - `pivots`: `vec3[]`
+ *                            - `ranges`: `vec4[]`
+ *                            - `extras`: `vec4[]`
+ */
+function loadJSON( url ) {
+
+	return fetch( ASSETS_PATH+url ).then( r =>
+
+		r.json().then( data => {
+
+			// convert arrays into array of vectors
+
+			data.pivots = data.pivots.map( x => vec3( ...x ) );
+			data.ranges = data.ranges.map( x => vec4( ...x ) );
+			data.extras = data.extras.map( x => vec4( ...x ) );
+
+			return data;
+
+		} )
+
+	); // then
+
+} // loadJSON
+
+
+
+export { JOINTS, loadGLTF, loadJSON };

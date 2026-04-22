@@ -21,8 +21,7 @@ export default [
 			'three/addons/libs/stats.module.js',
 			'three/addons/controls/OrbitControls.js',
 			'three/addons/loaders/GLTFLoader.js',
-			'three/addons/math/SimplexNoise.js',
-			'three/addons/modifiers/SimplifyModifier.js'
+			'three/addons/math/SimplexNoise.js'
 		],
 	},
 
@@ -40,8 +39,7 @@ export default [
 			'three/addons/libs/stats.module.js',
 			'three/addons/controls/OrbitControls.js',
 			'three/addons/loaders/GLTFLoader.js',
-			'three/addons/math/SimplexNoise.js',
-			'three/addons/modifiers/SimplifyModifier.js'
+			'three/addons/math/SimplexNoise.js'
 		],
 		plugins: [
 			terser()

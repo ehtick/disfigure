@@ -5,12 +5,16 @@ if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
 echo Eslinting src
 call npx eslint --fix src/*.js
 
-echo Eslinting poser
-call npx eslint --fix poser/*.js
-call npx eslint --fix poser/*.html
+echo Eslinting src/utils
+call npx eslint --fix src/utils/*.js
 
-echo Eslinting examples
-call npx eslint --fix examples/*.html
+rem echo Eslinting poser
+rem call npx eslint --fix poser/*.js
+rem call npx eslint --fix poser/*.html
+
+rem echo Eslinting examples
+rem call npx eslint --fix examples/*.html
+rem call npx eslint --fix examples/quaternions-prototype/*.js
 
 pause
 exit

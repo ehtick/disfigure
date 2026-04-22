@@ -1,0 +1,74 @@
+{
+	"info": "General skeleton topology - joint names and direction of rotation",
+	"joints": [
+		{"name": "head", "signs": [1, 1, -1]},
+		{"name": "chest", "signs": [1, 1, -1]},
+		{"name": "waist", "signs": [1, 1, -1]},
+		{"name": "torso", "signs": [1, 1, -1]},
+		
+		{"name": "l_foot", "signs": [1, 0, 0]},
+		{"name": "l_ankle", "signs": [1, 0, 1]},
+		{"name": "l_shin", "signs": [0, 1, 0]},
+		{"name": "l_knee", "signs": [1, 0, 1]},
+		{"name": "l_thigh", "signs": [0, 1, 0]},
+		{"name": "l_leg", "signs": [-1, 0, 1]},
+		
+		{"name": "r_foot", "signs": [1, 0, 0]},
+		{"name": "r_ankle", "signs": [1, 0, -1]},
+		{"name": "r_shin", "signs": [0, -1, 0]},
+		{"name": "r_knee", "signs": [1, 0, -1]},
+		{"name": "r_thigh", "signs": [0, -1, 0]},
+		{"name": "r_leg", "signs": [-1, 0, -1]},
+		
+		{"name": "l_wrist", "signs": [0, -1, 1]},
+		{"name": "l_forearm", "signs": [1, 0, 0]},
+		{"name": "l_elbow", "signs": [0, -1, 0]},
+		{"name": "l_arm", "signs": [1, -1, 1]},
+		
+		{"name": "r_wrist", "signs": [0, 1, -1]},
+		{"name": "r_forearm", "signs": [1, 0, 0]},
+		{"name": "r_elbow", "signs": [0, 1, 0]},
+		{"name": "r_arm", "signs": [1, 1, -1]},
+		
+		{"name": "l_thumb_tip", "signs": [0, 1, 0]},
+		{"name": "l_thumb_base", "signs": [1, 1, -1]},
+		
+		{"name": "r_thumb_tip", "signs": [0, -1, 0]},
+		{"name": "r_thumb_base", "signs": [1, -1, 1]},
+		
+		{"name": "l_index_tip", "signs": [0, 0, -1]},
+		{"name": "l_index_mid", "signs": [0, 0, -1]},
+		{"name": "l_index_base", "signs": [0, -1, -1]},
+		
+		{"name": "l_middle_tip", "signs": [0, 0, -1]},
+		{"name": "l_middle_mid", "signs": [0, 0, -1]},
+		{"name": "l_middle_base", "signs": [0, -1, -1]},
+		
+		{"name": "l_ring_tip", "signs": [0, 0, -1]},
+		{"name": "l_ring_mid", "signs": [0, 0, -1]},
+		{"name": "l_ring_base", "signs": [0, 1, -1]},
+		
+		{"name": "l_pinky_tip", "signs": [0, 0, -1]},
+		{"name": "l_pinky_mid", "signs": [0, 0, -1]},
+		{"name": "l_pinky_base", "signs": [0, 1, -1]},
+		
+		{"name": "r_index_tip", "signs": [0, 0, 1]},
+		{"name": "r_index_mid", "signs": [0, 0, 1]},
+		{"name": "r_index_base", "signs": [0, 1, 1]},
+		
+		{"name": "r_middle_tip", "signs": [0, 0, 1]},
+		{"name": "r_middle_mid", "signs": [0, 0, 1]},
+		{"name": "r_middle_base", "signs": [0, 1, 1]},
+		
+		{"name": "r_ring_tip", "signs": [0, 0, 1]},
+		{"name": "r_ring_mid", "signs": [0, 0, 1]},
+		{"name": "r_ring_base", "signs": [0, -1, 1]},
+		
+		{"name": "r_pinky_tip", "signs": [0, 0, 1]},
+		{"name": "r_pinky_mid", "signs": [0, 0, 1]},
+		{"name": "r_pinky_base", "signs": [0, -1, 1]},
+		
+		{"name": "pos", "signs": [1, 1, 1]},
+		{"name": "data", "signs": [1, 1, 1]}
+	]
+}

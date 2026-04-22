@@ -5,7 +5,7 @@
 
 
 
-import { Fn, If, mix, normalGeometry, positionGeometry, transformNormalToView } from "three/tsl";
+import { Fn, If, mat3, mix, normalGeometry, positionGeometry, transformNormalToView } from "three/tsl";
 import { SimplexNoise } from "three/addons/math/SimplexNoise.js";
 
 
@@ -44,8 +44,16 @@ function random( min=-1, max=1 ) {
 // general DOF=3 rotator, used for most joints
 var jointRotateMat= Fn( ([ pos, pivot, matrix, locus ])=>{
 
+
 	var p = pos.sub( pivot ).mul( matrix ).add( pivot );
-	return mix( pos, p, locus );
+	p = mix( pos, p, locus );
+
+	return p;
+
+	//var len = pos.distance(pivot);
+	//var lenp = p.distance(pivot);
+
+	//return p.sub(pivot).div(lenp).mul(len).add(pivot);
 
 } );//, {pos:'vec3',pivot:'vec3',matrix:'mat3',locus:'float',return:'vec3'} );
 
@@ -55,7 +63,7 @@ var jointRotateMat= Fn( ([ pos, pivot, matrix, locus ])=>{
 var jointNormalMat= Fn( ([ pos, pivot, matrix, locus ])=>{ // eslint-disable-line no-unused-vars
 
 	var p = pos.mul( matrix );
-	return mix( pos, p, locus );
+	return mix( pos, p, locus );//.normalize();
 
 } );//, {pos:'vec3',pivot:'vec3',matrix:'mat3',locus:'float',return:'vec3'} );
 
@@ -87,8 +95,11 @@ var disfigure = Fn( ([ joints, fn, p ])=>{
 
 	function chain( items ) {
 
-		for ( var item of items )
+		for ( var item of items ) {
+
 			p.assign( fn( p, space[ item ].pivot, joints[ item ].umatrix, space[ item ].locus() ) );
+
+		}
 
 	}
 

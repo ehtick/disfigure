@@ -10,47 +10,8 @@ console.log( '\n%c\u22EE\u22EE\u22EE Disfigure\n%chttps://boytchev.github.io/dis
 
 
 
-export {
+export * from './body.js';
+export * from './world.js';
+export * from './pool.js';
 
-	Man,
-	Woman,
-	Child,
-
-} from './body.js';
-
-
-
-export {
-
-	World,
-	renderer,
-	scene,
-	camera,
-	light,
-	cameraLight,
-	controls,
-	ground,
-	everybody,
-	setAnimationLoop,
-
-} from './world.js';
-
-
-
-export {
-
-	slice,
-	bands,
-	velour,
-	latex,
-
-} from './clothes.js';
-
-
-export {
-
-	random,
-	regular,
-	chaotic,
-
-} from './motion.js';
+export * from './tsl.js';

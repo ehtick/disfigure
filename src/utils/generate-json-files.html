@@ -1,0 +1,356 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+	</head>
+
+	<body>		
+		<h3>man</h3>
+		<div id="man"></div>
+		<h3>woman</h3>
+		<div id="woman"></div>
+		<h3>child</h3>
+		<div id="child"></div>
+		
+		<script type="module">
+
+		function rnd( x ) {
+		
+			return Math.round(10000*x)/10000;
+		}
+		
+		// v = [[x,y,z],...] -> [[x,y,z],...,[x,y,z],...]
+		function copy(v) {
+		
+			return [...v, ...v].map(x=>x.map(y=>rnd(y)));
+		
+		}
+		
+		// v = [[x,y,z],...] -> [[x,y,z],...,[-x,y,z],...]
+		function flip( v ) {
+
+			return [...v, ...(v.map( a => {var b=[...a]; b[0]*=-1; return b} ))].map(x=>x.map(y=>rnd(y)));
+
+		}
+		
+		// v = [[x,y,z,w],...] -> [[x,y,z,w],...,[-x,-y,z,w],...]
+		function flip2( v ) {
+
+			return [...v, ...(v.map( a => {var b=[...a]; b[0]*=-1; b[1]*=-1; return b} ))].map(x=>x.map(y=>rnd(y)));
+
+		}
+
+		// v = [n,m,...] -> [l_n,l_m,...,r_n,r_m,...]
+		function rename(v) {
+		
+			return [ ...v.map( a => 'l_'+a ), ...v.map( a => 'r_'+a ) ];
+		
+		}
+		
+		var man = {
+			
+			info: 'Male and Female Basemeshes - 3D Study Pack" (https://skfb.ly/p86JI) by ronildo.facanha is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/), modified by Pavel Boytchev',
+			
+			pivots: [
+				[ 0, 1.57, -0.07 ], //head
+				[ 0, 1.20, -0.01 ], //chest
+				[ 0, 1.00, -0.01 ], //waist
+				[ 0, 1.014, -0.016 ], //torso
+				//--
+				...flip([
+					[ 0, 0.03, 0.07 ], //foot,
+					[ 0.07, 0.07, -0.02 ], //ankle
+					[ 0.07, 0.4, -0.04 ], //shin
+					[ 0.09, 0.53, -0.03 ], //knee
+					[ 0.083, 0.708, -0.03 ], //thigh
+					[ 0.062, 0.931, -0.015 ], //leg
+				]),
+				//--
+				...flip([
+					[ 0.673, 1.462, -0.072 ], //wrist,
+					[ 0.550, 1.453, -0.068 ], //forearm,
+					[ 0.427, 1.453, -0.072 ], //elbow,
+					[ 0.16, 1.441, -0.072 ], //arm,
+				]),
+				//--
+				...flip([
+					[ 0.759, 1.453, 0 ], //thumb tip
+					[ 0.719, 1.456, -0.039 ], //thumb base
+				]),
+				...flip([
+					[ 0.826, 1.456, -0.051 ], //index tip
+					[ 0.799, 1.458, -0.049 ], //index mid
+					[ 0.764, 1.457, -0.049 ], //index base
+
+					[ 0.829, 1.458, -0.068 ], //middle tip
+					[ 0.803, 1.461, -0.068 ], //middle mid
+					[ 0.771, 1.456, -0.070 ], //middle base
+
+					[ 0.825, 1.459, -0.087 ], //ring tip
+					[ 0.804, 1.461, -0.088 ], //ring mid
+					[ 0.765, 1.453, -0.088 ], //ring base
+
+					[ 0.813, 1.456, -0.105 ], //pinky tip
+					[ 0.792, 1.456, -0.105 ], //pinky mid
+					[ 0.756, 1.45, -0.104 ], //pinky base
+				]),
+			],
+			
+			ranges: [
+				[ 1.49, 1.57, 0.5, 0 ], //head
+				[ 1.00, 1.40, 0, 0 ], //chest
+				[ 0.80, 1.20, 0, 0 ], //waist
+				[ -1, -1, 0, 0 ], //torso
+				//--
+				...copy([
+					[ 0.0, -0.10, -1, 0 ], //foot,
+					[ 0.10, 0.04, 0, 0 ], //ankle
+					[ 0.5, 0.07, 0, 0 ], //shin
+					[ 0.55, 0.48, 0, 0 ], //knee
+					[ 0.87, 0.55, 0, 0 ], //thigh
+					[ 1.05+0.005, 0.852-0.005, 0.88, 0.87 ], //leg
+				]),
+				//--
+				...flip2([
+				[ 0.65, 0.70, 0, 0 ], //wrist,
+				[ 0.40, 0.77, 0, 0 ], //forearm,
+				[ 0.413, 0.467, 0, 0 ], //elbow,
+				[ 0.103, 0.242, 1.550, 0 ], //arm,
+				]),
+				...flip2([
+				//--
+					[ 0.759-0.01, 0.759+0.007, -0.025, 0.03 ], //thumb tip
+					[ 0.690, 0.760, -0.040, -0.030 ], //thumb base xy-unused, kept for historical reason
+				]),
+				...flip2([
+					[ 0.820, 0.833, -0.059, -0.038 ], //index tip
+					[ 0.790, 0.806, -0.059, -0.038 ], //index mid
+					[ 0.747, 0.787, -0.059, -0.038 ], //index base
+
+					[ 0.822, 0.837, -0.077, -0.059 ], //middle tip
+					[ 0.795, 0.810, -0.077, -0.059 ], //middle mid
+					[ 0.753, 0.789, -0.077, -0.059 ], //middle base
+
+					[ 0.818, 0.832, -0.0955, -0.077 ], //ring tip
+					[ 0.796, 0.813, -0.0955, -0.077 ], //ring mid
+					[ 0.747, 0.791, -0.0955, -0.077 ], //ring base
+
+					[ 0.806, 0.819, -0.111, -0.0955 ], //pinky tip
+					[ 0.786, 0.800, -0.112, -0.0955 ], //pinky mid
+					[ 0.738, 0.783, -0.114, -0.0955 ], //pinky base
+				]),
+			],
+			
+			extras: [
+				...flip2([[ 0, 0.05, -0.05, 0 ]]), // legRange2 xy-left, xz-right
+				...flip2([[ 0.5,0,0,0 ]]), // thumb tip slope, thumb base slope
+			],
+		};
+
+		var woman = {
+			
+			info: '"Male and Female Basemeshes - 3D Study Pack" (https://skfb.ly/p86JI) by ronildo.facanha is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/), modified by Pavel Boytchev',
+			
+			pivots: [
+				[ 0.001, 1.471, -0.049 ], //head
+				[ 0.001, 1.114, -0.012 ], //chest
+				[ 0.001, 0.961, -0.014 ], //waist
+				[ 0.001, 0.961, -0.014 ], //torso
+				//--
+				...flip([
+					[ 0.076, 0.028, 0.058 ], //foot,
+					[ 0.076, 0.066, -0.021 ], //ankle
+					[ 0.088, 0.337, -0.047 ], //shin
+					[ 0.086, 0.499, -0.024 ], //knee
+					[ 0.086, 0.700, -0.024 ], //thigh
+					[ 0.063, 0.884, -0.014 ], //leg
+				]),
+				//--
+				...flip([
+					[ 0.608, 1.375, -0.060 ], //wrist,
+					[ 0.506, 1.375, -0.063 ], //forearm,
+					[ 0.404, 1.375, -0.066 ], //elbow,
+					[ 0.137, 1.338, -0.066 ], //arm,
+				]),
+				//--
+				...flip([
+					[ 0.694, 1.369, 0.004 ], //thumb tip
+					[ 0.652, 1.369, -0.027 ], //thumb base
+				]),
+				...flip([
+					[ 0.754, 1.375, -0.032 ], //index tip
+					[ 0.729, 1.375, -0.033 ], //index mid
+					[ 0.696, 1.373, -0.032 ], //index base
+
+					[ 0.760, 1.377, -0.049 ], //middle tip
+					[ 0.736, 1.378, -0.050 ], //middle mid
+					[ 0.688, 1.377, -0.049 ], //middle base
+
+					[ 0.754, 1.375, -0.066 ], //ring tip
+					[ 0.730, 1.375, -0.066 ], //ring mid
+					[ 0.695, 1.375, -0.066 ], //ring base
+
+					[ 0.734, 1.372, -0.081 ], //pinky tip
+					[ 0.720, 1.372, -0.081 ], //pinky mid
+					[ 0.693, 1.372, -0.076 ], //pinky base
+				]),
+			],
+			
+			ranges: [
+				[ 1.4, 1.48, 0.5, 0 ], //head
+				[ 0.96, 1.33, 0, 0 ], //chest
+				[ 0.75, 1.11, 0, 0 ], //waist
+				[ -1, -1, 0, 0 ], //torso
+				//--
+				...copy([
+					[ 0.0, -0.09, -1, 0 ], //foot,
+					[ 0.095, 0.04, 0, 0 ], //ankle
+					[ 0.467, 0.07, 0, 0 ], //shin
+					[ 0.533, 0.446, 0, 0 ], //knee
+					[ 0.82, 0.509, 0, 0 ], //thigh
+					[ 0.962, 0.796, 0.831, 0.802 ], //leg
+				]),
+				//--
+				...flip2([
+				[ 0.588, 0.628, 0, 0 ], //wrist,
+				[ 0.371, 0.699, 0, 0 ], //forearm,
+				[ 0.387, 0.432, 0, 0 ], //elbow,
+				[ 0.102, 0.202, 1.522, 0 ], //arm,
+				]),
+				...flip2([
+				//--
+					[ 0.6900, 0.7056, -0.0115, 0.03 ], //thumb tip
+					[ 0.6900, 0.7600, -0.1272, -0.1071 ], //thumb base xy-unused, kept for historical reason
+				]),
+				...flip2([
+					[ 0.7507, 0.7592, -0.0415, -0.0115 ], //index tip
+					[ 0.7225, 0.7360, -0.0415, -0.0115 ], //index mid
+					[ 0.6756, 0.7215, -0.0415, -0.0115 ], //index base
+
+					[ 0.7571, 0.7652, -0.0575, -0.0415 ], //middle tip
+					[ 0.7283, 0.7427, -0.0575, -0.0415 ], //middle mid
+					[ 0.6764, 0.7215, -0.0578, -0.0415 ], //middle base
+
+					[ 0.7510, 0.7592, -0.0727, -0.0575 ], //ring tip
+					[ 0.7234, 0.7370, -0.0727, -0.0575 ], //ring mid
+					[ 0.6819, 0.7073, -0.0727, -0.0575 ], //ring base
+
+					[ 0.7309, 0.7395, -0.090, -0.0727 ], //pinky tip
+					[ 0.7158, 0.7249, -0.090, -0.0727 ], //pinky mid
+					[ 0.6798, 0.7069, -0.090, -0.0727 ], //pinky base
+				]),
+			],
+			
+			extras: [
+				...flip2([[ 0, 0.04, -0.04, 0 ]]), // legRange2 xy-left, xz-right
+				...flip2([[ 0.5,-0.15,0,0 ]]), // thumb tip slope, thumb base slope
+			],
+		};
+
+		var child = {
+			
+			info: '"Male Boy" (https://skfb.ly/owzVM) by Raj_Kumar_Jadhav is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/), modified by Pavel Boytchev',
+			
+			pivots: [
+				[ 0, 1.149, -0.058 ], //head
+				[ 0, 0.898, -0.013 ], //chest
+				[ 0, 0.759, -0.024 ], //waist
+				[ 0, 0.759, -0.024 ], //torso
+				//--
+				...flip([
+					[ 0, 0.027, 0.024 ], //foot,
+					[ 0.053, 0.065, -0.033 ], //ankle
+					[ 0.053, 0.292, -0.048 ], //shin
+					[ 0.068, 0.397, -0.041 ], //knee
+					[ 0.051, 0.547, -0.044 ], //thigh
+					[ 0.054, 0.714, -0.027 ], //leg
+				]),
+				//--
+				...flip([
+					[ 0.529, 1.078, -0.096 ], //wrist,
+					[ 0.428, 1.074, -0.094 ], //forearm,
+					[ 0.345, 1.075, -0.097 ], //elbow,
+					[ 0.106, 1.072, -0.068 ], //arm,
+				]),
+				//--
+				...flip([
+					[ 0.586, 1.055, -0.043 ], //thumb tip
+					[ 0.559, 1.062, -0.070 ], //thumb base
+				]),
+				...flip([
+					[ 0.633, 1.054, -0.068 ], //index tip
+					[ 0.620, 1.058, -0.069 ], //index mid
+					[ 0.598, 1.065, -0.071 ], //index base
+
+					[ 0.636, 1.055, -0.086 ], //middle tip
+					[ 0.623, 1.058, -0.086 ], //middle mid
+					[ 0.600, 1.064, -0.088 ], //middle base
+
+					[ 0.632, 1.054, -0.103 ], //ring tip
+					[ 0.619, 1.057, -0.103 ], //ring mid
+					[ 0.598, 1.061, -0.103 ], //ring base
+
+					[ 0.621, 1.051, -0.115 ], //pinky tip
+					[ 0.611, 1.053, -0.116 ], //pinky mid
+					[ 0.594, 1.056, -0.117 ], //pinky base
+				]),
+			],
+			
+			ranges: [
+				[ 1.085, 1.159, 0.5, 0 ], //head
+				[ 0.727, 1.069, 0, 0 ], //chest
+				[ 0.593, 0.926, 0, 0 ], //waist
+				[ -1, -1, 0, 0 ], //torso
+				//--
+				...copy([
+					[ 0.036, -0.0388, -1, 0 ], //foot,
+					[ 0.0950, 0.0360, 0, 0 ], //ankle
+					[ 0.4200, 0.0410, 0, 0 ], //shin
+					[ 0.4110, 0.3620, 0, 0 ], //knee
+					[ 0.6730, 0.4110, 0, 0 ], //thigh
+					[ 0.7858, 0.6325, 0.7140, 0.6218 ], //leg
+				]),
+				//--
+				...flip2([
+				[ 0.516, 0.545, 0, 0 ], //wrist,
+				[ 0.318, 0.597, 0, 0 ], //forearm,
+				[ 0.3163, 0.3643, 0, 0 ], //elbow,
+				[ 0.0662, 0.185, 1.1467, 0 ], //arm,
+				]),
+				...flip2([
+				//--
+					[ 0.5613, 0.5700, -0.0613, 0.0113 ], //thumb tip
+					[ 0.6900, 0.7600, -0.1510, -0.1369 ], //thumb base xy-unused, kept for historical reason
+				]),
+				...flip2([
+					[ 0.6292, 0.6353, -0.0774, -0.0613 ], //index tip
+					[ 0.6157, 0.6233, -0.0774, -0.0613 ], //index mid
+					[ 0.5882, 0.5988, -0.0774, -0.0613 ], //index base
+
+					[ 0.6309, 0.6384, -0.0937, -0.0759 ], //middle tip
+					[ 0.6189, 0.6264, -0.0937, -0.0759 ], //middle mid
+					[ 0.5924, 0.6035, -0.0937, -0.0777 ], //middle base
+
+					[ 0.6268, 0.6354, -0.1084, -0.0941 ], //ring tip
+					[ 0.6115, 0.6228, -0.1084, -0.0943 ], //ring mid
+					[ 0.5891, 0.6012, -0.1084, -0.0945 ], //ring base
+
+					[ 0.6170, 0.6238, -0.1231, -0.1084 ], //pinky tip
+					[ 0.6070, 0.6138, -0.1231, -0.1084 ], //pinky mid
+					[ 0.5800, 0.6028, -0.1231, -0.1084 ], //pinky base
+				]),
+			],
+			
+			extras: [
+				...flip2([[ 0, 0.04, -0.04, 0 ]]), // legRange2 xy-left, xz-right
+				...flip2([[ 0.5,-0.15,0,0 ]]), // thumb tip slope, thumb base slope
+			],
+		};
+
+		document.getElementById('man').innerHTML = JSON.stringify(man);
+		document.getElementById('woman').innerHTML = JSON.stringify(woman);
+		document.getElementById('child').innerHTML = JSON.stringify(child);
+		
+		</script>
+	</body>
+</html>
