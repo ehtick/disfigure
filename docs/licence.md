@@ -6,7 +6,7 @@
 ## Postures Licence
 	
 	
-You can use Disfigure to generate still or animated postures of 3D models. You are allowed:
+You can use Disfigure to generate postures of 3D models. You are allowed:
 
 * to freely use these images, videos and animations;
 * to modify, adapt and build on them in any imaginable way;
