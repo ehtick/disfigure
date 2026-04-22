@@ -6,4 +6,4 @@ Currently the code is rewritten to use quaternions instead of matrices.
 
 **WIP.**
 
-[Old **Disfigure** Home](https://boytchev.github.io/disfigure/legacy/README.md)
+[Old **Disfigure** Home](https://boytchev.github.io/disfigure/legacy/index.html)
