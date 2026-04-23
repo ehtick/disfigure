@@ -170,7 +170,7 @@ class Man extends Body {
 		this.material = Man.pool.material; // expose to outside
 
 		this.l_arm.z = this.r_arm.z = -75;
-		this.l_elbow.y = this.r_elbow.y = -20;
+		this.l_elbow.y = this.r_elbow.y = 20;
 		this.l_leg.z = this.r_leg.z = 10;
 		this.l_ankle.z = this.r_ankle.z = -10;
 		this.l_ankle.x = this.r_ankle.x = 3;

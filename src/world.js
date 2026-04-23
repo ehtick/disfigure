@@ -191,17 +191,9 @@ var animateEvent = new AnimateEvent( );
 // default animation loop that dispatches animation events
 // to the window and to each body in the scene
 
-var loader = document.getElementById( 'loader' );
-
 function defaultAnimationLoop( time ) {
 
 	try {
-
-		if ( loader ) {
-
-			loader.style.display = 'none'; loader = undefined;
-
-		}
 
 		animateEvent.time = time;
 
