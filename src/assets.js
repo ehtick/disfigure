@@ -27,6 +27,7 @@ const ASSETS_PATH = import.meta.url
 // preloading names of skeleton joints
 
 const JOINTS = ( await fetch( ASSETS_PATH+'body.json' ).then( r => r.json() ) ).joints;
+JOINTS.forEach( x => x.parentIndex = JOINTS.findIndex( y => y.name==x.parent ) );
 
 
 
