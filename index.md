@@ -2,13 +2,18 @@
 
 # Disfigure
 
-A library to rig boneless and morphless 3D models.
-
-Currently the code is rewritten to use quaternions instead of matrices.
+A library to rig 3D models.
 
 **WIP.**
 
-[Old **Disfigure** Home](https://boytchev.github.io/disfigure/legacy/index.html)
+* [**Disfigure** User guide](https://boytchev.github.io/disfigure/docs/userguide.html)
+<!--* [**Disfigure** Posture editor](https://boytchev.github.io/disfigure/poser)-->
+* [Old **Disfigure** Home](https://boytchev.github.io/disfigure/legacy/index.html)
+
+[<img src="https://boytchev.github.io/disfigure/examples/snapshots/figure-type.jpg" width="23%">](https://boytchev.github.io/disfigure/examples/figure-type.html)
+[<img src="https://boytchev.github.io/disfigure/examples/snapshots/figure-height.jpg" width="23%">](https://boytchev.github.io/disfigure/examples/figure-height.html)
+[<img src="https://boytchev.github.io/disfigure/examples/snapshots/figure-parts.jpg" width="23%">](https://boytchev.github.io/disfigure/examples/figure-parts.html)
+
 
 <div class="footnote">
 	<a href="docs/cookies.html">Cookies</a> &middot;
