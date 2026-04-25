@@ -9,6 +9,7 @@
 
 
 
+import { Vector3 } from 'three';
 import { vec3, vec4 } from 'three/tsl';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { SimplifyModifier } from 'three/addons/modifiers/SimplifyModifier.js';
@@ -26,9 +27,17 @@ const ASSETS_PATH = import.meta.url
 
 // preloading names of skeleton joints
 
-const JOINTS = ( await fetch( ASSETS_PATH+'body.json' ).then( r => r.json() ) ).joints;
-JOINTS.forEach( x => x.parentIndex = JOINTS.findIndex( y => y.name==x.parent ) );
+//console.time( 'body.json' );
 
+const JOINTS = ( await fetch( ASSETS_PATH+'body.json' ).then( r => r.json() ) ).joints;
+JOINTS.forEach( x => {
+
+	x.parentIndex = JOINTS.findIndex( y => y.name==x.parent ); // set parent index for each joint
+	x.signs = new Vector3( ...x.signs ); // convert angle directions into Vector3
+
+} );
+
+//console.timeEnd( 'body.json' );
 
 
 
@@ -47,6 +56,8 @@ JOINTS.forEach( x => x.parentIndex = JOINTS.findIndex( y => y.name==x.parent ) )
  */
 function loadGLTF( url, lowpoly = 0 ) {
 
+	console.time( url );
+
 	return new GLTFLoader().loadAsync( ASSETS_PATH+url ).then( gltf => {
 
 		// get the geometry and vertex count to remove
@@ -63,6 +74,8 @@ function loadGLTF( url, lowpoly = 0 ) {
 			geometry = simplified;
 
 		}
+
+		console.timeEnd( url );
 
 		return geometry;
 
@@ -86,6 +99,8 @@ function loadGLTF( url, lowpoly = 0 ) {
  */
 function loadJSON( url ) {
 
+	//console.time( url );
+
 	return fetch( ASSETS_PATH+url ).then( r =>
 
 		r.json().then( data => {
@@ -95,6 +110,8 @@ function loadJSON( url ) {
 			data.pivots = data.pivots.map( x => vec3( ...x ) );
 			data.ranges = data.ranges.map( x => vec4( ...x ) );
 			data.extras = data.extras.map( x => vec4( ...x ) );
+
+			//console.timeEnd( url );
 
 			return data;
 

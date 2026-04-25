@@ -3,8 +3,8 @@
 
 
 
-import { Euler, EventDispatcher, Quaternion, Vector3 } from 'three';
-import { everybody } from './world.js';
+import { Euler, Object3D, Quaternion, Vector3 } from 'three';
+import { everybody, renderer } from './world.js';
 import { EQ, EQ_POS } from './tsl.js';
 import { JOINTS } from './assets.js';
 import { Pool } from './pool.js';
@@ -22,16 +22,24 @@ var uid = 0;
 
 
 
+// dummy variables
+var _p = new Vector3(),
+	_q = new Quaternion();
+
+
 class EulerDegrees extends Euler {
 
-	constructor( signX, signY, signZ ) {
+	constructor( body, index, parentIndex, signs ) {
 
 		super();
-		this.signX = signX;
-		this.signY = signY;
-		this.signZ = signZ;
+
+		this.body = body;
+		this.index = index;
+		this.parentIndex = parentIndex;
+		this.signs = signs;
 		this.quaternion = new Quaternion();
 		this.needsUpdate = true;
+		this.attached = [];
 
 	}
 
@@ -45,40 +53,40 @@ class EulerDegrees extends Euler {
 
 	set x( n ) {
 
-		super.x = toRad( this.signX*n );
+		super.x = toRad( this.signs.x*n );
 		this.needsUpdate = true;
 
 	}
 
 	set y( n ) {
 
-		super.y = toRad( this.signY*n );
+		super.y = toRad( this.signs.y*n );
 		this.needsUpdate = true;
 
 	}
 
 	set z( n ) {
 
-		super.z = toRad( this.signZ*n );
+		super.z = toRad( this.signs.z*n );
 		this.needsUpdate = true;
 
 	}
 
 	get x( ) {
 
-		return toDeg( this.signX*super.x );
+		return toDeg( this.signs.x*super.x );
 
 	}
 
 	get y( ) {
 
-		return toDeg( this.signY*super.y );
+		return toDeg( this.signs.y*super.y );
 
 	}
 
 	get z( ) {
 
-		return toDeg( this.signZ*super.z );
+		return toDeg( this.signs.z*super.z );
 
 	}
 
@@ -95,24 +103,37 @@ class EulerDegrees extends Euler {
 
 	}
 
+	// attach object to current joint
+	attach( object ) {
+
+		object.initialPosition = object.position.clone();
+		object.matrixAutoUpdate = false;
+
+		this.attached.push( object );
+
+		this.body.pool.add( object );
+
+
+	}
+
 }
 
 
-class Body extends EventDispatcher {
+class Body extends Object3D {
 
 	constructor( pool ) {
 
 		super();
 
 		this.pool = pool;
-		this.id = pool.getBody();
-		this.uid = uid++;
+		this.pid = pool.getBody(); // instance index within the pool
+		this.uid = uid++; // global index
 
 		this.eulers = [];
 
 		for ( var i=0; i<EQ; i++ ) {
 
-			this.eulers.push( new EulerDegrees( ...JOINTS[ i ].signs ) );
+			this.eulers.push( new EulerDegrees( this, i, JOINTS[ i ].parentIndex, JOINTS[ i ].signs ) );
 
 			this[ JOINTS[ i ].name ] = this.eulers[ i ];
 
@@ -122,29 +143,66 @@ class Body extends EventDispatcher {
 
 	}
 
-	setPosition( x, y, z ) {
-
-		var array = this.pool.instanceMatrix.array,
-			index = this.id * 16+12;
-
-		array[ index++ ] = x;
-		array[ index++ ] = y;
-		array[ index++ ] = z;
-
-		this.pool.instanceMatrix.needsUpdate = true;
-
-		//this.pool.setXYZ( this.id, EQ_POS, x, y, z );
-		//this.pool.quatTexture.needsUpdate = true;
-
-	}
-
 	update( ) {
 
-		for ( var i=0; i<EQ-2; i++ )
-			this.pool.setQ( this.id, i, this.eulers[ i ].q );
+		this.updateMatrix();
+		this.pool.setMatrixAt( this.pid, this.matrix );
+		this.pool.instanceMatrix.needsUpdate = true;
+
+		for ( var i=0; i<EQ-2; i++ ) {
+
+			var euler = this.eulers[ i ];
+
+			this.pool.setQ( this.pid, i, euler.q );
+
+		} // for i
+
 		this.pool.quatTexture.needsUpdate = true;
 
-	}
+	} // Body.update
+
+	updateAttached( ) {
+
+		var pivots = this.pool.data?.pivots; // in Firefox pool.data is created later
+
+		if ( !pivots ) return;
+
+		for ( var i=0; i<EQ-2; i++ ) {
+
+			var euler = this.eulers[ i ];
+
+			for ( var object of euler.attached ) {
+
+				_p.copy( object.initialPosition );
+				_p.add( pivots[ euler.index ].node.value );
+
+				_q.identity();
+
+				scan: while ( euler ) {
+
+					var pivot = pivots[ euler.index ].node.value;
+
+					_p.sub( pivot ).applyQuaternion( euler.quaternion ).add( pivot );
+					_q.premultiply( euler.quaternion );
+
+					if ( euler.parentIndex<0 ) break scan;
+
+					euler = this.eulers[ euler.parentIndex ];
+
+				}
+
+				_p.multiply( this.scale );
+				_p.add( this.position );
+
+				object.position.copy( _p );
+				object.quaternion.copy( _q );
+				object.updateMatrix();
+
+			} // for object
+
+		} // for i
+
+	} // Body.updateAttached
 
 } // Body
 
@@ -157,7 +215,7 @@ class Man extends Body {
 	static lowpoly = 0; // lowpoly-ness, 0=original, 1.0 remove 75%
 	static vertexStage = false; // true for faster but uglier normals
 
-	constructor( ) {
+	constructor( height = 1.80 ) {
 
 		if ( Man.pool == null ) {
 
@@ -168,6 +226,8 @@ class Man extends Body {
 		super( Man.pool );
 
 		this.material = Man.pool.material; // expose to outside
+		
+		this.scale.setScalar( height/1.795 ); // 1.795 is 3D model height
 
 		this.l_arm.z = this.r_arm.z = -75;
 		this.l_elbow.y = this.r_elbow.y = 20;
@@ -175,7 +235,7 @@ class Man extends Body {
 		this.l_ankle.z = this.r_ankle.z = -10;
 		this.l_ankle.x = this.r_ankle.x = 3;
 
-		this.setPosition( 0, -0.012, 0 );
+		this.position.y = -0.012;
 
 	}
 
@@ -190,7 +250,7 @@ class Woman extends Body {
 	static lowpoly = 0; // lowpoly-ness, 0=original, 1.0 remove 75%
 	static vertexStage = false; // true for faster but uglier normals
 
-	constructor( ) {
+	constructor( height = 1.70 ) {
 
 		if ( Woman.pool == null ) {
 
@@ -201,6 +261,8 @@ class Woman extends Body {
 		super( Woman.pool );
 
 		this.material = Woman.pool.material; // expose to outside
+
+		this.scale.setScalar( height/1.691 ); // 1.691 is 3D model height
 
 		this.l_arm.z = this.r_arm.z = -90;
 		this.l_elbow.y = this.r_elbow.y = 0;
@@ -221,7 +283,7 @@ class Child extends Body {
 	static lowpoly = 0; // lowpoly-ness, 0=original, 1.0 remove 75%
 	static vertexStage = false; // true for faster but uglier normals
 
-	constructor( ) {
+	constructor( height = 1.35 ) {
 
 		if ( Child.pool == null ) {
 
@@ -233,10 +295,14 @@ class Child extends Body {
 
 		this.material = Child.pool.material; // expose to outside
 
+		this.scale.setScalar( height/1.352 ); // 1.352 is 3D model height
+
 		this.l_arm.x = this.r_arm.x = -10;
 		this.l_arm.z = this.r_arm.z = -80;
 		this.l_ankle.bend = this.r_ankle.bend = 3;
 
+		this.position.y = -0.008;
+		
 	}
 
 } // Child

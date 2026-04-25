@@ -1,6 +1,6 @@
 // disfigure v0.0.25
 
-import { WebGPURenderer, PCFSoftShadowMap, Scene, Color, PerspectiveCamera, DirectionalLight, Object3D, Mesh, CircleGeometry, MeshLambertMaterial, CanvasTexture, InstancedMesh, MeshStandardNodeMaterial, DataTexture, RGBAFormat, FloatType, TextureNode, EventDispatcher, Euler, Quaternion } from 'three';
+import { WebGPURenderer, PCFSoftShadowMap, Scene, Color, PerspectiveCamera, DirectionalLight, Object3D, Mesh, CircleGeometry, MeshLambertMaterial, CanvasTexture, Vector3, InstancedMesh, MeshStandardNodeMaterial, DataTexture, RGBAFormat, FloatType, TextureNode, Quaternion, EventDispatcher, Euler } from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import Stats from 'three/addons/libs/stats.module.js';
 import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
@@ -190,30 +190,22 @@ var animateEvent = new AnimateEvent( );
 // default animation loop that dispatches animation events
 // to the window and to each body in the scene
 
-var loader = document.getElementById( 'loader' );
-
 function defaultAnimationLoop( time ) {
 
 	try {
-
-		if ( loader ) {
-
-			loader.style.display = 'none'; loader = undefined;
-
-		}
 
 		animateEvent.time = time;
 
 		window.dispatchEvent( animateEvent );
 
+		if ( userAnimationLoop ) userAnimationLoop( time );
+
 		everybody.forEach( ( p )=>{
 
-			p.update(); // todo call update only on changed figures
+			p.updateAttached();
 			p.dispatchEvent( animateEvent );
 
 		} );
-
-		if ( userAnimationLoop ) userAnimationLoop( time );
 
 		if ( controls ) {
 
@@ -226,6 +218,13 @@ function defaultAnimationLoop( time ) {
 
 
 		renderer.render( scene, camera );
+
+		everybody.forEach( ( p )=>{
+
+			p.update(); // todo call update only on changed figures
+
+		} );
+
 
 	} catch ( err ) {
 
@@ -467,8 +466,13 @@ const ASSETS_PATH = import.meta.url
 
 // preloading names of skeleton joints
 
+console.log('Loading body.json');
 const JOINTS = ( await fetch( ASSETS_PATH+'body.json' ).then( r => r.json() ) ).joints;
-
+JOINTS.forEach( x => {
+	x.parentIndex = JOINTS.findIndex( y => y.name==x.parent ); // set parent index for each joint
+	x.signs = new Vector3( ...x.signs ); // convert angle directions into Vector3
+} );
+console.log('Loaded body.json');
 
 
 
@@ -487,6 +491,8 @@ const JOINTS = ( await fetch( ASSETS_PATH+'body.json' ).then( r => r.json() ) ).
  */
 function loadGLTF( url, lowpoly = 0 ) {
 
+	console.log('Loading '+url);
+
 	return new GLTFLoader().loadAsync( ASSETS_PATH+url ).then( gltf => {
 
 		// get the geometry and vertex count to remove
@@ -503,6 +509,8 @@ function loadGLTF( url, lowpoly = 0 ) {
 			geometry = simplified;
 
 		}
+
+		console.log('Loaded '+url);
 
 		return geometry;
 
@@ -526,6 +534,8 @@ function loadGLTF( url, lowpoly = 0 ) {
  */
 function loadJSON( url ) {
 
+	console.log('Loading '+url);
+	
 	return fetch( ASSETS_PATH+url ).then( r =>
 
 		r.json().then( data => {
@@ -536,6 +546,8 @@ function loadJSON( url ) {
 			data.ranges = data.ranges.map( x => vec4( ...x ) );
 			data.extras = data.extras.map( x => vec4( ...x ) );
 
+			console.log('Loaded '+url);
+			
 			return data;
 
 		} )
@@ -681,16 +693,24 @@ var uid = 0;
 
 
 
+// dummy variables
+var _p = new Vector3(),
+	_q = new Quaternion();
+
+
 class EulerDegrees extends Euler {
 
-	constructor( signX, signY, signZ ) {
+	constructor( body, index, parentIndex, signs ) {
 
 		super();
-		this.signX = signX;
-		this.signY = signY;
-		this.signZ = signZ;
+
+		this.body = body;
+		this.index = index;
+		this.parentIndex = parentIndex;
+		this.signs = signs;
 		this.quaternion = new Quaternion();
 		this.needsUpdate = true;
+		this.attached = [];
 
 	}
 
@@ -704,40 +724,40 @@ class EulerDegrees extends Euler {
 
 	set x( n ) {
 
-		super.x = toRad( this.signX*n );
+		super.x = toRad( this.signs.x*n );
 		this.needsUpdate = true;
 
 	}
 
 	set y( n ) {
 
-		super.y = toRad( this.signY*n );
+		super.y = toRad( this.signs.y*n );
 		this.needsUpdate = true;
 
 	}
 
 	set z( n ) {
 
-		super.z = toRad( this.signZ*n );
+		super.z = toRad( this.signs.z*n );
 		this.needsUpdate = true;
 
 	}
 
 	get x( ) {
 
-		return toDeg( this.signX*super.x );
+		return toDeg( this.signs.x*super.x );
 
 	}
 
 	get y( ) {
 
-		return toDeg( this.signY*super.y );
+		return toDeg( this.signs.y*super.y );
 
 	}
 
 	get z( ) {
 
-		return toDeg( this.signZ*super.z );
+		return toDeg( this.signs.z*super.z );
 
 	}
 
@@ -754,6 +774,19 @@ class EulerDegrees extends Euler {
 
 	}
 
+	// attach object to current joint
+	attach( object ) {
+		
+		object.initialPosition = object.position.clone();
+		object.matrixAutoUpdate = false;
+		
+		this.attached.push( object );
+
+		this.body.pool.add( object );
+		
+		
+	}
+	
 }
 
 
@@ -764,14 +797,15 @@ class Body extends EventDispatcher {
 		super();
 
 		this.pool = pool;
-		this.id = pool.getBody();
-		this.uid = uid++;
+		this.id = pool.getBody(); // instance index within the pool
+		this.uid = uid++; // global index
 
 		this.eulers = [];
+		this.position = new Vector3();
 
 		for ( var i=0; i<EQ; i++ ) {
 
-			this.eulers.push( new EulerDegrees( ...JOINTS[ i ].signs ) );
+			this.eulers.push( new EulerDegrees( this, i, JOINTS[i].parentIndex, JOINTS[ i ].signs ) );
 
 			this[ JOINTS[ i ].name ] = this.eulers[ i ];
 
@@ -783,6 +817,8 @@ class Body extends EventDispatcher {
 
 	setPosition( x, y, z ) {
 
+		this.position.set( x, y, z );
+		
 		var array = this.pool.instanceMatrix.array,
 			index = this.id * 16+12;
 
@@ -792,18 +828,63 @@ class Body extends EventDispatcher {
 
 		this.pool.instanceMatrix.needsUpdate = true;
 
-		//this.pool.setXYZ( this.id, EQ_POS, x, y, z );
-		//this.pool.quatTexture.needsUpdate = true;
-
 	}
 
 	update( ) {
 
-		for ( var i=0; i<EQ-2; i++ )
-			this.pool.setQ( this.id, i, this.eulers[ i ].q );
+		for ( var i=0; i<EQ-2; i++ ) {
+
+			var euler = this.eulers[i];
+			
+			this.pool.setQ( this.id, i, euler.q );
+
+		} // for i
+		
 		this.pool.quatTexture.needsUpdate = true;
 
-	}
+	} // Body.update
+
+	updateAttached( ) {
+
+		var pivots = this.pool.data?.pivots; // in Firefox pool.data is created later
+		
+		if( !pivots ) return;
+		
+		for ( var i=0; i<EQ-2; i++ ) {
+
+			var euler = this.eulers[i];
+			
+			for( var object of euler.attached ) {
+				
+				_p.copy( object.initialPosition );
+				_p.add( pivots[euler.index].node.value );
+				
+				_q.identity();
+				
+				scan: while( euler ) {
+
+					var pivot = pivots[euler.index].node.value;
+					
+					_p.sub( pivot ).applyQuaternion( euler.quaternion ).add( pivot );
+					_q.premultiply( euler.quaternion );
+
+					if( euler.parentIndex<0 ) break scan;
+					
+					euler = this.eulers[ euler.parentIndex ];
+					
+				}
+				
+				_p.add( this.position );
+				
+				object.position.copy( _p );
+				object.quaternion.copy( _q );
+				object.updateMatrix();
+				
+			} // for object
+
+		} // for i
+		
+	} // Body.updateAttached
 
 } // Body
 
@@ -829,7 +910,7 @@ class Man extends Body {
 		this.material = Man.pool.material; // expose to outside
 
 		this.l_arm.z = this.r_arm.z = -75;
-		this.l_elbow.y = this.r_elbow.y = -20;
+		this.l_elbow.y = this.r_elbow.y = 20;
 		this.l_leg.z = this.r_leg.z = 10;
 		this.l_ankle.z = this.r_ankle.z = -10;
 		this.l_ankle.x = this.r_ankle.x = 3;

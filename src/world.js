@@ -62,6 +62,8 @@ class World {
 		renderer.shadowMap.enabled = options?.shadows ?? true;
 		renderer.shadowMap.type = PCFSoftShadowMap;
 
+
+
 		document.body.appendChild( renderer.domElement );
 		document.body.style.overflow = 'hidden';
 		document.body.style.margin = '0';
@@ -71,6 +73,8 @@ class World {
 
 		camera = new PerspectiveCamera( 30, innerWidth/innerHeight );
 		camera.position.set( 0, 1.5, 4 );
+
+renderer.compileAsync(scene, camera);
 
 		if ( options?.stats ?? false ) {
 
@@ -199,14 +203,14 @@ function defaultAnimationLoop( time ) {
 
 		window.dispatchEvent( animateEvent );
 
+		if ( userAnimationLoop ) userAnimationLoop( time );
+
 		everybody.forEach( ( p )=>{
 
-			p.update(); // todo call update only on changed figures
+			p.updateAttached();
 			p.dispatchEvent( animateEvent );
 
 		} );
-
-		if ( userAnimationLoop ) userAnimationLoop( time );
 
 		if ( controls ) {
 
@@ -219,6 +223,13 @@ function defaultAnimationLoop( time ) {
 
 
 		renderer.render( scene, camera );
+
+		everybody.forEach( ( p )=>{
+
+			p.update(); // todo call update only on changed figures
+
+		} );
+
 
 	} catch ( err ) {
 

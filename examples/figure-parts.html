@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<body>
+	<header>
+		<h1><b>Disfigure</b></h1>
+		<h3>Main body parts of a figure</h3></br>
+	</header>
+
+	<script src="importmap.js"></script>
+	<script type="module">
+
+		import * as Happy from 'disfigure';
+		import * as Red from 'label';
+
+
+		// create a default world
+
+		new Happy.World( );
+
+
+		// create a man showing names of body parts
+
+		var man = new Happy.Man();
+
+
+		// attach the name as labels around the body
+		
+		man.torso.attach( new Red.Label( 'torso', 1.2, [0, -0.10, 0.1] ) );
+
+		man.head.attach( new Red.Label( 'head', 0.8, [0, 0.27, 0.1] ) );
+		man.chest.attach( new Red.Label( 'chest', 0.8, [0, 0.2, 0.13] ) );
+		man.waist.attach( new Red.Label( 'waist', 0.8, [0, 0.1, 0.11] ) );
+
+		man.r_arm.attach( new Red.Label( 'r_arm→', 0.55, [0, 0.21, 0], [0,0,-90] ) );
+		man.l_arm.attach( new Red.Label( '←l_arm', 0.55, [0, 0.21, 0], [0,0,90] ) );
+
+		man.r_elbow.attach( new Red.Label( 'r_elbow→', 0.5, [0, 0.20, 0], [0,0,-90] ) );
+		man.l_elbow.attach( new Red.Label( '←l_elbow', 0.5, [0, 0.20, 0], [0,0,90] ) );
+
+		man.r_forearm.attach( new Red.Label( 'r_forearm→', 0.45, [0, 0.205, 0], [0,0,-90] ) );
+		man.l_forearm.attach( new Red.Label( '←l_forearm', 0.45, [0, 0.205, 0], [0,0,90] ) );
+
+		man.r_wrist.attach( new Red.Label( 'r_wrist→', 0.45, [0, 0.145, 0], [0,0,-90] ) );
+		man.l_wrist.attach( new Red.Label( '←l_wrist', 0.45, [0, 0.145, 0], [0,0,90] ) );
+
+		man.r_leg.attach( new Red.Label( 'r_leg→', 0.6, [-0.22, -0.05, 0] ) );
+		man.l_leg.attach( new Red.Label( '←l_leg', 0.6, [0.22, -0.05, 0] ) );
+
+		man.r_thigh.attach( new Red.Label( 'r_thigh→', 0.5, [-0.21, 0, 0] ) );
+		man.l_thigh.attach( new Red.Label( '←l_thigh', 0.5, [0.21, 0, 0] ) );
+
+		man.r_knee.attach( new Red.Label( 'r_knee→', 0.5, [-0.18, 0, 0] ) );
+		man.l_knee.attach( new Red.Label( '←l_knee', 0.5, [0.18, 0, 0] ) );
+
+		man.r_shin.attach( new Red.Label( 'r_shin→', 0.5, [-0.19, -0.07, 0] ) );
+		man.l_shin.attach( new Red.Label( '←l_shin', 0.5, [0.19, -0.07, 0] ) );
+
+		man.r_ankle.attach( new Red.Label( 'r_ankle→', 0.45, [-0.15, 0.05, 0] ) );
+		man.l_ankle.attach( new Red.Label( '←l_ankle', 0.45, [0.15, 0.05, 0] ) );
+
+		man.r_foot.attach( new Red.Label( 'r_foot', 0.35, [-0.08, 0.04, 0.1] ) );
+		man.l_foot.attach( new Red.Label( 'l_foot', 0.35, [0.08, 0.04, 0.1] ) );
+
+
+		// animate the man, make him dance
+		
+		function animate( t ) {
+
+			t = t/1000;
+
+			var s = Math.sin( 2*t );
+
+			man.head.y = 45 * Math.sin( 2*t );
+			man.waist.z = -15 * Math.sin( 2*t -0.5 );
+			man.chest.z = -20 * Math.sin( 2*t +0.5 );
+			man.waist.y = -10 * Math.sin( 2*t );
+			man.chest.y = 10 * Math.sin( 2*t );
+
+			man.l_arm.z = -40 - 25 * s;
+			man.r_arm.z = -40 + 25 * s;
+
+			man.l_wrist.z = -10;
+			man.r_wrist.z = -10;
+
+			man.torso.z = 20*s;
+
+			man.l_leg.z = 20+24.5*s;
+			man.r_leg.z = 20-24.5*s;
+
+			man.l_ankle.z = -5*s-20;
+			man.r_ankle.z = +5*s-20;
+
+			man.position.set( -0.03*s, -0.055-0.005*Math.abs( s ), 0 );
+
+		}
+
+		Happy.setAnimationLoop( animate );
+
+	</script>
+</body>
+</html>

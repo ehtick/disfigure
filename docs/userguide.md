@@ -1,40 +1,47 @@
-<img class="logo" src="../assets/logo/logo.png">
+<img class="logo" src="../assets/logo/logo.min.png">
 
 
 # Disfigure: User Guide
 
-
+<!--
 ## <small><small>[Figures](#figures-shapes) &middot; [Motions](#figure-motions) &middot; [Postures](#figure-postures) &middot; [Customizations](#figure-customizations) &middot; [Worlds](#predefined-world) &middot; [Others](#others)</small></small>
+-->
+
+
+<small><small>Този документ е наличен и на [български език](userguide-bg.md).</small></small>
 
 
 
-<!--## <small><small>Този документ е наличен и на [български език](userguide-bg.md)</small></small>-->
+Disfigure is a simple library for animating human figures by
+modifying the space around them. It is experimental work and
+a proof of concept for rigging boneless figures with TSL
+vertex-based quaternion rotations and heterogeneous core &ndash;
+a blend of standalone and instanced 3D objects.
 
-Disfigure is a library for animating human figures by modifying
-a matrix field of the space around them. Here is an absurdly
-minimal demo &ndash; [see it live](../examples/minimal.html).
 
-```js
-import * as Happy from 'disfigure'
-	
-new Happy.World
-new Happy.Man
-```
-
-# Figure shapes
-
-### new **Man**( *height* )<br>new **Woman**( *height* )<br>new **Child**( *height* )
-
-Disfigure defines figures as instances of classes `Man`, `Woman`
-and `Child` &ndash; [see it](../examples/figure-create-basic.html).
-The optional parameter *height* defines the height of a figure
-in meters &ndash; [see it](../examples/figure-create-height.html).
-By default, a man is 1.80m, a woman is 1.70m and a child is 1.35m.
+Disfigure figures are instances of `Man`, `Woman` and `Child`
+with an optional parameter for its *height* in meters. The default
+heights are 1.80 for men, 1.70 for women and 1.35 for children.
 
 ```js
-var man = new Happy.Man( 1.90 );
-var woman = new Happy.Woman( );
+var man = new Man( );
+var woman = new Woman( 1.75 );
 ```
+
+| [Supported types of figures](../examples/figure-type.html) | [Custom height for a figure](../examples/figure-height.html) |
+
+[<img src="../examples/snapshots/figure-type.jpg" width="48%" border="1">](../examples/figure-type.html)
+[<img src="../examples/snapshots/figure-height.jpg" width="48%" border="1">](../examples/figure-height.html)
+
+
+# API
+
+* new **Man**( *height=1.8* ) &mdash; create a new male figure
+* new **Woman**( *height=1.7* ) &mdash; create a new female figure
+* new **Child**( *height=1.35* ) &mdash; create a new child figure
+
+
+<!--
 
 [<img src="../examples/snapshots/figure-create-basic.jpg" width="48%">](../examples/figure-create-basic.html)
 [<img src="../examples/snapshots/figure-create-height.jpg" width="48%">](../examples/figure-create-height.html)
@@ -646,7 +653,7 @@ figure.material.colorNode = TSLTexture.camouflage ( {
 [<img src="../examples/snapshots/extras-tsl-texture-simple.jpg" width="48%">](../examples/extras-tsl-texture-simple.html)
 [<img src="../examples/snapshots/extras-tsl-texture.jpg" width="48%">](../examples/extras-tsl-texture.html)
 
-
+-->
 
 <!--
 
@@ -788,7 +795,7 @@ know how to fix it, please get in touch.
 
 -->
 
-
+<!--
 # Predefined world
 
 ### new **World**( )<br>new **World**( *features* )
@@ -909,7 +916,7 @@ figure.head.turn = chaotic( time, 0, -60, 60 );
 An array of all created bodies. Usually used to traverse them
 and do some operation on all bodies.
 
-
+-->
 
 <div class="footnote">
 	<a href="../">Home</a> &middot;

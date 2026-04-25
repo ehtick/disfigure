@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<body>
+	<header>
+		<h1><b>Disfigure</b></h1>
+		<h3>Custom height for a figure</h3></br>
+	</header>
+
+	<div id="spinner"></div>
+
+	<script src="importmap.js"></script>
+	<script type="module">
+
+		import * as Happy from 'disfigure';
+		import * as Red from 'label';
+
+		// create a default world
+
+		new Happy.World( );
+
+
+		// create a crowd of 100 men of different heights
+
+		var z = 0;
+		var height = 0.2;
+		
+		for( var i=0, z=0; i<10; i++, z-=height/5 ) {
+					
+			var man = new Happy.Man( height );
+
+			man.position.x = -1.8-2.2*z//Happy.random(-0.4,0.4);
+			//man.position.z = z;
+			
+			man.head.attach( new Red.Label( height.toFixed(2), 0.4*height, [0, 0.14*height, 0.0*height] ) );
+			
+			height *= 1.28;
+		}		
+
+
+		// move the people
+		
+		Happy.setAnimationLoop( ( t )=>{
+
+			for ( var somebody of Happy.everybody ) {
+
+				somebody.head.y = Happy.chaotic( t/4000, somebody.uid, -40, 40 );
+				somebody.head.x = Happy.chaotic( t/4000, -somebody.uid, -20, 60 );
+				somebody.waist.y = somebody.head.y;
+
+				somebody.l_arm.z = Happy.chaotic( t/3000, somebody.uid, -20, -90 );
+				somebody.r_arm.z = somebody.l_arm.z;
+				
+				somebody.l_elbow.y = -somebody.l_arm.z;
+				somebody.r_elbow.y = -somebody.l_arm.z;
+			}
+
+		} );
+		
+	</script>
+</body>
+</html>

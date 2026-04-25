@@ -32,7 +32,7 @@
 			Happy.Child.vertexStage = true;
 			*/			
 
-			for( var i=0; i<50; i++ ) {
+			for( var i=0; i<10; i++ ) {
 			
 				var body = Math.random()<1/3?new Happy.Child(  ):( Math.random()<1/2?new Happy.Woman(  ):new Happy.Man(  ) );
 
@@ -43,11 +43,24 @@
 				body.material.emissiveIntensity = 1;
 				body.material.metalness = 0.2;
 
+				var hair = new THREE.Mesh(
+					new THREE.IcosahedronGeometry( 0.1, 3 ),
+					new THREE.MeshLambertMaterial( {color: 'black'} )
+				);
+				hair.position.set( 0, 0.15, 0.01 );
+				
+				body.head.attach( hair );
+				body.l_wrist.attach( new THREE.AxesHelper(0.1) );
+				body.r_wrist.attach( new THREE.AxesHelper(0.1) );
+				body.l_middle_tip.attach( new THREE.AxesHelper(0.1) );
+				body.r_middle_tip.attach( new THREE.AxesHelper(0.1) );
 			}
 
+/*
 			Happy.Man.pool.material.color = new THREE.Color(0,1,5);
 			Happy.Woman.pool.material.color = new THREE.Color(2,0,0.2);
 			Happy.Child.pool.material.color = new THREE.Color(2,1.2,-0.2);
+*/
 
 			Happy.setAnimationLoop((t) => {
 
@@ -55,12 +68,16 @@
 
 				var k=0;
 				for( var figure of Happy.everybody ) {
+
+					figure.waist.z = Happy.regular(10*t,k++,-60,60);
+
 /*
 					figure.torso.x = Happy.chaotic(t/13,k++,-360,360);
 					figure.torso.y = Happy.chaotic(t/13,k++,-360,360);
 					figure.torso.z = Happy.chaotic(t/13,k++,-360,360);
 */
 
+/*
 					figure.head.x = Happy.chaotic(t,k++,-30,30);
 					figure.head.y = Happy.chaotic(t*2,k++,-60,60);
 					figure.head.z = Happy.chaotic(t,k++,-30,30);
@@ -171,7 +188,7 @@
 
 					figure.l_pinky_base.y = 3*h;
 					figure.r_pinky_base.y = 3*h;
-			
+*/			
 				}
 				
 			});				

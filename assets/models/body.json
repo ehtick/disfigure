@@ -23,12 +23,12 @@
 		{"name": "l_wrist", "signs": [0, -1, 1], "parent": "l_forearm"},
 		{"name": "l_forearm", "signs": [1, 0, 0], "parent": "l_elbow"},
 		{"name": "l_elbow", "signs": [0, -1, 0], "parent": "l_arm"},
-		{"name": "l_arm", "signs": [1, -1, 1], "parent": "torso"},
+		{"name": "l_arm", "signs": [1, -1, 1], "parent": "chest"},
 		
 		{"name": "r_wrist", "signs": [0, 1, -1], "parent": "r_forearm"},
 		{"name": "r_forearm", "signs": [1, 0, 0], "parent": "r_elbow"},
 		{"name": "r_elbow", "signs": [0, 1, 0], "parent": "r_arm"},
-		{"name": "r_arm", "signs": [1, 1, -1], "parent": "torso"},
+		{"name": "r_arm", "signs": [1, 1, -1], "parent": "chest"},
 		
 		{"name": "l_thumb_tip", "signs": [0, 1, 0], "parent": "l_thumb_base"},
 		{"name": "l_thumb_base", "signs": [1, 1, -1], "parent": "l_wrist"},

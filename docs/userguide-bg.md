@@ -1,13 +1,28 @@
-<img class="logo" src="../assets/logo/logo.png">
+<img class="logo" src="../assets/logo/logo.min.png">
 
 
 # Disfigure: Потребителска документация
 
+<!--
 ## <small><small>[Тела](#Тела) [[*форми*](#форми-на-телата) &middot; [*движения*](#движения-на-телата) ] [АПИ](#апи) [[*класове*](#апи-класове) &middot; [*функции*](#апи-функции) &middot; [*променливи*](#апи-променливи)]</small></small>
-
+-->
 
 
 ## <small><small>This document is also available in [English](userguide.md)</small></small>
+
+
+
+Disfigure е библиотека за движение на фигури чрез промяна на
+пространството около тях с кватерниони. Фигурите са инстанции
+на класовете `Man()`, `Woman()` и `Child(height)` &ndash; [виж](../examples/body-shapes.html).
+
+
+# АПИ
+
+* new **Man**( *height* ) &mdash; създава фигура на мъж
+* new **Woman**( *height* ) &mdash; създава фигура на жена
+* new **Child**( *height* ) &mdash; създава фигура на дете
+
 
 <!--
 - <small>[Долни крайници](#долни-крайници)</small>)
@@ -16,16 +31,7 @@
 - **[Използване на Mannequin.js](#използване-на-mannequinjs)** (<small>[CDN](#пускане-от-cdn) | [локален уеб сървър](#пускане-през-локален-уеб-сървър) | [Nodes.js](#пускане-през-nodesjs) | [АПИ](#апи)</small>)
 -->
 
-Disfigure е библиотека за движение на фигури чрез промяна на
-матричното поле на пространството около тях. Ето абсурдно
-минимален пример [виж](../examples/minimal-cdn.html).
-
-```js
-import * as Happy from 'disfigure'
-	
-new Happy.World
-new Happy.Man
-```
+<!--
 
 
 
@@ -34,9 +40,7 @@ new Happy.Man
 ## Форми на телата
 
 
-Disfigure дефинира класовете `Man(height)`, `Woman(height)`
-и `Child(height)`, а телата се създават като инстанции на
-тези класове &ndash; [виж](../examples/body-shapes.html).
+
 Незадължителният параметър *height* определя височината на
 тялото в метри &ndash; [live example](../examples/body-heights.html). По подразбиране
 мъж е висок 1.80м, жена е 1.70м и дете е 1.35м.
@@ -125,7 +129,7 @@ man.r_wrist.tilt = 10;
 ```
 
 [<img src="../examples/snapshots/motion-wrist.jpg" width="48%">](../examples/motion-wrist.html)
-
+-->
 <!--
 
 ### Долни крайници
@@ -660,7 +664,7 @@ Three.js, така и на mannequin.js.
 какво трябва да се коригира, за да проработи, моля, свържете се с нас.
 
 -->
-
+<!--
 # АПИ
 
 ## АПИ класове
@@ -688,7 +692,7 @@ var person = new Man( );
 - `l_elbow` и `r_elbow` &ndash; лакти със свойство `bend`  &ndash; [live example](motion-elbow.html)
 - `l_forearm` и `r_forearm` &ndash; предмишници със свойство `turn` &ndash; [live example](motion-forearm.html)
 - `l_wrist` и `r_wrist` &ndash; китки със свойства `turn` и `tilt` &ndash; [live example](motion-wrist.html)
-
+-->
 
 <!--
 
@@ -715,7 +719,7 @@ var person = new Man( );
 		
 -->		
 
-
+<!--
 ### new **Woman**( )<br>new **Woman**( *height* )
 
 Създава женска фигура с дадена височина *height*. Има същите свойства и 
@@ -852,7 +856,7 @@ man.head.turn = chaotic( time, 0, -60, 60 );
 ### **stats**
 Панел за статистика за визуализиране на текущата скорост на
 анимация в предефинирания свят. Той е инстанция на [`Stats`](https://mrdoob.github.io/stats.js/)
-
+-->
 
 		
 		
