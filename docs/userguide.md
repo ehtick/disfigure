@@ -3,25 +3,15 @@
 
 # Disfigure: User Guide
 
-<!--
-## <small><small>[Figures](#figures-shapes) &middot; [Motions](#figure-motions) &middot; [Postures](#figure-postures) &middot; [Customizations](#figure-customizations) &middot; [Worlds](#predefined-world) &middot; [Others](#others)</small></small>
--->
 
 
-<small><small>Този документ е наличен и на [български език](userguide-bg.md).</small></small>
+## <small><small>Този документ е наличен и на [български език](userguide-bg.md).</small></small>
 
 
 
-Disfigure is a simple library for animating human figures by
-modifying the space around them. It is experimental work and
-a proof of concept for rigging boneless figures with TSL
-vertex-based quaternion rotations and heterogeneous core &ndash;
-a blend of standalone and instanced 3D objects.
-
-
-Disfigure figures are instances of `Man`, `Woman` and `Child`
-with an optional parameter for its *height* in meters. The default
-heights are 1.80 for men, 1.70 for women and 1.35 for children.
+**Disfigure** is a simple library for animating human figures &ndash; instances
+of `Man`, `Woman` and `Child` with an optional parameter for *height* in meters.
+The default heights are 1.80 for men, 1.70 for women and 1.35 for children.
 
 ```js
 var man = new Man( );
@@ -29,9 +19,9 @@ var woman = new Woman( 1.75 );
 ```
 
 | [Supported types of figures](../examples/figure-type.html) | [Custom height for a figure](../examples/figure-height.html) |
+| --- | --- |
+| [<img src="../examples/snapshots/figure-type.jpg">](../examples/figure-type.html) | [<img src="../examples/snapshots/figure-height.jpg">](../examples/figure-height.html) |
 
-[<img src="../examples/snapshots/figure-type.jpg" width="48%" border="1">](../examples/figure-type.html)
-[<img src="../examples/snapshots/figure-height.jpg" width="48%" border="1">](../examples/figure-height.html)
 
 
 # API

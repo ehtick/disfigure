@@ -3,25 +3,31 @@
 
 # Disfigure: Потребителска документация
 
-<!--
-## <small><small>[Тела](#Тела) [[*форми*](#форми-на-телата) &middot; [*движения*](#движения-на-телата) ] [АПИ](#апи) [[*класове*](#апи-класове) &middot; [*функции*](#апи-функции) &middot; [*променливи*](#апи-променливи)]</small></small>
--->
 
 
 ## <small><small>This document is also available in [English](userguide.md)</small></small>
 
 
 
-Disfigure е библиотека за движение на фигури чрез промяна на
-пространството около тях с кватерниони. Фигурите са инстанции
-на класовете `Man()`, `Woman()` и `Child(height)` &ndash; [виж](../examples/body-shapes.html).
+**Disfigure** е библиотека за движение на фигури &ndash; инстанции на класовете
+`Man`, `Woman` и `Child` с незадължителен параметър за височината *height* в метри. Стойностите по подразбиране са 1.80 за мъжете, 1.70 за жените и 1.35 за децата.
+
+```js
+var man = new Man( );
+var woman = new Woman( 1.75 );
+```
+
+| [Поддържани типове фигури](../examples/figure-type.html) | [Потребителска височина на фигура](../examples/figure-height.html) |
+| --- | --- |
+| [<img src="../examples/snapshots/figure-type.jpg">](../examples/figure-type.html) | [<img src="../examples/snapshots/figure-height.jpg">](../examples/figure-height.html) |
+
 
 
 # АПИ
 
-* new **Man**( *height* ) &mdash; създава фигура на мъж
-* new **Woman**( *height* ) &mdash; създава фигура на жена
-* new **Child**( *height* ) &mdash; създава фигура на дете
+* new **Man**( *height=1.8* ) &mdash; създава фигура на мъж
+* new **Woman**( *height=1.7* ) &mdash; създава фигура на жена
+* new **Child**( *height=1.35* ) &mdash; създава фигура на дете
 
 
 <!--
