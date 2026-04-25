@@ -9,6 +9,8 @@
 
 
 
+# Figures
+
 **Disfigure** is a simple library for animating human figures &ndash; instances
 of `Man`, `Woman` and `Child` with an optional parameter for *height* in meters.
 The default heights are 1.80 for men, 1.70 for women and 1.35 for children.
@@ -18,34 +20,45 @@ var man = new Man( );
 var woman = new Woman( 1.75 );
 ```
 
-| [Supported types of figures](../examples/figure-type.html) | [Custom height for a figure](../examples/figure-height.html) |
-| --- | --- |
-| [<img src="../examples/snapshots/figure-type.jpg">](../examples/figure-type.html) | [<img src="../examples/snapshots/figure-height.jpg">](../examples/figure-height.html) |
+[<img src="../examples/snapshots/figure-type.jpg" width="48%" border="1">](../examples/figure-type.html) [<img src="../examples/snapshots/figure-height.jpg" width="48%" border="1">](../examples/figure-height.html)
+
+All figures have the exact same body structure with names for all body parts
+that can be rotated. The names of symmetrical body parts have prefixes `l_···`
+for left and `r_···` for right. Leftness and rightness is always in respect to
+the figure itself.
+
+The main body parts are `torso`, `head`, `chest` and `waist`. The upper limbs
+are `arm`, `elbow`, `forearm` and `wrist`. The lower limbs are `leg`, `thigh`,
+`knee`, `shin`, `ankle` and `foot`. Half of the complexity of a figure comes
+from the hands and its fingers `thumb`, `index`, `middle`, `ring` and `pinky`.
+The thumbs has `base` and `tip` phalanges, while the other four fingers all have
+`base`, `mid` and `tip` phalanges.
+		
+| Prefix<br><small><b style="font-weight:normal">for orientation</b></small> | Name | Suffix<br><small><b style="font-weight:normal">for phalanges</b></small> |
+|:---:|:---:|:---:|
+| | `torso` `head` `chest` `waist` | |
+| `l_` `r_` | `arm` `elbow` `forearm` `wrist` `leg` `thigh` `knee` `shin` `ankle` `foot` | |
+| `l_` `r_` | `thumb` | `_base` `_tip`|
+| `l_` `r_` | `index` `middle` `ring` `pinky` | `_base` `_mid` `_tip`|
+
+[<img src="../examples/snapshots/figure-parts.jpg" width="48%" border="1">](../examples/figure-parts.html) 
 
 
 
 # API
 
-* new **Man**( *height=1.8* ) &mdash; create a new male figure
-* new **Woman**( *height=1.7* ) &mdash; create a new female figure
-* new **Child**( *height=1.35* ) &mdash; create a new child figure
+* new **`Man`**( `height` ) &mdash; create a new male figure with optional height
+* new **`Woman`**( `height` ) &mdash; create a new female figure with optional height
+* new **`Child`**( `height` ) &mdash; create a new child figure with optional height
+
+* *figure.part*.**`x`** &mdash; rotation angle around the horizontal (left-right) axis
+* *figure.part*.**`y`** &mdash; rotation angle around the vertical (top-down) axis
+* *figure.part*.**`z`** &mdash; rotation angle around the depth (front-back) axis
 
 
 <!--
 
-[<img src="../examples/snapshots/figure-create-basic.jpg" width="48%">](../examples/figure-create-basic.html)
-[<img src="../examples/snapshots/figure-create-height.jpg" width="48%">](../examples/figure-create-height.html)
 
-All types of figures have the exact same structure with names
-corresponding to body parts, like `head` and `chest`. Left and
-right body parts are always in respect to the figure. Their
-names have prefixes `l_···` for left and `r_···` for right, so
-there is `l_knee` and `r_knee` &ndash; [see it](../examples/figure-parts.html):
-
-* **Whole body** &ndash; `torso`
-* **Central parts** &ndash; `head`, `chest`, `waist`
-* **Upper limbs** &ndash; `arm`, `elbow`, `forearm`, `wrist`
-* **Lower limbs** &ndash; `leg`, `thigh`, `knee`, `shin`, `ankle`, `foot`
 
 [<img src="../examples/snapshots/figure-parts.jpg">](../examples/figure-parts.html)
 

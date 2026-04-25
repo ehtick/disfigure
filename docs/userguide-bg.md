@@ -9,6 +9,8 @@
 
 
 
+# Фигури
+
 **Disfigure** е библиотека за движение на фигури &ndash; инстанции на класовете
 `Man`, `Woman` и `Child` с незадължителен параметър за височината *height* в метри. Стойностите по подразбиране са 1.80 за мъжете, 1.70 за жените и 1.35 за децата.
 
@@ -17,17 +19,39 @@ var man = new Man( );
 var woman = new Woman( 1.75 );
 ```
 
-| [Поддържани типове фигури](../examples/figure-type.html) | [Потребителска височина на фигура](../examples/figure-height.html) |
-| --- | --- |
-| [<img src="../examples/snapshots/figure-type.jpg">](../examples/figure-type.html) | [<img src="../examples/snapshots/figure-height.jpg">](../examples/figure-height.html) |
+[<img src="../examples/snapshots/figure-type.jpg" width="48%" border="1">](../examples/figure-type.html) [<img src="../examples/snapshots/figure-height.jpg" width="48%" border="1">](../examples/figure-height.html)
+
+Всички фигури имат една и съща структура с имена на всички части на тялото,
+които могат да се въртят. Имената на симетричните части имат префикси `l_` за
+ляво и `r_` за дясно. Ориентацията ляво/дясно е винаги спрямо фигурата. 
+
+Основните части на тялото са `torso`, `head`, `chest` и `waist`. Горните крайници
+са `arm`, `elbow`, `forearm` и `wrist`. Долните крайници са `leg`, `thigh`,
+`knee`, `shin`, `ankle` and `foot`. Половината от сложността на фигура идва от
+дланите и пръстите на ръцете `thumb`, `index`, `middle`, `ring` и `pinky`.
+Палецът има фаланги `base` и `tip`, докато останалите четири пръста имат фаланги
+`base`, `mid` и `tip`.
+		
+| Префикс<br><small><b style="font-weight:normal">за ориентация</b></small> | Име | Суфикс<br><small><b style="font-weight:normal">за фаланги</b></small> |
+|:---:|:---:|:---:|
+| | `torso` `head` `chest` `waist` | |
+| `l_` `r_` | `arm` `elbow` `forearm` `wrist` `leg` `thigh` `knee` `shin` `ankle` `foot` | |
+| `l_` `r_` | `thumb` | `_base` `_tip`|
+| `l_` `r_` | `index` `middle` `ring` `pinky` | `_base` `_mid` `_tip`|
+
+[<img src="../examples/snapshots/figure-parts.jpg" width="48%" border="1">](../examples/figure-parts.html)
 
 
 
 # АПИ
 
-* new **Man**( *height=1.8* ) &mdash; създава фигура на мъж
-* new **Woman**( *height=1.7* ) &mdash; създава фигура на жена
-* new **Child**( *height=1.35* ) &mdash; създава фигура на дете
+* new **`Man`**( `height` ) &mdash; създава фигура на мъж с желана височина
+* new **`Woman`**( `height` ) &mdash; създава фигура на жена с желана височина
+* new **`Child`**( `height` ) &mdash; създава фигура на дете с желана височина
+
+* *фигура.част*.**`x`** &mdash; ъгъл на завъртане около хоризонтаната (ляво-дясно) ос
+* *фигура.част*.**`y`** &mdash; ъгъл на завъртане около вертикалната (горе-долу) ос
+* *фигура.част*.**`z`** &mdash; ъгъл на завъртане около фронталната (отпред-назад) ос
 
 
 <!--
@@ -39,25 +63,6 @@ var woman = new Woman( 1.75 );
 
 <!--
 
-
-
-# Тела
-
-## Форми на телата
-
-
-
-Незадължителният параметър *height* определя височината на
-тялото в метри &ndash; [live example](../examples/body-heights.html). По подразбиране
-мъж е висок 1.80м, жена е 1.70м и дете е 1.35м.
-
-[<img src="../examples/snapshots/body-shapes.jpg" width="48%">](../examples/body-shapes.html)
-[<img src="../examples/snapshots/body-heights.jpg" width="48%">](../examples/body-heights.html)
-
-Всички видове тела имат една и съща структура, например главата
-е `head`. Левите и десните части на тялото са винаги спрямо
-тялото. Техните имена имат префикси `l_` за ляво и `r_` за
-дясно, например `l_arm` и `r_arm` &ndash; [виж](../examples/body-parts.html):
 
 * **Централни части** &ndash; това са `head`, `chest`, `waist` и `torso`.
 * **Горни крайници** &ndash; това са `arm`, `elbow`, `forearm` и `wrist`.
