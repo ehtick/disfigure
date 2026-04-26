@@ -28,7 +28,7 @@ var woman = new Woman( 1.75 );
 var child = new Child( 1 );
 ```
 
-The following two demos show how to create figures (left) and set their heights (right).
+Live examples: [figure types](../examples/figure-type.html) and [custom heights](../examples/figure-height.html):
 
 [<img src="../examples/snapshots/figure-type.jpg" width="48%" border="1">](../examples/figure-type.html) [<img src="../examples/snapshots/figure-height.jpg" width="48%" border="1">](../examples/figure-height.html)
 
@@ -37,50 +37,53 @@ The following two demos show how to create figures (left) and set their heights 
 ## Anatomy of a figure
 
 All figures have the same body structure with names for each body part that can
-be manipulated. The names of symmetrical body parts have prefixes `l_` for left
+be manipulated. 
+
+The central body parts are `torso`, `head`, `chest` and `waist`. Arms are `arm`,
+`elbow`,`forearm` and `wrist`. Legs are `leg`, `thigh`, `knee`, `shin`, `ankle`
+and `foot`. Hand fingers are `thumb`, `index`, `middle`, `ring` and `pinky`.
+
+The names of symmetrical body parts have prefixes `l_` for left
 and `r_` for right. Leftness and rightness is always in respect to the figure
-itself. Fingers have suffixes `_base`, `_mid` and `_tip` for phalanges.
-		
-| | Prefix<br><small><b style="font-weight:normal">for orientation</b></small> | Name of body part | Suffix<br><small><b style="font-weight:normal">for phalanges</b></small> |
-|--:|:---:|:---:|:---:|
-| | | `torso` `head` `chest` `waist` | |
-| Arms | `l_` `r_` | `arm` `elbow` `forearm` `wrist` | |
-| Legs | `l_` `r_` | `leg` `thigh` `knee` `shin` `ankle` `foot` | |
-| Thumbs | `l_` `r_` | `thumb` | `_base` `_tip`|
-| Other fingers | `l_` `r_` | `index` `middle` `ring` `pinky` | `_base` `_mid` `_tip`|
+itself. Fingers have suffixes `_base`, `_mid` and `_tip` for phalanges (*note:
+thumbs have no middle phalanges*).
 
+```js
+figure.head        // head
+figure.r_knee      // knee of right leg
+figure.l_index_tip // tip phalange of index finger of left hand
+```
 
-| <small>[Creating a figure](../examples/figure-parts.html)</small> | <small>[Custom height](../examples/figure-fingers.html)</small> |
-|:---:|:---:|
-| [<img src="../examples/snapshots/figure-parts.jpg" border="1">](../examples/figure-parts.html) | [<img src="../examples/snapshots/figure-fingers.jpg" border="1">](../examples/figure-fingers.html) |
-
+Live examples: [body parts](../examples/figure-parts.html) and [finger phalanges](../examples/figure-fingers.html):
 
 [<img src="../examples/snapshots/figure-parts.jpg" width="48%" border="1">](../examples/figure-parts.html) 
 [<img src="../examples/snapshots/figure-fingers.jpg" width="48%" border="1">](../examples/figure-fingers.html) 
 
 
 
+
+
 # API
 
+Disfigue defines classes for different body parts with height in meters.
 
-* new **`Man`**( `height` ) &mdash; create a new male figure with optional height
-* new **`Woman`**( `height` ) &mdash; create a new female figure with optional height
-* new **`Child`**( `height` ) &mdash; create a new child figure with optional height
+| Class | Description |
+|:--|:--|
+| **Man** ( height ) | create a male figure with optional *height* (default 1.8 m) |
+| **Woman** ( height ) | create a female figure with optional *height* (default 1.7 m) |
+| **Child** ( height ) | create a child figure with optional *height* (default 1.35 m) |
 
+Each body part has properties for rotations in degrees, although some rotations
+are biologically ignored.
 
-* *figure.part*.**`x`** &mdash; rotation angle around the horizontal (left-right) axis
-* *figure.part*.**`y`** &mdash; rotation angle around the vertical (top-down) axis
-* *figure.part*.**`z`** &mdash; rotation angle around the depth (front-back) axis
+| Property | Description |
+|:--|:--|
+| .**x** | rotation angle around the horizontal (left-right) axis |
+| .**y** | rotation angle around the vertical (top-down) axis
+| .**z** | rotation angle around the depth (front-back) axis
 
 
 <!--
-
-
-
-[<img src="../examples/snapshots/figure-parts.jpg">](../examples/figure-parts.html)
-
-
-
 
 # Figure motions
 
