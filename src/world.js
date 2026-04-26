@@ -74,7 +74,7 @@ class World {
 		camera = new PerspectiveCamera( 30, innerWidth/innerHeight );
 		camera.position.set( 0, 1.5, 4 );
 
-renderer.compileAsync(scene, camera);
+		renderer.compileAsync( scene, camera );
 
 		if ( options?.stats ?? false ) {
 

@@ -23,8 +23,8 @@ var woman = new Woman( 1.75 );
 [<img src="../examples/snapshots/figure-type.jpg" width="48%" border="1">](../examples/figure-type.html) [<img src="../examples/snapshots/figure-height.jpg" width="48%" border="1">](../examples/figure-height.html)
 
 All figures have the exact same body structure with names for all body parts
-that can be rotated. The names of symmetrical body parts have prefixes `l_···`
-for left and `r_···` for right. Leftness and rightness is always in respect to
+that can be rotated. The names of symmetrical body parts have prefixes `l_`
+for left and `r_` for right. Leftness and rightness is always in respect to
 the figure itself.
 
 The main body parts are `torso`, `head`, `chest` and `waist`. The upper limbs
@@ -42,14 +42,17 @@ The thumbs has `base` and `tip` phalanges, while the other four fingers all have
 | `l_` `r_` | `index` `middle` `ring` `pinky` | `_base` `_mid` `_tip`|
 
 [<img src="../examples/snapshots/figure-parts.jpg" width="48%" border="1">](../examples/figure-parts.html) 
+[<img src="../examples/snapshots/figure-fingers.jpg" width="48%" border="1">](../examples/figure-fingers.html) 
 
 
 
 # API
 
+
 * new **`Man`**( `height` ) &mdash; create a new male figure with optional height
 * new **`Woman`**( `height` ) &mdash; create a new female figure with optional height
 * new **`Child`**( `height` ) &mdash; create a new child figure with optional height
+
 
 * *figure.part*.**`x`** &mdash; rotation angle around the horizontal (left-right) axis
 * *figure.part*.**`y`** &mdash; rotation angle around the vertical (top-down) axis

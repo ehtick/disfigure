@@ -40,14 +40,17 @@ var woman = new Woman( 1.75 );
 | `l_` `r_` | `index` `middle` `ring` `pinky` | `_base` `_mid` `_tip`|
 
 [<img src="../examples/snapshots/figure-parts.jpg" width="48%" border="1">](../examples/figure-parts.html)
+[<img src="../examples/snapshots/figure-fingers.jpg" width="48%" border="1">](../examples/figure-fingers.html) 
 
 
 
 # АПИ
 
+
 * new **`Man`**( `height` ) &mdash; създава фигура на мъж с желана височина
 * new **`Woman`**( `height` ) &mdash; създава фигура на жена с желана височина
 * new **`Child`**( `height` ) &mdash; създава фигура на дете с желана височина
+
 
 * *фигура.част*.**`x`** &mdash; ъгъл на завъртане около хоризонтаната (ляво-дясно) ос
 * *фигура.част*.**`y`** &mdash; ъгъл на завъртане около вертикалната (горе-долу) ос

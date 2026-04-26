@@ -3,7 +3,7 @@ import { vertexStage } from 'three/tsl';
 import { DataTexture, FloatType, InstancedMesh, MeshStandardNodeMaterial, RGBAFormat, TextureNode } from 'three';
 import { disfigureBody, EQ } from './tsl.js';
 import { loadGLTF, loadJSON } from './assets.js';
-import { renderer, camera, scene } from './world.js';
+import { camera, renderer, scene } from './world.js';
 
 
 
@@ -80,20 +80,20 @@ class Pool extends InstancedMesh {
 
 			this.geometry = geometry;
 			this.data = data;
-console.time('TSL shaders');
+			console.time( 'TSL shaders' );
 			var disfigure = disfigureBody( this, data );
 			material.positionNode = disfigure.element( 0 );
 			if ( useVertexStage )
 				material.normalNode = vertexStage( disfigure.element( 1 ) );
 			else
 				material.normalNode = disfigure.element( 1 );
-			
+
 			this.onLoad();
 
 			scene.add( this );
-renderer.compile(scene,camera)
-			
-console.timeEnd('TSL shaders');
+			renderer.compile( scene, camera );
+
+			console.timeEnd( 'TSL shaders' );
 
 
 		} );

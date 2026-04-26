@@ -169,17 +169,19 @@ class Body extends Object3D {
 
 		for ( var i=0; i<EQ-2; i++ ) {
 
-			var euler = this.eulers[ i ];
+			var _euler = this.eulers[ i ];
 
-			for ( var object of euler.attached ) {
+			for ( var object of _euler.attached ) {
+
+				var euler = _euler;
 
 				_p.copy( object.initialPosition );
 				_p.add( pivots[ euler.index ].node.value );
 
 				_q.identity();
 
+				
 				scan: while ( euler ) {
-
 					var pivot = pivots[ euler.index ].node.value;
 
 					_p.sub( pivot ).applyQuaternion( euler.quaternion ).add( pivot );
@@ -197,6 +199,7 @@ class Body extends Object3D {
 				object.position.copy( _p );
 				object.quaternion.copy( _q );
 				object.updateMatrix();
+
 
 			} // for object
 
@@ -226,7 +229,7 @@ class Man extends Body {
 		super( Man.pool );
 
 		this.material = Man.pool.material; // expose to outside
-		
+
 		this.scale.setScalar( height/1.795 ); // 1.795 is 3D model height
 
 		this.l_arm.z = this.r_arm.z = -75;
@@ -302,7 +305,7 @@ class Child extends Body {
 		this.l_ankle.bend = this.r_ankle.bend = 3;
 
 		this.position.y = -0.008;
-		
+
 	}
 
 } // Child

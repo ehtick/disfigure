@@ -1,6 +1,6 @@
 // disfigure v0.0.25
 
-import { WebGPURenderer, PCFSoftShadowMap, Scene, Color, PerspectiveCamera, DirectionalLight, Object3D, Mesh, CircleGeometry, MeshLambertMaterial, CanvasTexture, Vector3, InstancedMesh, MeshStandardNodeMaterial, DataTexture, RGBAFormat, FloatType, TextureNode, Quaternion, EventDispatcher, Euler } from 'three';
+import { WebGPURenderer, PCFSoftShadowMap, Scene, Color, PerspectiveCamera, DirectionalLight, Object3D, Mesh, CircleGeometry, MeshLambertMaterial, CanvasTexture, Vector3, InstancedMesh, MeshStandardNodeMaterial, DataTexture, RGBAFormat, FloatType, TextureNode, Quaternion, Euler } from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import Stats from 'three/addons/libs/stats.module.js';
 import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
@@ -61,6 +61,8 @@ class World {
 		renderer.shadowMap.enabled = options?.shadows ?? true;
 		renderer.shadowMap.type = PCFSoftShadowMap;
 
+
+
 		document.body.appendChild( renderer.domElement );
 		document.body.style.overflow = 'hidden';
 		document.body.style.margin = '0';
@@ -70,6 +72,8 @@ class World {
 
 		camera = new PerspectiveCamera( 30, innerWidth/innerHeight );
 		camera.position.set( 0, 1.5, 4 );
+
+		renderer.compileAsync( scene, camera );
 
 		if ( options?.stats ?? false ) {
 
@@ -466,13 +470,17 @@ const ASSETS_PATH = import.meta.url
 
 // preloading names of skeleton joints
 
-console.log('Loading body.json');
+//console.time( 'body.json' );
+
 const JOINTS = ( await fetch( ASSETS_PATH+'body.json' ).then( r => r.json() ) ).joints;
 JOINTS.forEach( x => {
+
 	x.parentIndex = JOINTS.findIndex( y => y.name==x.parent ); // set parent index for each joint
 	x.signs = new Vector3( ...x.signs ); // convert angle directions into Vector3
+
 } );
-console.log('Loaded body.json');
+
+//console.timeEnd( 'body.json' );
 
 
 
@@ -491,7 +499,7 @@ console.log('Loaded body.json');
  */
 function loadGLTF( url, lowpoly = 0 ) {
 
-	console.log('Loading '+url);
+	console.time( url );
 
 	return new GLTFLoader().loadAsync( ASSETS_PATH+url ).then( gltf => {
 
@@ -510,7 +518,7 @@ function loadGLTF( url, lowpoly = 0 ) {
 
 		}
 
-		console.log('Loaded '+url);
+		console.timeEnd( url );
 
 		return geometry;
 
@@ -534,8 +542,8 @@ function loadGLTF( url, lowpoly = 0 ) {
  */
 function loadJSON( url ) {
 
-	console.log('Loading '+url);
-	
+	//console.time( url );
+
 	return fetch( ASSETS_PATH+url ).then( r =>
 
 		r.json().then( data => {
@@ -546,8 +554,8 @@ function loadJSON( url ) {
 			data.ranges = data.ranges.map( x => vec4( ...x ) );
 			data.extras = data.extras.map( x => vec4( ...x ) );
 
-			console.log('Loaded '+url);
-			
+			//console.timeEnd( url );
+
 			return data;
 
 		} )
@@ -629,7 +637,7 @@ class Pool extends InstancedMesh {
 
 			this.geometry = geometry;
 			this.data = data;
-
+			console.time( 'TSL shaders' );
 			var disfigure = disfigureBody( this, data );
 			material.positionNode = disfigure.element( 0 );
 			if ( useVertexStage )
@@ -640,6 +648,10 @@ class Pool extends InstancedMesh {
 			this.onLoad();
 
 			scene.add( this );
+			renderer.compile( scene, camera );
+
+			console.timeEnd( 'TSL shaders' );
+
 
 		} );
 
@@ -776,36 +788,35 @@ class EulerDegrees extends Euler {
 
 	// attach object to current joint
 	attach( object ) {
-		
+
 		object.initialPosition = object.position.clone();
 		object.matrixAutoUpdate = false;
-		
+
 		this.attached.push( object );
 
 		this.body.pool.add( object );
-		
-		
+
+
 	}
-	
+
 }
 
 
-class Body extends EventDispatcher {
+class Body extends Object3D {
 
 	constructor( pool ) {
 
 		super();
 
 		this.pool = pool;
-		this.id = pool.getBody(); // instance index within the pool
+		this.pid = pool.getBody(); // instance index within the pool
 		this.uid = uid++; // global index
 
 		this.eulers = [];
-		this.position = new Vector3();
 
 		for ( var i=0; i<EQ; i++ ) {
 
-			this.eulers.push( new EulerDegrees( this, i, JOINTS[i].parentIndex, JOINTS[ i ].signs ) );
+			this.eulers.push( new EulerDegrees( this, i, JOINTS[ i ].parentIndex, JOINTS[ i ].signs ) );
 
 			this[ JOINTS[ i ].name ] = this.eulers[ i ];
 
@@ -815,31 +826,20 @@ class Body extends EventDispatcher {
 
 	}
 
-	setPosition( x, y, z ) {
-
-		this.position.set( x, y, z );
-		
-		var array = this.pool.instanceMatrix.array,
-			index = this.id * 16+12;
-
-		array[ index++ ] = x;
-		array[ index++ ] = y;
-		array[ index++ ] = z;
-
-		this.pool.instanceMatrix.needsUpdate = true;
-
-	}
-
 	update( ) {
+
+		this.updateMatrix();
+		this.pool.setMatrixAt( this.pid, this.matrix );
+		this.pool.instanceMatrix.needsUpdate = true;
 
 		for ( var i=0; i<EQ-2; i++ ) {
 
-			var euler = this.eulers[i];
-			
-			this.pool.setQ( this.id, i, euler.q );
+			var euler = this.eulers[ i ];
+
+			this.pool.setQ( this.pid, i, euler.q );
 
 		} // for i
-		
+
 		this.pool.quatTexture.needsUpdate = true;
 
 	} // Body.update
@@ -847,43 +847,44 @@ class Body extends EventDispatcher {
 	updateAttached( ) {
 
 		var pivots = this.pool.data?.pivots; // in Firefox pool.data is created later
-		
-		if( !pivots ) return;
-		
+
+		if ( !pivots ) return;
+
 		for ( var i=0; i<EQ-2; i++ ) {
 
-			var euler = this.eulers[i];
-			
-			for( var object of euler.attached ) {
-				
-				_p.copy( object.initialPosition );
-				_p.add( pivots[euler.index].node.value );
-				
-				_q.identity();
-				
-				scan: while( euler ) {
+			var euler = this.eulers[ i ];
 
-					var pivot = pivots[euler.index].node.value;
-					
+			for ( var object of euler.attached ) {
+
+				_p.copy( object.initialPosition );
+				_p.add( pivots[ euler.index ].node.value );
+
+				_q.identity();
+
+				scan: while ( euler ) {
+
+					var pivot = pivots[ euler.index ].node.value;
+
 					_p.sub( pivot ).applyQuaternion( euler.quaternion ).add( pivot );
 					_q.premultiply( euler.quaternion );
 
-					if( euler.parentIndex<0 ) break scan;
-					
+					if ( euler.parentIndex<0 ) break scan;
+
 					euler = this.eulers[ euler.parentIndex ];
-					
+
 				}
-				
+
+				_p.multiply( this.scale );
 				_p.add( this.position );
-				
+
 				object.position.copy( _p );
 				object.quaternion.copy( _q );
 				object.updateMatrix();
-				
+
 			} // for object
 
 		} // for i
-		
+
 	} // Body.updateAttached
 
 } // Body
@@ -897,7 +898,7 @@ class Man extends Body {
 	static lowpoly = 0; // lowpoly-ness, 0=original, 1.0 remove 75%
 	static vertexStage = false; // true for faster but uglier normals
 
-	constructor( ) {
+	constructor( height = 1.80 ) {
 
 		if ( Man.pool == null ) {
 
@@ -909,13 +910,15 @@ class Man extends Body {
 
 		this.material = Man.pool.material; // expose to outside
 
+		this.scale.setScalar( height/1.795 ); // 1.795 is 3D model height
+
 		this.l_arm.z = this.r_arm.z = -75;
 		this.l_elbow.y = this.r_elbow.y = 20;
 		this.l_leg.z = this.r_leg.z = 10;
 		this.l_ankle.z = this.r_ankle.z = -10;
 		this.l_ankle.x = this.r_ankle.x = 3;
 
-		this.setPosition( 0, -0.012, 0 );
+		this.position.y = -0.012;
 
 	}
 
@@ -930,7 +933,7 @@ class Woman extends Body {
 	static lowpoly = 0; // lowpoly-ness, 0=original, 1.0 remove 75%
 	static vertexStage = false; // true for faster but uglier normals
 
-	constructor( ) {
+	constructor( height = 1.70 ) {
 
 		if ( Woman.pool == null ) {
 
@@ -941,6 +944,8 @@ class Woman extends Body {
 		super( Woman.pool );
 
 		this.material = Woman.pool.material; // expose to outside
+
+		this.scale.setScalar( height/1.691 ); // 1.691 is 3D model height
 
 		this.l_arm.z = this.r_arm.z = -90;
 		this.l_elbow.y = this.r_elbow.y = 0;
@@ -961,7 +966,7 @@ class Child extends Body {
 	static lowpoly = 0; // lowpoly-ness, 0=original, 1.0 remove 75%
 	static vertexStage = false; // true for faster but uglier normals
 
-	constructor( ) {
+	constructor( height = 1.35 ) {
 
 		if ( Child.pool == null ) {
 
@@ -973,9 +978,13 @@ class Child extends Body {
 
 		this.material = Child.pool.material; // expose to outside
 
+		this.scale.setScalar( height/1.352 ); // 1.352 is 3D model height
+
 		this.l_arm.x = this.r_arm.x = -10;
 		this.l_arm.z = this.r_arm.z = -80;
 		this.l_ankle.bend = this.r_ankle.bend = 3;
+
+		this.position.y = -8e-3;
 
 	}
 
