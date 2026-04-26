@@ -49,6 +49,12 @@ itself. Fingers have suffixes `_base`, `_mid` and `_tip` for phalanges.
 | Thumbs | `l_` `r_` | `thumb` | `_base` `_tip`|
 | Other fingers | `l_` `r_` | `index` `middle` `ring` `pinky` | `_base` `_mid` `_tip`|
 
+
+| <small>[Creating a figure](../examples/figure-parts.html)</small> | <small>[Custom height](../examples/figure-fingers.html)</small> |
+|:---:|:---:|
+| [<img src="../examples/snapshots/figure-parts.jpg" border="1">](../examples/figure-parts.html) | [<img src="../examples/snapshots/figure-fingers.jpg" border="1">](../examples/figure-fingers.html) |
+
+
 [<img src="../examples/snapshots/figure-parts.jpg" width="48%" border="1">](../examples/figure-parts.html) 
 [<img src="../examples/snapshots/figure-fingers.jpg" width="48%" border="1">](../examples/figure-fingers.html) 
 
