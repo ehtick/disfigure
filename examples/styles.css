@@ -69,3 +69,14 @@ header h3 a:hover {
 	color: black;
 }
 
+.bottom-info {
+	border: dotted 1px gray;
+	border-radius: 0.5em;
+	display: block;
+	position: fixed;
+	padding: 1em;
+	bottom: 1em;
+	margin:0 1em 0 0;
+	font-weight: 300;
+	background: rgba(255,255,255,0.2);
+}

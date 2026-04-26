@@ -9,6 +9,9 @@
 
 
 
+[**Figures**](#figures) <small>([creating](#creating-a-figure) &middot;  [anatomy](#anatomy-of-a-figure) &middot; [posture](#figure-posture))</small> [**API**](#api)
+
+
 # Figures
 
 **Disfigure** is a simple library for animating human figures.
@@ -61,26 +64,63 @@ Live examples: [body parts](../examples/figure-parts.html) and [finger phalanges
 
 
 
+## Figure posture
+
+The `posture` property of a figure describes the rotations of all body parts.
+It contains version number of an array of rotation angles. The `posture` property
+can be used to push a posture to a figure. A read-only property `postureString` retrieves the posture as a string.
+
+``` javascript
+figure.posture = {version:9, angles:[[-15,44,10],[5,82,-24],...]};
+figure.posture = anotherFigure.posture;
+
+var str = figure.postureString;
+```
+
+A posture could be defined as a blend of other postures. Method `blend` mixes
+two postures with a blending coefficient. When the coefficient is 0 the result
+is the first posture, when it is 1 the result is the second and when it is between
+0 and 1 the result is a posture between both postures.
+
+``` javascript
+figure.blend( initialPosture, finalPosture, 0.5 );
+```
+
+Live examples: [posture data](../examples/figure-posture.html) and [posture blending](../examples/figure-blend.html):
+
+[<img src="../examples/snapshots/figure-posture.jpg" width="48%" border="1">](../examples/figure-posture.html) 
+[<img src="../examples/snapshots/figure-blend.jpg" width="48%" border="1">](../examples/figure-blend.html) 
+
 
 
 # API
 
 Disfigue defines classes for different body parts with height in meters.
 
-| Class | Description |
-|:--|:--|
-| **Man** ( height ) | create a male figure with optional *height* (default 1.8 m) |
-| **Woman** ( height ) | create a female figure with optional *height* (default 1.7 m) |
-| **Child** ( height ) | create a child figure with optional *height* (default 1.35 m) |
+### Classes
 
-Each body part has properties for rotations in degrees, although some rotations
-are biologically ignored.
+* new **Man** ( *height* ) <br> class. creates a male figure with optional *height* (default 1.8 m)
 
-| Property | Description |
-|:--|:--|
-| .**x** | rotation angle around the horizontal (left-right) axis |
-| .**y** | rotation angle around the vertical (top-down) axis
-| .**z** | rotation angle around the depth (front-back) axis
+* new **Woman** ( *height* ) <br> class. creates a female figure with optional *height* (default 1.7 m)
+
+* new **Child** ( *height* ) <br> class. creates a child figure with optional *height* (default 1.35 m) |
+
+
+### Properties of figures
+
+* figure.**posture** <br> property. gets or sets the posture of a figure
+
+* figure.**postureString** <br> read-only property. gets the posture of a figure as string
+
+* figure.**blend** ( *postureA*, *postureB*, *k* ) <br> method. sets the posture as a blend of *postureA* and *postureB*, based on coefficient *k*&isin;[0,1]
+
+### Properties of body parts
+
+* figure.part.**x** <br> property. gets or sets the rotation angle around the horizontal (left-right) axis
+
+* figure.part.**y** <br> property. gets or sets rotation angle around the vertical (top-down) axis
+
+* figure.part.**z** <br> property. gets or sets rotation angle around the depth (front-back) axis
 
 
 <!--
@@ -401,49 +441,7 @@ function animate ( event ) {
 
 [<img src="../examples/snapshots/posture-events-local.jpg" width="48%">](../examples/posture-events-local.html)
 
-## Figure postures
 
-### figure.**posture**<br> figure.**postureString**
-
-A posture could be extracted from a figure with the `posture` property.
-The posture object contains properties `version` of the posture data
-format, `position` for the coordinates of the figure, `rotation` for its
-orientation and `data` with joint angles. The `posture` property can be
-used to push a posture to a figure &ndash; [see it](../examples/posture.html).
-
-``` javascript
-figure.posture = {
-   version:  8,
-   position: [0,-0.29,0.5],
-   rotation: [0,0,0,"XYZ"],
-   angles:   [8,0,0,-4,4,-6,3,-34,0,-5,-60,...]
-};
-```
-
-A read-only property `postureString` retrieves the posture as a string.
-
-``` javascript
-var str = figure.postureString;
-```
-
-[<img src="../examples/snapshots/posture.jpg" width="48%">](../examples/posture.html)
-
-### figure.**blend**( postureA, postureB, k )
-
-A posture could be defined as a blend of other postures. The
-method `blend` mixes the initial *postureA* and the final
-*postureB* with a coefficient *k*&isin;[0,1]. When *k*=0 the
-result is *postureA*, when *k*=1 the result is *postureB*,
-when *k* is between 0 and 1 the result is a posture between
-*postureA* and *postureB* &ndash; [see it](../examples/posture-blend.html).
-
-``` javascript
-var A = manA.posture;
-var B = manB.posture;
-
-manZ.blend(A,B,0.5);
-```
-[<img src="../examples/snapshots/posture-blend.jpg" width="48%">](../examples/posture-blend.html)
 
 
 
@@ -944,5 +942,5 @@ and do some operation on all bodies.
 <div class="footnote">
 	<a href="../">Home</a> &middot;
 	<a href="https://github.com/boytchev/disfigure">GitHub</a> &middot; 
-	<a href="https://www.npmjs.com/package/disfigure">NPM</a>
+	<a href="https://www.npmjs.com/package/disfigure">Legacy NPM</a>
 </div>

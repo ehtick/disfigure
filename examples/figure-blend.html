@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<body>
+	<header>
+		<h1><b>Disfigure</b></h1>
+		<h3>Blending figure postures</h3>
+	</header>
+
+	<script src="importmap.js"></script>
+	<script type="module">
+
+		import * as Happy from 'disfigure';
+		import {randomPosture} from './random-posture.js';
+
+		// create a default world
+
+		new Happy.World( );
+
+
+		// create three figures
+
+		var man = new Happy.Man( );
+		man.position.x = -0.75;
+		randomPosture( man, 0 );
+		
+		var woman = new Happy.Woman( );
+		woman.position.x = 0.75;
+		randomPosture( woman, 1 );
+		
+		var child = new Happy.Child( );
+
+
+		// blend between two postured
+		
+		Happy.setAnimationLoop((t) => {
+	
+			// random posture for the man and the woman
+			randomPosture( man, Math.floor(t/2/Math.PI/300), 0 );
+			randomPosture( woman, Math.floor(t/2/Math.PI/300), 10 );
+
+			var k = Math.min(1,Math.max(0,Math.cos(t/300)*0.6+0.55));
+			
+			child.blend( man.posture, woman.posture, k );
+			
+			child.position.x = (man.position.x*(1-k)+k*woman.position.x)/4;
+			
+		});
+	
+
+	</script>
+</body>
+</html>

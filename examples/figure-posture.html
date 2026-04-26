@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<body>
+	<header>
+		<h1><b>Disfigure</b></h1>
+		<h3>Copying figure postures</h3>
+		<div id="posture" class="bottom-info"></div>
+	</header>
+
+	<script src="importmap.js"></script>
+	<script type="module">
+
+		import * as Happy from 'disfigure';
+		import {randomPosture} from './random-posture.js';
+
+		// create a default world
+
+		new Happy.World( );
+
+
+		// create three figures
+
+		var man = new Happy.Man( );
+		man.position.x = -0.75;
+		
+		var woman = new Happy.Woman( );
+		woman.position.x = 0.75;
+		
+		var child = new Happy.Child( );
+
+
+		// change the postures every half second
+		
+		setInterval( changePosture, 500 );
+		
+		function changePosture( ) {
+		
+			// random posture for the man
+			randomPosture( man );
+			
+			// show the posture data
+			document.getElementById('posture').innerHTML = '<b>Posture: </b>'+ man.postureString.replaceAll(',',', ');
+			
+			// copy the posture to the woman and the child
+			woman.posture = man.posture;
+			child.posture = man.posture;
+			
+		}
+	
+	</script>
+</body>
+</html>

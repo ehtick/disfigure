@@ -3,7 +3,7 @@
 
 
 
-import { Euler, Object3D, Quaternion, Vector3 } from 'three';
+import { MathUtils, Euler, Object3D, Quaternion, Vector3 } from 'three';
 import { everybody, renderer } from './world.js';
 import { EQ, EQ_POS } from './tsl.js';
 import { JOINTS } from './assets.js';
@@ -207,6 +207,83 @@ class Body extends Object3D {
 
 	} // Body.updateAttached
 
+
+
+	get posture() {
+		
+		var r = x=>Math.round(100*(Object.is(x,-0)?0:x))/100; // round a number
+
+		return {
+			version: 9,
+			position: [...this.position],
+			angles: this.eulers.map( e=>[r(e.x), r(e.y), r(e.z)] ),
+		};
+
+	} // Body.get.posture 
+
+
+	
+	get posture() {
+		
+		var r = x=>Math.round(100*(Object.is(x,-0)?0:x))/100; // round a number
+
+		return {
+			version: 9,
+			//position: [...this.position],
+			angles: this.eulers.map( e=>[r(e.x), r(e.y), r(e.z)] ),
+		};
+
+	} // Body.get.posture 
+
+
+
+	get postureString() {
+
+		return JSON.stringify( this.posture );
+
+	} // Body.get.postureString
+
+
+	
+	set posture( data ) {
+
+		if ( data.version !=9 )
+			throw error( 'Incompatible posture version' );
+
+		//this.position.set( ...data.position );
+
+		for ( var i in data.angles ) {
+			this.eulers[i].x = data.angles[i][0];
+			this.eulers[i].y = data.angles[i][1];
+			this.eulers[i].z = data.angles[i][2];
+		}
+
+	} // Body.posture
+
+
+	blend( postureA, postureB, k ) {
+
+		function lerp( a, b ) {
+
+			var c = [];
+			for ( var i=0; i<a.length; i++ )
+				c[ i ] = MathUtils.lerp( a[ i ], b[ i ], k );
+
+			return c;
+
+		}
+
+		if ( postureA.version !=9 || postureB.version !=9 )
+			throw error( 'Incompatible posture version' );
+
+		this.posture = {
+			version: 9,
+			angles: postureA.angles.map((a, i) => lerp(a,postureB.angles[i])),
+		};
+
+	} // blend
+
+
 } // Body
 
 
@@ -309,7 +386,6 @@ class Child extends Body {
 	}
 
 } // Child
-
-
-
+	
+	
 export { Man, Woman, Child };
