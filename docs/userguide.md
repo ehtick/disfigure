@@ -5,41 +5,49 @@
 
 
 
-## <small><small>Този документ е наличен и на [български език](userguide-bg.md).</small></small>
+<!--## <small><small>Този документ е наличен и на [български език](userguide-bg.md).</small></small>-->
 
 
 
 # Figures
 
-**Disfigure** is a simple library for animating human figures &ndash; instances
-of `Man`, `Woman` and `Child` with an optional parameter for *height* in meters.
-The default heights are 1.80 for men, 1.70 for women and 1.35 for children.
+**Disfigure** is a simple library for animating human figures.
+
+
+
+## Creating a figure
+
+A figure is created as an instance of `Man`, `Woman` and `Child` with an optional
+parameter for *height* in meters. The default heights are 1.80 for men, 1.70 for
+women and 1.35 for children.
+
 
 ```js
 var man = new Man( );
 var woman = new Woman( 1.75 );
+var child = new Child( 1 );
 ```
+
+The following two demos show how to create figures (left) and set their heights (right).
 
 [<img src="../examples/snapshots/figure-type.jpg" width="48%" border="1">](../examples/figure-type.html) [<img src="../examples/snapshots/figure-height.jpg" width="48%" border="1">](../examples/figure-height.html)
 
-All figures have the exact same body structure with names for all body parts
-that can be rotated. The names of symmetrical body parts have prefixes `l_`
-for left and `r_` for right. Leftness and rightness is always in respect to
-the figure itself.
 
-The main body parts are `torso`, `head`, `chest` and `waist`. The upper limbs
-are `arm`, `elbow`, `forearm` and `wrist`. The lower limbs are `leg`, `thigh`,
-`knee`, `shin`, `ankle` and `foot`. Half of the complexity of a figure comes
-from the hands and its fingers `thumb`, `index`, `middle`, `ring` and `pinky`.
-The thumbs has `base` and `tip` phalanges, while the other four fingers all have
-`base`, `mid` and `tip` phalanges.
+
+## Anatomy of a figure
+
+All figures have the same body structure with names for each body part that can
+be manipulated. The names of symmetrical body parts have prefixes `l_` for left
+and `r_` for right. Leftness and rightness is always in respect to the figure
+itself. Fingers have suffixes `_base`, `_mid` and `_tip` for phalanges.
 		
-| Prefix<br><small><b style="font-weight:normal">for orientation</b></small> | Name | Suffix<br><small><b style="font-weight:normal">for phalanges</b></small> |
-|:---:|:---:|:---:|
-| | `torso` `head` `chest` `waist` | |
-| `l_` `r_` | `arm` `elbow` `forearm` `wrist` `leg` `thigh` `knee` `shin` `ankle` `foot` | |
-| `l_` `r_` | `thumb` | `_base` `_tip`|
-| `l_` `r_` | `index` `middle` `ring` `pinky` | `_base` `_mid` `_tip`|
+| | Prefix<br><small><b style="font-weight:normal">for orientation</b></small> | Name of body part | Suffix<br><small><b style="font-weight:normal">for phalanges</b></small> |
+|--:|:---:|:---:|:---:|
+| | | `torso` `head` `chest` `waist` | |
+| Arms | `l_` `r_` | `arm` `elbow` `forearm` `wrist` | |
+| Legs | `l_` `r_` | `leg` `thigh` `knee` `shin` `ankle` `foot` | |
+| Thumbs | `l_` `r_` | `thumb` | `_base` `_tip`|
+| Other fingers | `l_` `r_` | `index` `middle` `ring` `pinky` | `_base` `_mid` `_tip`|
 
 [<img src="../examples/snapshots/figure-parts.jpg" width="48%" border="1">](../examples/figure-parts.html) 
 [<img src="../examples/snapshots/figure-fingers.jpg" width="48%" border="1">](../examples/figure-fingers.html) 

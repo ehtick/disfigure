@@ -133,3 +133,15 @@ h1:not([id])+p {
 .style-block:hover img {
 	border: black 1px solid;
 }
+
+table, tr, th, td {
+	border: none;
+}
+
+table {
+	border-bottom: solid 1px gray;
+}
+
+th {
+	border-bottom: solid 2px gray;
+}	
