@@ -134,14 +134,14 @@ h1:not([id])+p {
 	border: black 1px solid;
 }
 
-table, tr, th, td {
-	border: none !important;
-}
-
 table {
 	width: 100%;
 	font-size: 110%;
 	border-bottom: solid 1px gray !important;
+}
+
+table, tr, th, td {
+	border: none !important;
 }
 
 thead {
