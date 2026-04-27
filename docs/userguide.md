@@ -340,7 +340,6 @@ figure.r_foot.bend = 20;
 
 Disfigue defines classes for different body parts with height in meters.
 
-<big>
 
 | Classes |
 |---|
@@ -348,9 +347,6 @@ Disfigue defines classes for different body parts with height in meters.
 | new **Woman** ( *height* ) <br> class. creates a female figure with optional *height* (default 1.7 m) |
 | new **Child** ( *height* ) <br> class. creates a child figure with optional *height* (default 1.35 m) |
 
-</big>
-
-<big>
 
 | Properties of figures |
 |---|
@@ -360,9 +356,6 @@ Disfigue defines classes for different body parts with height in meters.
 | figure.**postureString** <br> read-only property. gets the posture of a figure as string |
 | figure.**blend** ( *postureA*, *postureB*, *k* ) <br> method. sets the posture as a blend of *postureA* and *postureB*, based on coefficient *k*&isin;[0,1] |
 
-</big>
-
-<big>
 
 | Properties of body parts |
 |---|
@@ -370,7 +363,6 @@ Disfigue defines classes for different body parts with height in meters.
 | figure.part.**y** <br> property. gets or sets rotation angle around the vertical (top-down) axis |
 | figure.part.**z** <br> property. gets or sets rotation angle around the depth (front-back) axis |
 
-</big>
 
 <!--
 
