@@ -352,7 +352,7 @@ Disfigue defines classes for different body parts with height in meters.
 |---|
 | figure.**position** <br> property. gets or sets the position of a figure in 3D space |
 | figure.**position.x** <br> figure.**position.y** <br> figure.**position.z** <br> properties. get or set the x,y,z-coordinate of a figure in 3D space |
-| figure.**posture** <br> property. gets or sets the posture of a figure<br>figure |
+| figure.**posture** <br> property. gets or sets the posture of a figure |
 | figure.**postureString** <br> read-only property. gets the posture of a figure as string |
 | figure.**blend** ( *postureA*, *postureB*, *k* ) <br> method. sets the posture as a blend of *postureA* and *postureB*, based on coefficient *k*&isin;[0,1] |
 
