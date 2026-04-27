@@ -340,33 +340,37 @@ figure.r_foot.bend = 20;
 
 Disfigue defines classes for different body parts with height in meters.
 
-## Classes
+<big>
 
-* new **Man** ( *height* ) <br> class. creates a male figure with optional *height* (default 1.8 m)
+| Classes |
+|---|
+| new **Man** ( *height* ) <br> class. creates a male figure with optional *height* (default 1.8 m) |
+| new **Woman** ( *height* ) <br> class. creates a female figure with optional *height* (default 1.7 m) |
+| new **Child** ( *height* ) <br> class. creates a child figure with optional *height* (default 1.35 m) |
 
-* new **Woman** ( *height* ) <br> class. creates a female figure with optional *height* (default 1.7 m)
+</big>
 
-* new **Child** ( *height* ) <br> class. creates a child figure with optional *height* (default 1.35 m)
-
+<big>
 
 | Properties of figures |
 |---|
 | figure.**position** <br> property. gets or sets the position of a figure in 3D space |
-| figure.**position.x** <br> property. gets or sets the x-coordinate of a figure in 3D space |
-| figure.**position.y** <br> property. gets or sets the y-coordinate of a figure in 3D space |
-| figure.**position.z** <br> property. gets or sets the z-coordinate of a figure in 3D space |
-| figure.**posture** <br> property. gets or sets the posture of a figure<br>figure.**postureString** <br> read-only property. gets the posture of a figure as string |
+| figure.**position.x** <br> figure.**position.y** <br> figure.**position.z** <br> properties. get or set the x,y,z-coordinate of a figure in 3D space |
+| figure.**posture** <br> property. gets or sets the posture of a figure<br>figure |
+| figure.**postureString** <br> read-only property. gets the posture of a figure as string |
 | figure.**blend** ( *postureA*, *postureB*, *k* ) <br> method. sets the posture as a blend of *postureA* and *postureB*, based on coefficient *k*&isin;[0,1] |
 
+</big>
 
-## Properties of body parts
+<big>
 
-* figure.part.**x** <br> property. gets or sets the rotation angle around the horizontal (left-right) axis
+| Properties of body parts |
+|---|
+| figure.part.**x** <br> property. gets or sets the rotation angle around the horizontal (left-right) axis |
+| figure.part.**y** <br> property. gets or sets rotation angle around the vertical (top-down) axis |
+| figure.part.**z** <br> property. gets or sets rotation angle around the depth (front-back) axis |
 
-* figure.part.**y** <br> property. gets or sets rotation angle around the vertical (top-down) axis
-
-* figure.part.**z** <br> property. gets or sets rotation angle around the depth (front-back) axis
-
+</big>
 
 <!--
 
