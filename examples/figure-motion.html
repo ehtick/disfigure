@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<body>
+	<header>
+		<h1><b>Disfigure</b></h1>
+		<h3>Changing figure position</h3></br>
+	</header>
+
+	<div id="spinner"></div>
+
+	<script src="importmap.js"></script>
+	<script type="module">
+
+		import * as Happy from 'disfigure';
+
+
+		// create a default world
+
+		new Happy.World( );
+
+
+		// create 9 women
+
+		for( var i=0; i<9; i++ ) new Happy.Woman( 1.5 );
+
+
+		// move the people along a lemniscate
+		
+		Happy.setAnimationLoop( ( t )=>{
+
+			for ( var somebody of Happy.everybody ) {
+
+				// calculate lemniscate position
+				var theta = t/2000 + somebody.uid/9*2*Math.PI,
+					x = 2*Math.cos(theta)/(1 + Math.sin(theta)**2),
+					z = Math.sin(theta)*x-1;
+
+				// set body position
+				somebody.position.x = x;
+				somebody.position.z = z;
+
+				// turn head towards trajectory
+				somebody.waist.y = -20*Math.sin(theta);
+				theta += 1/2;
+				somebody.chest.y = -40*Math.sin(theta);
+				theta += 1/2;
+				somebody.head.y = -60*Math.sin(theta);
+				
+			}
+
+		} );
+		
+	</script>
+</body>
+</html>

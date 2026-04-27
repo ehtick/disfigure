@@ -9,7 +9,7 @@
 
 
 
-[**Figures**](#figures) <small>([creating](#creating-a-figure) &middot;  [anatomy](#anatomy-of-a-figure) &middot; [posture](#figure-posture))</small> [**API**](#api)
+[**Figures**](#figures) <small>([creating](#creating-a-figure) &middot;  [anatomy](#anatomy-of-a-figure) &middot; [posture](#figure-posture))</small> [**Motions**](#motions) <small>([figure](#figure-motion))</small> [**API**](#api)
 
 
 # Figures
@@ -93,38 +93,30 @@ Live examples: [posture data](../examples/figure-posture.html) and [posture blen
 
 
 
-# API
+# Motions
 
-Disfigue defines classes for different body parts with height in meters.
-
-### Classes
-
-* new **Man** ( *height* ) <br> class. creates a male figure with optional *height* (default 1.8 m)
-
-* new **Woman** ( *height* ) <br> class. creates a female figure with optional *height* (default 1.7 m)
-
-* new **Child** ( *height* ) <br> class. creates a child figure with optional *height* (default 1.35 m) |
+The motion of a figure is done by manipulating properties of the figure or its
+body parts.
 
 
-### Properties of figures
+## Figure motion
 
-* figure.**posture** <br> property. gets or sets the posture of a figure
+The position of the figure within the 3D is controlled by its
+`.position` property with subproperties `.x`, `.y` and `.z`. Technically, the
+position is [`Vector3`](https://threejs.org/docs/#Vector3) object.
 
-* figure.**postureString** <br> read-only property. gets the posture of a figure as string
+``` javascript
+figure.position.set( 1, 0, 0.5 );
+figure.position.y = -0.1;
+```
 
-* figure.**blend** ( *postureA*, *postureB*, *k* ) <br> method. sets the posture as a blend of *postureA* and *postureB*, based on coefficient *k*&isin;[0,1]
+Live examples: [figure position](../examples/figure-position.html) and [figure motion](../examples/figure-motion.html):
 
-### Properties of body parts
-
-* figure.part.**x** <br> property. gets or sets the rotation angle around the horizontal (left-right) axis
-
-* figure.part.**y** <br> property. gets or sets rotation angle around the vertical (top-down) axis
-
-* figure.part.**z** <br> property. gets or sets rotation angle around the depth (front-back) axis
+[<img src="../examples/snapshots/figure-position.jpg" width="48%" border="1">](../examples/figure-position.html) 
+[<img src="../examples/snapshots/figure-motion.jpg" width="48%" border="1">](../examples/figure-motion.html) 
 
 
 <!--
-
 # Figure motions
 
 ## Central parts
@@ -338,6 +330,50 @@ figure.r_foot.bend = 20;
 ```
 
 [<img src="../examples/snapshots/motion-foot.jpg" width="48%">](../examples/motion-foot.html)
+
+-->
+
+
+
+
+# API
+
+Disfigue defines classes for different body parts with height in meters.
+
+### Classes
+
+* new **Man** ( *height* ) <br> class. creates a male figure with optional *height* (default 1.8 m)
+
+* new **Woman** ( *height* ) <br> class. creates a female figure with optional *height* (default 1.7 m)
+
+* new **Child** ( *height* ) <br> class. creates a child figure with optional *height* (default 1.35 m) |
+
+
+### Properties of figures
+
+* figure.**position** <br> property. gets or sets the position of a figure in 3D space
+* figure.**position.x** <br> property. gets or sets the x-coordinate of a figure in 3D space
+* figure.**position.y** <br> property. gets or sets the y-coordinate of a figure in 3D space
+* figure.**position.z** <br> property. gets or sets the z-coordinate of a figure in 3D space
+
+
+* figure.**posture** <br> property. gets or sets the posture of a figure
+* figure.**postureString** <br> read-only property. gets the posture of a figure as string
+
+
+* figure.**blend** ( *postureA*, *postureB*, *k* ) <br> method. sets the posture as a blend of *postureA* and *postureB*, based on coefficient *k*&isin;[0,1]
+
+
+### Properties of body parts
+
+* figure.part.**x** <br> property. gets or sets the rotation angle around the horizontal (left-right) axis
+
+* figure.part.**y** <br> property. gets or sets rotation angle around the vertical (top-down) axis
+
+* figure.part.**z** <br> property. gets or sets rotation angle around the depth (front-back) axis
+
+
+<!--
 
 
 
@@ -673,34 +709,6 @@ figure.material.colorNode = TSLTexture.camouflage ( {
 
 [<img src="../examples/snapshots/extras-tsl-texture-simple.jpg" width="48%">](../examples/extras-tsl-texture-simple.html)
 [<img src="../examples/snapshots/extras-tsl-texture.jpg" width="48%">](../examples/extras-tsl-texture.html)
-
--->
-
-<!--
-
-### Body modification
-
-
-Body parts are descendants of [`THREE.Object3D`](https://threejs.org/docs/#api/en/core/Object3D)
-and support its properties and methods. However, due to the skeletal dependency
-and joint attachment, scaling of a body part should be congruent along all axes,
-otherwise positions need to be adjusted ([see it](example-custom-sizes.html)):
-
-[<img src="snapshots/example-custom-sizes.jpg">](example-custom-sizes.html)
-
-``` javascript
-var man = new Male();
-
-man.head.scale.set(3,3,3);
-
-man.l_arm.scale.set(1/2,1/2,1/2);
-man.r_arm.scale.set(1/2,1/2,1/2);
-
-man.l_wrist.scale.set(3,5,3);
-man.r_wrist.scale.set(3,5,3);
-```
-
-
 		
 # Using mannequin.js
 

@@ -16,6 +16,8 @@ A library to rig 3D models.
 [<img src="https://boytchev.github.io/disfigure/examples/snapshots/figure-fingers.jpg" width="23%">](https://boytchev.github.io/disfigure/examples/figure-fingers.html)
 [<img src="https://boytchev.github.io/disfigure/examples/snapshots/figure-posture.jpg" width="23%">](https://boytchev.github.io/disfigure/examples/figure-posture.html)
 [<img src="https://boytchev.github.io/disfigure/examples/snapshots/figure-blend.jpg" width="23%">](https://boytchev.github.io/disfigure/examples/figure-blend.html)
+[<img src="https://boytchev.github.io/disfigure/examples/snapshots/figure-position.jpg" width="23%">](https://boytchev.github.io/disfigure/examples/figure-position.html)
+[<img src="https://boytchev.github.io/disfigure/examples/snapshots/figure-motion.jpg" width="23%">](https://boytchev.github.io/disfigure/examples/figure-motion.html)
 
 
 <div class="footnote">

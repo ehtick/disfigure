@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<body>
+	<header>
+		<h1><b>Disfigure</b></h1>
+		<h3>Figure position in 3D space</h3></br>
+	</header>
+
+	<div id="spinner"></div>
+
+	<script src="importmap.js"></script>
+	<script type="module">
+
+		import * as Happy from 'disfigure';
+
+
+		// create a default world
+
+		new Happy.World( );
+
+
+		// create 9 men in a square
+
+		for( var i=0; i<9; i++ ) {
+					
+			var man = new Happy.Man( );
+
+			man.position.x = i%3 - 1;
+			man.position.y = -i/6;
+			man.position.z = Math.floor(i/3) - 2;
+			
+		}		
+
+
+		// move the people's heads
+		
+		Happy.setAnimationLoop( ( t )=>{
+
+			for ( var somebody of Happy.everybody ) {
+
+				somebody.head.x = Happy.chaotic( t/4000, -somebody.uid, -20, 60 );
+				somebody.head.y = Happy.chaotic( t/4000, somebody.uid, -40, 40 );
+				somebody.head.z = Happy.chaotic( t/4000, 2*somebody.uid, -40, 40 );
+			}
+
+		} );
+		
+	</script>
+</body>
+</html>
