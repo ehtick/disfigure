@@ -9,6 +9,9 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import { SimplexNoise } from "three/addons/math/SimplexNoise.js";
 
+
+
+
 // number generators
 
 var simplex = new SimplexNoise( );
@@ -61,7 +64,8 @@ class World {
 		renderer.setSize( innerWidth, innerHeight );
 		renderer.shadowMap.enabled = options?.shadows ?? true;
 		renderer.shadowMap.type = PCFSoftShadowMap;
-
+		
+		renderer.init();
 
 
 		document.body.appendChild( renderer.domElement );

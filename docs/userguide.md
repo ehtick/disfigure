@@ -9,7 +9,7 @@
 
 
 
-[**Figures**](#figures) <small>([creating](#creating-a-figure) &middot;  [anatomy](#anatomy-of-a-figure) &middot; [posture](#figure-posture))</small> [**Motions**](#motions) <small>([figure](#figure-motion))</small> [**API**](#api)
+[**Figures**](#figures) <small>([creating](#creating-a-figure) &middot;  [anatomy](#anatomy-of-a-figure) &middot; [posture](#figure-posture))</small> [**Motions**](#motions) <small>([figure](#figure-motion))</small>
 
 
 # Figures
@@ -334,38 +334,6 @@ figure.r_foot.bend = 20;
 
 
 
-
-# API
-
-Disfigue defines classes for different body parts with height in meters.
-
-
-| Classes |
-|---|
-| new **Man** ( *height* ) <br> class. creates a male figure with optional *height* (default 1.8 m) |
-| new **Woman** ( *height* ) <br> class. creates a female figure with optional *height* (default 1.7 m) |
-| new **Child** ( *height* ) <br> class. creates a child figure with optional *height* (default 1.35 m) |
-
-
-| Properties of figures |
-|---|
-| figure.**position** <br> property. gets or sets the position of a figure in 3D space |
-| figure.**position.x** <br> figure.**position.y** <br> figure.**position.z** <br> properties. get or set the x,y,z-coordinate of a figure in 3D space |
-| figure.**posture** <br> property. gets or sets the posture of a figure |
-| figure.**postureString** <br> read-only property. gets the posture of a figure as string |
-| figure.**blend** ( *postureA*, *postureB*, *k* ) <br> method. sets the posture as a blend of *postureA* and *postureB*, based on coefficient *k*&isin;[0,1] |
-
-
-| Properties of figures body parts|
-|---|
-| figure.**torso**, .**head**, .**chest**, .**waist**<br> properties. the central body parts |
-
-
-| Properties of body parts |
-|---|
-| figure.part.**x** <br> property. gets or sets the rotation angle around the horizontal (left-right) axis |
-| figure.part.**y** <br> property. gets or sets rotation angle around the vertical (top-down) axis |
-| figure.part.**z** <br> property. gets or sets rotation angle around the depth (front-back) axis |
 
 
 <!--

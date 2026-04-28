@@ -214,7 +214,7 @@ var disfigureBody = Fn( ([ poolData, figureData ])=>{
 	//m.element( 0 ).addAssign( q( EQ_POS ) );
 	m.element( 1 ).assign( transformNormalToView( m.element( 1 ) ).normalize() );
 
-	return m;//.debug();
+	return m//.debug();
 
 } );
 

@@ -80,18 +80,21 @@ class Pool extends InstancedMesh {
 
 			this.geometry = geometry;
 			this.data = data;
+			
 			console.time( 'TSL shaders' );
 			var disfigure = disfigureBody( this, data );
+			
 			material.positionNode = disfigure.element( 0 );
+			
 			if ( useVertexStage )
 				material.normalNode = vertexStage( disfigure.element( 1 ) );
 			else
 				material.normalNode = disfigure.element( 1 );
-
+			
 			this.onLoad();
 
 			scene.add( this );
-			renderer.compile( scene, camera );
+			//renderer.render( scene, camera );
 
 			console.timeEnd( 'TSL shaders' );
 

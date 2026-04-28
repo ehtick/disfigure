@@ -7,6 +7,7 @@ A library to rig 3D models.
 **WIP.**
 
 * [**Disfigure** User guide](https://boytchev.github.io/disfigure/docs/userguide.html)
+* [**Disfigure** API reference](https://boytchev.github.io/disfigure/docs/api.html)
 <!--* [**Disfigure** Posture editor](https://boytchev.github.io/disfigure/poser)-->
 * [Old **Disfigure** Home](https://boytchev.github.io/disfigure/legacy/index.html)
 
