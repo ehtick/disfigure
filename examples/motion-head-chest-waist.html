@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<body>
+	<header>
+		<h1><b>Disfigure</b></h1>
+		<h3>Motion of head, chest and waist</h3>
+	</header>
+
+	<div id="spinner"></div>
+
+	<script src="importmap.js"></script>
+	<script type="module">
+
+		import * as THREE from 'three';
+		import * as TSL from 'three/tsl';
+		import * as Happy from 'disfigure';
+		import * as Red from 'label';
+
+
+		// create a default world
+
+		new Happy.World( );
+
+
+		// create 6 man
+
+		var xp = new Red.Label( 'X>0', 0.8, [0, 0.27, 0] ),
+			xn = new Red.Label( 'X<0', 0.8, [0, 0.27, 0] );
+			
+		var yp = new Red.Label( 'Y>0', 0.8, [0, 0.27, 0] ),
+			yn = new Red.Label( 'Y<0', 0.8, [0, 0.27, 0] );
+			
+		var zp = new Red.Label( 'Z>0', 0.8, [0, 0.27, 0] ),
+			zn = new Red.Label( 'Z<0', 0.8, [0, 0.27, 0] );
+			
+		var manX = new Happy.Man( 1.5 );
+		manX.position.x = -0.7;
+		manX.head.attach( xp );
+		manX.head.attach( xn );
+		
+		var manY = new Happy.Man( 1.5 );
+		manY.head.attach( yp );
+		manY.head.attach( yn );
+		
+		var manZ = new Happy.Man( 1.5 );
+		manZ.position.x = 0.7;
+		manZ.head.attach( zp );
+		manZ.head.attach( zn );
+		
+		
+
+		var recolor = TSL.Fn( ()=> {
+		
+			var color = TSL.vec3( 1, 1, 1 ),
+				select = TSL.vec3( 0.8, 0, 0.05 );
+			
+			var p = TSL.positionGeometry;
+			
+			// head
+			TSL.If( p.y.add(p.z.div(2)).greaterThan(1.51), ()=>{color.assign(select);} );
+			
+			// chest
+			TSL.If( p.y.sub(1.29).abs().lessThan(0.08), ()=>{color.assign(select);} );
+			
+			// waist
+			TSL.If( p.y.sub(1.07).abs().lessThan(0.08), ()=>{color.assign(select);} );
+
+			return color;
+			
+		} )();
+		
+		manX.pool.material.colorNode = recolor;
+		
+		
+		
+		// move the people
+		
+		Happy.setAnimationLoop( ( t )=>{
+
+			var a = Happy.regular( t/1000, 0, -30, 30 );
+			
+			manX.head.x = a;
+			manX.chest.x = a;
+			manX.waist.x = a;
+			
+			xp.visible = a>=0;
+			xn.visible = a<0;
+			
+			a = Happy.regular( t/1000, 1, -30, 30 );
+
+			manY.head.y = a;
+			manY.chest.y = a;
+			manY.waist.y = a;
+						
+			yp.visible = a>=0;
+			yn.visible = a<0;
+
+			a = Happy.regular( t/1000, 2, -15, 15 );
+			
+			manZ.head.z = a;
+			manZ.chest.z = a;
+			manZ.waist.z = a;
+						
+			zp.visible = a>=0;
+			zn.visible = a<0;
+
+		} );
+		
+	</script>
+</body>
+</html>

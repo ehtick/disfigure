@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<body>
+	<header>
+		<h1><b>Disfigure</b></h1>
+		<h3>Figure axes of rotations</h3>
+	</header>
+
+	<div id="spinner"></div>
+
+	<script src="importmap.js"></script>
+	<script type="module">
+
+		import * as THREE from 'three';
+		import * as Happy from 'disfigure';
+		import * as Red from 'label';
+
+
+		// create a default world
+
+		new Happy.World( );
+		Happy.camera.position.set( 1.2, 2.2, 1.2 );
+		Happy.controls.target.set( 0, 1.5, 0 );
+
+
+		// create a man with axes
+
+		var man = new Happy.Man( );
+		man.position.z = 0.08;
+		man.head.x = -10;
+		
+		class Arrow extends THREE.Group {
+		
+			constructor ( length ) {
+
+				super( );
+				
+				var cyl = new THREE.Mesh(
+					new THREE.CylinderGeometry( 0.002, 0.005, length ),
+					new THREE.MeshLambertMaterial( {color:'black'} )
+				);
+				cyl.position.y = length/2;
+
+				var arr = new THREE.Mesh(
+					new THREE.ConeGeometry( 0.01, 0.05 ),
+					new THREE.MeshLambertMaterial( {color:'black'} )
+				);
+				arr.position.y = length+0.05/2;
+
+				this.add( cyl, arr );
+			}
+			
+		}
+		
+		var headArrow = new Arrow( 0.4 );
+			headArrow.position.y = 1.45;
+		
+		var chestArrow = new Arrow( 0.5 );
+			chestArrow.rotation.x = Math.PI/2;
+			chestArrow.position.y = 1.45;
+		
+		var showlderArrow1 = new Arrow( 0.68 );
+			showlderArrow1.rotation.z = Math.PI/2;
+			showlderArrow1.position.y = 1.45;
+		
+		var showlderArrow2 = new Arrow( 0.68 );
+			showlderArrow2.rotation.z = -Math.PI/2;
+			showlderArrow2.position.y = 1.45;
+		
+		var headGroup = new THREE.Group();
+			headGroup.position.set( 0, 1.81, 0 );
+			
+		var headText = new Red.Label( 'Y "Head" Axis', 0.4, [0.17, 0, 0] )
+			headGroup.add( headText );
+		
+		var chestGroup = new THREE.Group();
+			chestGroup.position.set( 0, 1.49, 0.32 );
+			
+		var chestText = new Red.Label( 'X "Chest" Axis', 0.4, [0, 0, 0] )
+			chestGroup.add( chestText );
+		
+		var shoulderGroup = new THREE.Group();
+			shoulderGroup.position.set( 0.46, 1.49, 0 );
+			
+		var shoulderText = new Red.Label( 'X "Shoulder" Axis', 0.4, [0, 0, 0] )
+			shoulderGroup.add( shoulderText );
+			
+		var shoulderGroup2 = shoulderGroup.clone();
+			shoulderGroup.position.x *= -1;
+		
+		Happy.scene.add( headArrow, chestArrow, showlderArrow1, showlderArrow2, headGroup, chestGroup, shoulderGroup, shoulderGroup2 );
+
+
+		// move the people
+		
+		Happy.setAnimationLoop( ( t )=>{
+
+			var alpha = Happy.controls.getPolarAngle()-Math.PI/2,
+				beta = Happy.controls.getAzimuthalAngle();
+				
+			headGroup.rotation.set( alpha, beta, 0, 'YXZ' );
+			
+			if( Happy.camera.position.x > 0 )
+				chestGroup.rotation.y = Math.PI/2;
+			else
+				chestGroup.rotation.y = -Math.PI/2;
+				
+			if( Happy.camera.position.z > 0 )
+				shoulderGroup.rotation.y = 0;
+			else
+				shoulderGroup.rotation.y = Math.PI;
+				
+			shoulderGroup2.rotation.y = shoulderGroup.rotation.y;
+
+		} );
+		
+	</script>
+</body>
+</html>

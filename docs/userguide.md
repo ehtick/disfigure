@@ -99,7 +99,7 @@ The motion of a figure is done by manipulating properties of the figure or its
 body parts.
 
 
-## Figure motion
+## Figure position
 
 The position of the figure within the 3D is controlled by its
 `.position` property with subproperties `.x`, `.y` and `.z`. Technically, the
@@ -116,38 +116,37 @@ Live examples: [figure position](../examples/figure-position.html) and [figure m
 [<img src="../examples/snapshots/figure-motion.jpg" width="48%" border="1">](../examples/figure-motion.html) 
 
 
-<!--
-# Figure motions
+## Figure motion
 
-## Central parts
+Each figure has three main axes:
 
-The motion of a figure is done by manipulating properties of
-body parts. Motions are just rotations measured in degrees.
+* X axis: (aka shoulder axis) horizontal left-right direction
+* Y axis: (aka head axis) vertical top-bottom direction
+* Z axis: (aka chest axis) horizontal front-back direction
 
-### figure.**torso**<br>figure.**head**<br>figure.**chest**<br>figure.**waist**
+Body parts have properties `.x`, `.y` and `.z` which define the rotation around
+the corresponding axes. Angles of rotations are in degrees.
 
-The `torso` is the root body part and its rotation affects
-the whole body. Torso has properties `bend`, `turn` and `tilt`
-&ndash; [see it](../examples/motion-torso.html). The central
-body parts are `head`, `chest` and `waist`. They have the
-same set of properties as the torso &ndash;
-[see it](../examples/motion-central.html).
+The motions of head, chest, waist and the torso follow the same axes of rotations.
 
-* `bend` &ndash; bends forward or backward
-* `turn` &ndash; turns to the left or right
-* `tilt` &ndash; tilts sideways to the left or right
+* positive X direction is bending forward, negative is backward
+* positive Y direction is turning left, negative is right
+* positive Z direction is tilting left, negitive is right
 
-```js
-figure.torso.bend = 40;
-figure.head.bend = 40;
-figure.chest.turn = -20;
-figure.waist.tilt = 35;
+``` javascript
+figure.head.x = 40;
+figure.chest.z = 10;
+figure.waist.z = -30;
 ```
 
-[<img src="../examples/snapshots/motion-torso.jpg" width="48%">](../examples/motion-torso.html)
-[<img src="../examples/snapshots/motion-central.jpg" width="48%">](../examples/motion-central.html)
+Live examples: [axes of rotations](../examples/motion-axes.html) and [motion of head, chest and waist](../examples/motion-head-chest-waist.html):
+
+[<img src="../examples/snapshots/motion-axes.jpg" width="48%" border="1">](../examples/motion-axes.html) 
+[<img src="../examples/snapshots/motion-head-chest-waist.jpg" width="48%" border="1">](../examples/motion-head-chest-waist.html) 
 
 
+<!--
+# Figure motions
 
 ## Upper limbs
 
@@ -355,6 +354,11 @@ Disfigue defines classes for different body parts with height in meters.
 | figure.**posture** <br> property. gets or sets the posture of a figure |
 | figure.**postureString** <br> read-only property. gets the posture of a figure as string |
 | figure.**blend** ( *postureA*, *postureB*, *k* ) <br> method. sets the posture as a blend of *postureA* and *postureB*, based on coefficient *k*&isin;[0,1] |
+
+
+| Properties of figures body parts|
+|---|
+| figure.**torso**, .**head**, .**chest**, .**waist**<br> properties. the central body parts |
 
 
 | Properties of body parts |
