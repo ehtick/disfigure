@@ -127,7 +127,10 @@ Each figure has three main axes:
 Body parts have properties `.x`, `.y` and `.z` which define the rotation around
 the corresponding axes. Angles of rotations are in degrees.
 
-The motions of head, chest, waist and the torso follow the same axes of rotations.
+#### Central body
+
+The central body contains body parts in the middle of the figure &ndash; `head`,
+`chest`, `waist` and the `torso`. They have no left and right variants. The motions of central body parts follow the same axes of rotations.
 
 * positive X direction is bending forward, negative is backward
 * positive Y direction is turning left, negative is right
@@ -143,6 +146,18 @@ Live examples: [axes of rotations](../examples/motion-axes.html) and [motion of 
 
 [<img src="../examples/snapshots/motion-axes.jpg" width="48%" border="1">](../examples/motion-axes.html) 
 [<img src="../examples/snapshots/motion-head-chest-waist.jpg" width="48%" border="1">](../examples/motion-head-chest-waist.html) 
+
+#### Legs
+
+A leg is made of `leg`, `thigh`, `knee`, `shin`, `ankle` and `foot`. There
+parts are left and right. Note that not all angles are available for each body
+part; and the rotation around head (*Y*) and chest (*Z*) axes are symmetrically
+flipped.
+
+``` javascript
+figure.l_knee.x = 40;
+figure.r_ankle.x = 10;
+```
 
 
 <!--

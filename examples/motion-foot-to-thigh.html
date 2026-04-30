@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<body>
+	<header>
+		<h1><b>Disfigure</b></h1>
+		<h3>Motion of foot to thigh</h3>
+	</header>
+
+	<div id="spinner"></div>
+
+	<script src="importmap.js"></script>
+	<script type="module">
+
+		import * as THREE from 'three';
+		import * as TSL from 'three/tsl';
+		import * as Happy from 'disfigure';
+		import * as Red from 'label';
+
+
+		// create a default world
+
+		new Happy.World( {ground: !false} );
+//		Happy.camera.position.set( -2.5, 1, 2.5 );
+//		Happy.controls.target.set( 0, 0.75, 0 );
+
+		// a TSL coloring function to mark body parts
+
+		var recolorX = TSL.Fn( ()=> {
+		
+			var color = TSL.vec3( 1, 1, 1 ),
+				select = TSL.vec3( 0.5, 0.5, 0.5 );
+			
+			var p = TSL.positionGeometry;
+			
+			// feet
+			TSL.If( p.z.sub(p.y.div(2)).greaterThan(0.04), ()=>{color.assign(select);} );
+
+			// ankles
+			TSL.If( p.y.sub(0.08).sub(p.z.div(4)).abs().lessThan(0.03), ()=>{color.assign(select);} );
+
+			// knees
+			TSL.If( p.y.sub(0.53).abs().lessThan(0.05), ()=>{color.assign(select);} );
+
+			// legs
+			TSL.If( p.y.sub(0.95).abs().lessThan(0.08), ()=>{color.assign(select);} );
+			
+			return color;
+			
+		} )();
+
+
+		var recolorY = TSL.Fn( ()=> {
+		
+			var color = TSL.vec3( 1, 1, 1 ),
+				select = TSL.vec3( 0.5, 0.5, 0.5 );
+			
+			var p = TSL.positionGeometry;
+			
+			// shins
+			TSL.If( p.y.sub(0.29).abs().lessThan(0.15), ()=>{color.assign(select);} );
+
+			// thighs
+			TSL.If( p.y.sub(0.73).abs().lessThan(0.11), ()=>{color.assign(select);} );
+
+			return color;
+			
+		} )();
+
+		var recolorZ = TSL.Fn( ()=> {
+		
+			var color = TSL.vec3( 1, 1, 1 ),
+				select = TSL.vec3( 0.5, 0.5, 0.5 );
+			
+			var p = TSL.positionGeometry;
+			
+			// ankles
+			TSL.If( p.y.sub(0.08).sub(p.z.div(4)).abs().lessThan(0.03), ()=>{color.assign(select);} );
+
+			// knees
+			TSL.If( p.y.sub(0.53).abs().lessThan(0.05), ()=>{color.assign(select);} );
+
+			// legs
+			TSL.If( p.y.sub(0.95).abs().lessThan(0.08), ()=>{color.assign(select);} );
+			
+			return color;
+			
+		} )();
+
+
+		// create 3 man for X, Y and Z rotations
+		var manX = new Happy.Man( 1.5 );
+		manX.position.x = -0.7;
+		manX.position.y = 0.05;
+		manX.head.attach( new Red.Label( 'X', 0.8, [0, 0.24, 0] ) );
+		manX.l_knee.attach( new Red.CurvedArrow( 0.2, [0, 45], [1.8, 1, 0], [0, 0, -0.1] ) );
+		manX.r_knee.attach( new Red.CurvedArrow( 0.2, [0, 45], [1.8, 1, 0], [0, 0, -0.1] ) );
+		manX.l_ankle.attach( new Red.CurvedArrow( 0.08, [-65, 45], [-0.5, 1 ,0], [0, -0.02, -0.02] ) );
+		manX.r_ankle.attach( new Red.CurvedArrow( 0.08, [-65, 45], [-0.5, 1 ,0], [0, -0.02, -0.02] ) );
+		manX.l_foot.attach( new Red.CurvedArrow( 0.06, [-65, 45], [2.2, 1, 0], [0.06, 0, 0.05] ) );
+		manX.r_foot.attach( new Red.CurvedArrow( 0.06, [-65, 45], [2.2, 1, 0], [-0.06, 0, 0.05] ) );
+		manX.l_leg.attach( new Red.CurvedArrow( 0.2, [-20, 35], [2, -1, 0], [0.03, 0, 0.03] ) );
+		manX.r_leg.attach( new Red.CurvedArrow( 0.2, [-20, 35], [2, -1, 0], [-0.03, 0, 0.03] ) );
+		
+		manX.pool.material.colorNode = recolorX;
+		
+		Happy.Man.pool = null;
+		var manY = new Happy.Man( 1.5 );
+		manY.position.y = 0.05;
+		manY.head.attach( new Red.Label( 'Y', 0.8, [0, 0.24, 0] ) );
+		manY.l_shin.attach( new Red.CurvedArrow( 0.10, [-55, 55], [-1, 0, -1], [0, -0.1, -0.06] ) );
+		manY.r_shin.attach( new Red.CurvedArrow( 0.10, [-55, 55], [1, 0, 1], [0, -0.1, -0.06] ) );
+		manY.l_thigh.attach( new Red.CurvedArrow( 0.11, [-35, 55], [-1, 0, -1], [0, 0, -0.01] ) );
+		manY.r_thigh.attach( new Red.CurvedArrow( 0.11, [-35, 55], [1, 0, 1], [0, 0, -0.01] ) );
+		
+		manY.pool.material.colorNode = recolorY;
+		
+		Happy.Man.pool = null;
+		var manZ = new Happy.Man( 1.5 );
+		manZ.position.y = 0.05;
+		manZ.position.x = 0.7;
+		manZ.head.attach( new Red.Label( 'Z', 0.8, [0, 0.24, 0] ) );
+		manZ.l_ankle.attach( new Red.CurvedArrow( 0.1, [-60, 60], [0, 0, -1], [0, 0, 0.05] ) );
+		manZ.r_ankle.attach( new Red.CurvedArrow( 0.1, [-60, 60], [2, 0, 1], [0, 0, 0.05] ) );
+		manZ.l_knee.attach( new Red.CurvedArrow( 0.1, [-60, 60], [0, 0, -1], [0, 0.05, 0.05], ) );
+		manZ.r_knee.attach( new Red.CurvedArrow( 0.1, [-60, 60], [2, 0, 1], [0, 0.05, 0.05] ) );
+		manZ.l_leg.attach( new Red.CurvedArrow( 0.2, [-10, 50], [0, 0, -1], [0, 0.1, 0.1]) );
+		manZ.r_leg.attach( new Red.CurvedArrow( 0.2, [-10, 50], [2, 0, 1], [0, 0.1, 0.1] ) );
+		
+		manZ.pool.material.colorNode = recolorZ;
+		
+		
+	
+		
+		// move the people
+		
+		Happy.setAnimationLoop( ( t )=>{
+
+			var a = Happy.regular( t/1000, 0, -40, 0 );
+			manX.torso.y = a;
+			manX.waist.y = manX.chest.y = manX.head.y = -a/3;
+			manZ.torso.y = -a;
+			manZ.waist.y = manZ.chest.y = manZ.head.y = a/3;
+
+			manX.l_foot.x = Happy.regular( t/1000, 0, -20, 40 );
+			manX.l_ankle.x = Happy.regular( t/1000, 1, -40, 40 );
+			manX.l_knee.x = Happy.regular( t/1000, 2, 0, 90 );
+			manX.l_leg.x = Happy.regular( t/1000, 3, -30, 70 );
+
+			manX.r_foot.x = Happy.regular( t/1000, 3, -20, 40 );
+			manX.r_ankle.x = Happy.regular( t/1000, 4, -40, 40 );
+			manX.r_knee.x = Happy.regular( t/1000, 5, 0, 90 );
+			manX.r_leg.x = Happy.regular( t/1000, 6, -30, 70 );
+
+			manY.l_shin.y = Happy.regular( t/700, 0, -30, 30 );
+			manY.l_thigh.y = manY.l_shin.y;
+			manY.r_shin.y = manY.l_shin.y;
+			manY.r_thigh.y = manY.l_shin.y;
+
+			manZ.l_ankle.z = Happy.regular( t/300, 0, -30, 30 );
+			manZ.r_ankle.z = manZ.l_ankle.z;
+			manZ.l_knee.z = Happy.regular( t/500, 0, -15, 15 );
+			manZ.r_knee.z = manZ.l_knee.z;
+			t += 1000;
+			manZ.l_leg.z = Happy.regular( t/1000, 0, 5, 20 );
+			manZ.r_leg.z = manZ.l_leg.z;
+		} );
+		
+	</script>
+</body>
+</html>

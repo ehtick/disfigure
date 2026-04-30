@@ -1,7 +1,7 @@
 
 
 
-import { Group, Color, Mesh, MeshPhongMaterial } from 'three';
+import { AxesHelper, Group, Color, Mesh, MeshLambertMaterial, MeshPhongMaterial, CylinderGeometry, ConeGeometry, TorusGeometry } from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
@@ -114,13 +114,8 @@ var font=(new FontLoader()).parse({"glyphs":{
 
 
 
-var fontStyle = new MeshPhongMaterial( {
-	color: 'crimson',
-	shininess: 100,
-	//roughness: 0,
-	//metalness: 0,
-	emissive: new Color( 'crimson' ),
-	emissiveIntensity: 0,
+var fontStyle = new MeshLambertMaterial( {
+	color: new Color(2,0,0.2),
 } );
 
 
@@ -184,4 +179,93 @@ class Label extends Group {
 
 
 
-export { Label };
+class StraightArrow extends Group {
+
+	constructor ( length ) {
+
+		super( );
+		
+		var cyl = new Mesh(
+			new CylinderGeometry( 0.003, 0.003, length ),
+			new MeshPhongMaterial( {color:'firebrick', shininess:100} )
+		);
+		cyl.position.y = length/2;
+
+		var arr = new Mesh(
+			new ConeGeometry( 0.01, 0.05 ),
+			cyl.material
+		);
+		arr.position.y = length+0.05/2;
+
+		this.add( cyl, arr );
+	}
+	
+}
+
+
+
+class CurvedArrow extends Group {
+
+	// angles = [from, to] in degrees
+	// rotation = [x,y,z] in units of 90 degrees
+	// position = [x,y,z]
+	constructor ( radius, angles, rotation=null, position=null, addAxes=false ) {
+
+		super( );
+	
+		this.image = new Group();
+		
+		var fromAngle = Math.PI/180 * angles[0],
+			toAngle = Math.PI/180 * angles[1];
+		
+		var tor1 = new Mesh(
+			new TorusGeometry( radius, 0.003, 12, Math.round(-5*fromAngle)+1, -fromAngle).rotateZ(fromAngle),
+			new MeshLambertMaterial( {color:new Color(0,0.2,2)} )
+		);
+		tor1.castShadow = true;
+
+		var tor2 = new Mesh(
+			new TorusGeometry( radius, 0.003, 12, Math.round(5*toAngle)+1, toAngle),
+			new MeshLambertMaterial( {color:new Color(2,0,0.2)} )
+		);
+		tor2.castShadow = true;
+
+		var arr1 = new Mesh(
+			new ConeGeometry( 0.01, 0.05 ),
+			tor1.material
+		);
+		arr1.castShadow = true;
+		
+		var arr2 = new Mesh(
+			arr1.geometry,
+			tor2.material
+		);
+		arr2.castShadow = true;
+		
+		this.castShadow = true;
+
+		arr1.position.set( radius*Math.cos(fromAngle), radius*Math.sin(fromAngle), 0 );
+		arr2.position.set( radius*Math.cos(toAngle), radius*Math.sin(toAngle), 0 );
+		
+		arr1.rotation.z = fromAngle+Math.PI;
+		arr2.rotation.z = toAngle;
+		
+		arr1.visible = Math.abs(fromAngle)>0.1;
+		arr2.visible = Math.abs(toAngle)>0.1;
+		
+		this.add( this.image );
+		this.image.add( tor1, tor2, arr1, arr2 );
+		
+		if( rotation )
+			this.image.rotation.set( Math.PI/2*rotation[0], Math.PI/2*rotation[1], Math.PI/2*rotation[2] );
+		
+		if( position )
+			this.image.position.set( ...position );
+		
+		if( addAxes )
+			this.add( new AxesHelper(radius) );
+	}
+	
+}
+
+export { Label, StraightArrow, CurvedArrow };

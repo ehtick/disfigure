@@ -22,39 +22,38 @@
 		// create a default world
 
 		new Happy.World( );
+		Happy.camera.position.set( 1.5, 1.5, 3 );
 
 
-		// create 6 man
+		// create 3 man for X, Y and Z rotations
 
-		var xp = new Red.Label( 'X>0', 0.8, [0, 0.27, 0] ),
-			xn = new Red.Label( 'X<0', 0.8, [0, 0.27, 0] );
-			
-		var yp = new Red.Label( 'Y>0', 0.8, [0, 0.27, 0] ),
-			yn = new Red.Label( 'Y<0', 0.8, [0, 0.27, 0] );
-			
-		var zp = new Red.Label( 'Z>0', 0.8, [0, 0.27, 0] ),
-			zn = new Red.Label( 'Z<0', 0.8, [0, 0.27, 0] );
-			
-		var manX = new Happy.Man( 1.5 );
+		var manX = new Happy.Man( 1.5 );	
 		manX.position.x = -0.7;
-		manX.head.attach( xp );
-		manX.head.attach( xn );
-		
+		manX.head.attach( new Red.Label( 'X', 0.8, [0, 0.24, 0] ) );
+		manX.head.attach( new Red.CurvedArrow( 0.5, [-25, 25], [1, 1, 0], [0, -0.43, 0.05] ) );
+		manX.chest.attach( new Red.CurvedArrow( 0.5, [-25, 25], [1, 1, 0], [0, -0.43, 0] ) );
+		manX.waist.attach( new Red.CurvedArrow( 0.5, [-25, 25], [1, 1, 0], [0, -0.43, 0] ) );
+
 		var manY = new Happy.Man( 1.5 );
-		manY.head.attach( yp );
-		manY.head.attach( yn );
-		
+		manY.head.attach( new Red.Label( 'Y', 0.8, [0, 0.24, 0] ) );
+		manY.head.attach( new Red.CurvedArrow( 0.15, [-95, 95], [-1, 0, -1], [0, 0.05, 0.05] ) );
+		manY.chest.attach( new Red.CurvedArrow( 0.15, [-65, 65], [-1, 0, -1], [0, 0.05, -0.05] ) );
+		manY.waist.attach( new Red.CurvedArrow( 0.15, [-65, 65], [-1, 0, -1], [0, 0.05, -0.05] ) );
+
 		var manZ = new Happy.Man( 1.5 );
 		manZ.position.x = 0.7;
-		manZ.head.attach( zp );
-		manZ.head.attach( zn );
+		manZ.head.attach( new Red.Label( 'Z', 0.8, [0, 0.24, 0] ) );
+		manZ.head.attach( new Red.CurvedArrow( 0.5, [-20, 20], [2, 0, -1], [0, -0.43, 0.05] ) );
+		manZ.chest.attach( new Red.CurvedArrow( 0.7, [-20, 20], [2, 0, -1], [0, -0.65, 0.02] ) );
+		manZ.waist.attach( new Red.CurvedArrow( 0.7, [-20, 20], [2, 0, -1], [0, -0.65, 0.02] ) );
 		
 		
-
+		// a TSL coloring function to mark head, chest and waist
+		
 		var recolor = TSL.Fn( ()=> {
 		
 			var color = TSL.vec3( 1, 1, 1 ),
-				select = TSL.vec3( 0.8, 0, 0.05 );
+				select = TSL.vec3( 0.5, 0.5, 0.5 );
 			
 			var p = TSL.positionGeometry;
 			
@@ -85,27 +84,18 @@
 			manX.chest.x = a;
 			manX.waist.x = a;
 			
-			xp.visible = a>=0;
-			xn.visible = a<0;
-			
 			a = Happy.regular( t/1000, 1, -30, 30 );
 
 			manY.head.y = a;
 			manY.chest.y = a;
 			manY.waist.y = a;
 						
-			yp.visible = a>=0;
-			yn.visible = a<0;
-
 			a = Happy.regular( t/1000, 2, -15, 15 );
 			
 			manZ.head.z = a;
 			manZ.chest.z = a;
 			manZ.waist.z = a;
 						
-			zp.visible = a>=0;
-			zn.visible = a<0;
-
 		} );
 		
 	</script>

@@ -31,41 +31,20 @@
 		man.position.z = 0.08;
 		man.head.x = -10;
 		
-		class Arrow extends THREE.Group {
+
 		
-			constructor ( length ) {
-
-				super( );
-				
-				var cyl = new THREE.Mesh(
-					new THREE.CylinderGeometry( 0.002, 0.005, length ),
-					new THREE.MeshLambertMaterial( {color:'black'} )
-				);
-				cyl.position.y = length/2;
-
-				var arr = new THREE.Mesh(
-					new THREE.ConeGeometry( 0.01, 0.05 ),
-					new THREE.MeshLambertMaterial( {color:'black'} )
-				);
-				arr.position.y = length+0.05/2;
-
-				this.add( cyl, arr );
-			}
-			
-		}
-		
-		var headArrow = new Arrow( 0.4 );
+		var headArrow = new Red.StraightArrow( 0.4 );
 			headArrow.position.y = 1.45;
 		
-		var chestArrow = new Arrow( 0.5 );
+		var chestArrow = new Red.StraightArrow( 0.5 );
 			chestArrow.rotation.x = Math.PI/2;
 			chestArrow.position.y = 1.45;
 		
-		var showlderArrow1 = new Arrow( 0.68 );
+		var showlderArrow1 = new Red.StraightArrow( 0.68 );
 			showlderArrow1.rotation.z = Math.PI/2;
 			showlderArrow1.position.y = 1.45;
 		
-		var showlderArrow2 = new Arrow( 0.68 );
+		var showlderArrow2 = new Red.StraightArrow( 0.68 );
 			showlderArrow2.rotation.z = -Math.PI/2;
 			showlderArrow2.position.y = 1.45;
 		
