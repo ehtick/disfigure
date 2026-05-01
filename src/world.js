@@ -65,9 +65,6 @@ class World {
 		renderer.shadowMap.enabled = options?.shadows ?? true;
 		renderer.shadowMap.type = PCFSoftShadowMap;
 		
-		renderer.init();
-
-
 		document.body.appendChild( renderer.domElement );
 		document.body.style.overflow = 'hidden';
 		document.body.style.margin = '0';

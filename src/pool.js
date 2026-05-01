@@ -32,6 +32,11 @@ class DataTextureNode extends TextureNode {
 
 
 
+/* to do when I figure out how to pass poolData to disfigureBody as uniforms
+var tslCache = new Map();
+*/
+
+
 /**
  * A class representing an instanced mesh with TSL material.
  * The data for rigging is stored in a square data texture.
@@ -80,24 +85,37 @@ class Pool extends InstancedMesh {
 
 			this.geometry = geometry;
 			this.data = data;
-			
-			console.time( 'TSL shaders' );
+
+/* to do when I figure out how to pass poolData to disfigureBody as uniforms
+
+			var disfigure;
+			if( tslCache.has(url) ) {
+				disfigure = tslCache.get(url);
+			} else {
+				disfigure = disfigureBody( this, data );
+				tslCache.set(url,disfigure);
+			}
+*/	
 			var disfigure = disfigureBody( this, data );
 			
-			material.positionNode = disfigure.element( 0 );
 			
-			if ( useVertexStage )
-				material.normalNode = vertexStage( disfigure.element( 1 ) );
-			else
-				material.normalNode = disfigure.element( 1 );
+			setTimeout( ()=>{
+				
+				material.positionNode = disfigure.element( 0 );
+				
+				if ( useVertexStage )
+					material.normalNode = vertexStage( disfigure.element( 1 ) );
+				else
+					material.normalNode = disfigure.element( 1 );
+			
+				scene.add( this );
+				
+				// safe only for webgl
+				if( renderer.backend.isWebGLBackend ) renderer.render( this, camera )
+			}, 10 );
+	
 			
 			this.onLoad();
-
-			scene.add( this );
-			//renderer.render( scene, camera );
-
-			console.timeEnd( 'TSL shaders' );
-
 
 		} );
 

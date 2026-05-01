@@ -5,7 +5,7 @@
 <body>
 	<header>
 		<h1><b>Disfigure</b></h1>
-		<h3>Motion of foot to thigh</h3>
+		<h3>Directions of motion of legs</h3>
 	</header>
 
 	<div id="spinner"></div>
@@ -22,8 +22,8 @@
 		// create a default world
 
 		new Happy.World( {ground: !false} );
-//		Happy.camera.position.set( -2.5, 1, 2.5 );
-//		Happy.controls.target.set( 0, 0.75, 0 );
+		Happy.camera.position.set( 0, 2, 3 );
+		Happy.controls.target.y = 0.8;
 
 		// a TSL coloring function to mark body parts
 
@@ -91,9 +91,12 @@
 
 		// create 3 man for X, Y and Z rotations
 		var manX = new Happy.Man( 1.5 );
-		manX.position.x = -0.7;
+		manX.position.x = -0.8;
 		manX.position.y = 0.05;
-		manX.head.attach( new Red.Label( 'X', 0.8, [0, 0.24, 0] ) );
+		manX.position.z = -0.3;
+		manX.torso.y = 45;
+		manX.head.y = -25;
+		manX.head.attach( new Red.Label( 'X', 0.3, [0, 0.12, 0.111], [-15,0,0] ) );
 		manX.l_knee.attach( new Red.CurvedArrow( 0.2, [0, 45], [1.8, 1, 0], [0, 0, -0.1] ) );
 		manX.r_knee.attach( new Red.CurvedArrow( 0.2, [0, 45], [1.8, 1, 0], [0, 0, -0.1] ) );
 		manX.l_ankle.attach( new Red.CurvedArrow( 0.08, [-65, 45], [-0.5, 1 ,0], [0, -0.02, -0.02] ) );
@@ -107,8 +110,7 @@
 		
 		Happy.Man.pool = null;
 		var manY = new Happy.Man( 1.5 );
-		manY.position.y = 0.05;
-		manY.head.attach( new Red.Label( 'Y', 0.8, [0, 0.24, 0] ) );
+		manY.head.attach( new Red.Label( 'Y', 0.3, [0, 0.12, 0.111], [-15,0,0] ) );
 		manY.l_shin.attach( new Red.CurvedArrow( 0.10, [-55, 55], [-1, 0, -1], [0, -0.1, -0.06] ) );
 		manY.r_shin.attach( new Red.CurvedArrow( 0.10, [-55, 55], [1, 0, 1], [0, -0.1, -0.06] ) );
 		manY.l_thigh.attach( new Red.CurvedArrow( 0.11, [-35, 55], [-1, 0, -1], [0, 0, -0.01] ) );
@@ -118,9 +120,12 @@
 		
 		Happy.Man.pool = null;
 		var manZ = new Happy.Man( 1.5 );
+		manZ.position.x = 0.8;
 		manZ.position.y = 0.05;
-		manZ.position.x = 0.7;
-		manZ.head.attach( new Red.Label( 'Z', 0.8, [0, 0.24, 0] ) );
+		manZ.position.z = -0.3;
+		manZ.torso.y = -45;
+		manZ.head.y = 25;
+		manZ.head.attach( new Red.Label( 'Z', 0.3, [0, 0.12, 0.111], [-15,0,0] ) );
 		manZ.l_ankle.attach( new Red.CurvedArrow( 0.1, [-60, 60], [0, 0, -1], [0, 0, 0.05] ) );
 		manZ.r_ankle.attach( new Red.CurvedArrow( 0.1, [-60, 60], [2, 0, 1], [0, 0, 0.05] ) );
 		manZ.l_knee.attach( new Red.CurvedArrow( 0.1, [-60, 60], [0, 0, -1], [0, 0.05, 0.05], ) );
@@ -136,12 +141,6 @@
 		// move the people
 		
 		Happy.setAnimationLoop( ( t )=>{
-
-			var a = Happy.regular( t/1000, 0, -40, 0 );
-			manX.torso.y = a;
-			manX.waist.y = manX.chest.y = manX.head.y = -a/3;
-			manZ.torso.y = -a;
-			manZ.waist.y = manZ.chest.y = manZ.head.y = a/3;
 
 			manX.l_foot.x = Happy.regular( t/1000, 0, -20, 40 );
 			manX.l_ankle.x = Happy.regular( t/1000, 1, -40, 40 );

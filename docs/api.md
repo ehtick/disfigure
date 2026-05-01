@@ -55,10 +55,10 @@ Method. Sets the posture of a *figure* to be a lerp blend of *postureA* and
 
 Body part properties. The *bodypart* is the name of a body part, one of these:
 * Central body parts: **torso**, **head**, **chest**, **waist**
-* Left leg: todo
-* Right leg: todo
-* Left arm: todo
-* Right arm: todo
+* Left leg: **l_leg**, **l_thigh**, **l_knee**, **l_shin**, **l_ankle**, **l_foot**
+* Right leg: **r_leg**, **r_thigh**, **r_knee**, **r_shin**, **r_ankle**, **r_foot**
+* Left arm: **l_arm**, **l_elbow**, **l_forearm**, **l_wrist**
+* Right arm: **r_arm**, **r_elbow**, **r_forearm**, **r_wrist**
 * Left palm: todo
 * Right palm: todo
 
@@ -67,6 +67,7 @@ Body part properties. The *bodypart* is the name of a body part, one of these:
 ## Body parts
 
 Each body part has the same set of properties, although some are deactivated.
+For example, a knee can rotate around X axis and partly around Z axis.
 
 ### figure.bodypart.**x**
 
@@ -82,7 +83,6 @@ Numeric property. Gets or sets the rotation angle in degrees around the Y
 
 Numeric property. Gets or sets the rotation angle in degrees around the Z
 "chest" axis.
-
 
 
 <div class="footnote">

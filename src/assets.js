@@ -56,7 +56,7 @@ JOINTS.forEach( x => {
  */
 function loadGLTF( url, lowpoly = 0 ) {
 
-	console.time( url );
+//	console.time( url );
 
 	return new GLTFLoader().loadAsync( ASSETS_PATH+url ).then( gltf => {
 
@@ -75,7 +75,7 @@ function loadGLTF( url, lowpoly = 0 ) {
 
 		}
 
-		console.timeEnd( url );
+//		console.timeEnd( url );
 
 		return geometry;
 

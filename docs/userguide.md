@@ -147,209 +147,24 @@ Live examples: [axes of rotations](../examples/motion-axes.html) and [motion of 
 [<img src="../examples/snapshots/motion-axes.jpg" width="48%" border="1">](../examples/motion-axes.html) 
 [<img src="../examples/snapshots/motion-head-chest-waist.jpg" width="48%" border="1">](../examples/motion-head-chest-waist.html) 
 
-#### Legs
+#### Legs and arms
 
-A leg is made of `leg`, `thigh`, `knee`, `shin`, `ankle` and `foot`. There
-parts are left and right. Note that not all angles are available for each body
-part; and the rotation around head (*Y*) and chest (*Z*) axes are symmetrically
-flipped.
+A leg is made of `leg`, `thigh`, `knee`, `shin`, `ankle` and `foot`. An arm is
+made of `arm`, `elbow`, `forearm` and `wrist`. These body parts are left and
+right and the rotation around Y and Z axes is symmetrical and horizontally
+flipped as if mirrored. Note that some motions might look counterintuitive when
+two or three rotation are applied on the same body part. This is due to rotations
+being non-commutative.
 
 ``` javascript
 figure.l_knee.x = 40;
 figure.r_ankle.x = 10;
+figure.l_elbow.y = 45;
+figure.r_wrist.z = -20;
 ```
 
-
-<!--
-# Figure motions
-
-## Upper limbs
-
-
-### figure.**l_arm**<br>figure.**r_arm**
-
-The upper limbs are symmetrical body parts with multiple joints
-and rotation properties that recreate a complex and flexible
-motion &ndash; [see it](../examples/motion-limbs-upper.html).
-Arms have `forward`, `turn` and `straddle` &ndash;
-[see it](../examples/motion-arm.html).
-
-* `forward` &ndash; moves an arm forward (or backward)
-* `turn` &ndash; turns an arm inwards (or outwards)
-* `straddle` &ndash; moves an arm sideways to the body (or away from the body)
-
-``` javascript
-figure.r_arm.forward = 70;
-figure.r_arm.straddle = -30;
-figure.r_arm.turn = 5;
-```
-
-[<img src="../examples/snapshots/motion-limbs-upper.jpg" width="48%">](../examples/motion-limbs-upper.html)
-[<img src="../examples/snapshots/motion-arm.jpg" width="48%">](../examples/motion-arm.html)
-
-
-### figure.**l_elbow**<br>figure.**r_elbow**
-
-Elbows `l_elbow` and `r_elbow` have limited motions. Elbows
-have only `bend` &ndash; [see it](../examples/motion-elbow.html).
-
-* `bend` &ndash; bends an elbow towards the body (or away from the body)
-
-``` javascript
-figure.r_elbow.bend = 45;
-```
-
-[<img src="../examples/snapshots/motion-elbow.jpg" width="48%">](../examples/motion-elbow.html)
-
-
-### figure.**l_forearm**<br>figure.**r_forearm**
-
-Forearms `l_forearm` and `r_forearm` have limited motions.
-Forearms have only `turn` &ndash; [see it](../examples/motion-forearm.html).
-
-* `turn` &ndash; turns a forearm inwards (or outwards)
-
-``` javascript
-figure.r_forearm.turn = -20;
-```
-
-[<img src="../examples/snapshots/motion-forearm.jpg" width="48%">](../examples/motion-forearm.html)
-
-
-### figure.**l_wrist**<br>figure.**r_wrist**
-
-Wrists `l_wrist` and `r_wrist` support `bend` and `tilt` &ndash;
-[see it](../examples/motion-wrist.html). Wrist have no turns,
-as turning is done in the forearm or the arm.
-
-Motions of `l_wrist` and `r_wrist`:
-
-* `bend` &ndash; bends a wrist down or up
-* `turn` &ndash; turns a wrist forward or backward
-
-``` javascript
-man.r_wrist.bend = -60;
-man.r_wrist.tilt = 10;
-```
-
-[<img src="../examples/snapshots/motion-wrist.jpg" width="48%">](../examples/motion-wrist.html)
-
-
-
-## Lower limbs
-
-### figure.**l_leg**<br>figure.**r_leg**
-
-The lower limbs are symmetrical body parts with multiple joints
-and rotation properties that recreate a complex and flexible
-motion &ndash; [see it](../examples/motion-limbs-lower.html).
-Legs have `forward`, `straddle` and `turn` &ndash; [see it](../examples/motion-leg.html).
-
-* `forward` &ndash; moves a leg forward (or backward)
-* `straddle` &ndash; moves a leg sideways away from the body (or to the body)
-* `turn` &ndash; turns a leg inward (or outward)
-
-``` javascript
-figure.r_leg.forward = -10;
-figure.r_leg.straddle = 50;
-figure.r_leg.turn = 20;
-```
-
-[<img src="../examples/snapshots/motion-limbs-lower.jpg" width="48%">](../examples/motion-limbs-lower.html)
-[<img src="../examples/snapshots/motion-leg.jpg" width="48%">](../examples/motion-leg.html)
-
-
-
-### figure.**l_thigh**<br>figure.**r_thigh**
-
-Thighs `l_thigh` and `r_thigh` have limited motions.
-Thighs have only `turn` &ndash; [see it](../examples/motion-thigh.html).
-
-* `turn` &ndash; turns a thigh outwards (or inwards)
-
-``` javascript
-figure.r_thigh.turn = 20;
-```
-
-[<img src="../examples/snapshots/motion-thigh.jpg" width="48%">](../examples/motion-thigh.html)
-
-
-
-### figure.**l_knee**<br>figure.**r_knee**
-
-Knees `l_knee` and `r_knee` support `bend` and `tilt` &ndash;
-[see it](../examples/motion-knee.html). Knee have no turns,
-as turning is done in the thigh or the shin. However, their
-tilting is used to model [bowlegs](https://en.wikipedia.org/wiki/Genu_varum)
-and [knock knees](https://en.wikipedia.org/wiki/Genu_valgum).
-
-Motions of `l_knee` and `r_knee`:
-
-* `bend` &ndash; bends a knee backward
-* `tilt` &ndash; tilts a knee sideways
-
-``` javascript
-man.r_knee.bend = 40;
-man.r_knee.tilt = 0;
-```
-
-[<img src="../examples/snapshots/motion-knee.jpg" width="48%">](../examples/motion-knee.html)
-
-
-
-### figure.**l_shin**<br>figure.**r_shin**
-
-Shins `l_shin` and `r_shin` have limited motions, just like thighs.
-Shins have only `turn` &ndash; [see it](../examples/motion-shin.html).
-
-* `turn` &ndash; turns a shin outwards (or inwards)
-
-``` javascript
-figure.r_shin.turn = 20;
-```
-
-[<img src="../examples/snapshots/motion-shin.jpg" width="48%">](../examples/motion-shin.html)
-
-
-
-
-### figure.**l_ankle**<br>figure.**r_ankle**
-
-Ankles `l_ankle` and `r_ankle` support `bend` and `tilt` &ndash;
-[see it](../examples/motion-ankle.html). Ankle have no turns,
-as turning is done in the shin.
-
-Motions of `l_ankle` and `r_ankle`:
-
-* `bend` &ndash; bends an ankle forward or backward
-* `tilt` &ndash; tilts a ankle outward or inward
-
-``` javascript
-man.r_ankle.bend = 40;
-man.r_ankle.tilt = -10;
-```
-
-[<img src="../examples/snapshots/motion-ankle.jpg" width="48%">](../examples/motion-ankle.html)
-
-
-### figure.**l_foot**<br>figure.**r_foot**
-
-Feet `l_foot` and `r_foot` have limited motions. Feet have only
-`bend` &ndash; [see it](../examples/motion-foot.html).
-
-* `bend` &ndash; bends a foot downward (or upward)
-
-``` javascript
-figure.r_foot.bend = 20;
-```
-
-[<img src="../examples/snapshots/motion-foot.jpg" width="48%">](../examples/motion-foot.html)
-
--->
-
-
-
-
+[<img src="../examples/snapshots/motion-legs.jpg" width="48%" border="1">](../examples/motion-legs.html) 
+[<img src="../examples/snapshots/motion-arms.jpg" width="48%" border="1">](../examples/motion-arms.html) 
 
 <!--
 

@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<body>
+	<header>
+		<h1><b>Disfigure</b></h1>
+		<h3>Directions of motion of arms</h3>
+	</header>
+
+	<div id="spinner"></div>
+
+	<script src="importmap.js"></script>
+	<script type="module">
+
+		import * as THREE from 'three';
+		import * as TSL from 'three/tsl';
+		import * as Happy from 'disfigure';
+		import * as Red from 'label';
+
+
+		// create a default world
+
+		new Happy.World( {ground: !false} );
+		Happy.camera.position.set( 0, 2.7, 2.7 );
+		Happy.controls.target.y = 1;
+
+		// a TSL coloring function to mark body parts
+
+		var recolorX = TSL.Fn( ()=> {
+		
+			var color = TSL.vec3( 1, 1, 1 ),
+				select = TSL.vec3( 0.5, 0.5, 0.5 );
+			
+			var p = TSL.positionGeometry;
+			
+			// arms
+			TSL.If( p.x.abs().lessThan(0.30).and(p.x.abs().add(p.y.div(3)).greaterThan(0.6)).and(p.y.lessThan(1.6)) , ()=>{color.assign(select);} );
+			
+			// forearms
+			TSL.If( p.x.abs().sub(0.6).abs().lessThan(0.08), ()=>{color.assign(select);} );
+			
+			return color;
+			
+		} )();
+
+
+		var recolorY = TSL.Fn( ()=> {
+		
+			var color = TSL.vec3( 1, 1, 1 ),
+				select = TSL.vec3( 0.5, 0.5, 0.5 );
+			
+			var p = TSL.positionGeometry;
+			
+			// arms
+			TSL.If( p.x.abs().lessThan(0.30).and(p.x.abs().add(p.y.div(3)).greaterThan(0.6)).and(p.y.lessThan(1.6)) , ()=>{color.assign(select);} );
+			
+			// elbows
+			TSL.If( p.x.abs().sub(0.44).abs().lessThan(0.06), ()=>{color.assign(select);} );
+
+			// wrists
+			TSL.If( p.x.abs().greaterThan(0.67), ()=>{color.assign(select);} );
+
+			return color;
+			
+		} )();
+
+		var recolorZ = TSL.Fn( ()=> {
+		
+			var color = TSL.vec3( 1, 1, 1 ),
+				select = TSL.vec3( 0.5, 0.5, 0.5 );
+			
+			var p = TSL.positionGeometry;
+			
+			// arms
+			TSL.If( p.x.abs().lessThan(0.30).and(p.x.abs().add(p.y.div(3)).greaterThan(0.6)).and(p.y.lessThan(1.6)) , ()=>{color.assign(select);} );
+			
+			// wrists
+			TSL.If( p.x.abs().greaterThan(0.67), ()=>{color.assign(select);} );
+			
+			return color;
+			
+		} )();
+
+
+		// create 3 man for X, Y and Z rotations
+		var manX = new Happy.Man( 1.5 );
+		manX.position.x = -0.8;
+		manX.position.z = -0.3;
+		manX.torso.y = 45;
+		manX.head.y = -25;
+		manX.l_arm.z = manX.r_arm.z = 0;
+		//manX.head.attach( new Red.Label( 'X', 0.8, [0, 0.24, 0] ) );
+		manX.head.attach( new Red.Label( 'X', 0.3, [0, 0.12, 0.111], [-15,0,0] ) );
+		manX.l_forearm.attach( new Red.CurvedArrow( 0.08, [-100, 100], [1.2, 1, 0], [0.05, 0, 0] ) );
+		manX.r_forearm.attach( new Red.CurvedArrow( 0.08, [-100, 100], [1.2, 1, 0], [-0.05, 0, 0] ) );
+		manX.l_arm.attach( new Red.CurvedArrow( 0.15, [-60, 60], [1, 1+0.2, 0], [0.05, -0.04, 0] ) );
+		manX.r_arm.attach( new Red.CurvedArrow( 0.15, [-60, 60], [1, 1-0.2, 0], [-0.05, -0.04, 0] ) );
+		
+		manX.pool.material.colorNode = recolorX;
+		
+		Happy.Man.pool = null;
+		var manY = new Happy.Man( 1.5 );
+		manY.l_arm.z = manY.r_arm.z = -30;
+		//manY.head.attach( new Red.Label( 'Y', 0.8, [0, 0.24, 0] ) );
+		manY.head.attach( new Red.Label( 'Y', 0.3, [0, 0.12, 0.111], [-15,0,0] ) );
+		manY.l_wrist.attach( new Red.CurvedArrow( 0.08, [-75, 75], [1, 0, 1-1], [0.1, -0.01, 0] ) );
+		manY.r_wrist.attach( new Red.CurvedArrow( 0.08, [-75, 75], [-1, 0, -1-1], [-0.1, -0.01, 0] ) );
+		manY.l_elbow.attach( new Red.CurvedArrow( 0.20, [0, 35], [1, 0, 1-1], [-0.15, 0, 0] ) );
+		manY.r_elbow.attach( new Red.CurvedArrow( 0.20, [0, 35], [-1, 0, -1-1], [0.15, 0, 0] ) );
+		manY.l_arm.attach( new Red.CurvedArrow( 0.35, [-30, 30], [1, 0, 1-1], [-0.25, 0, 0] ) );
+		manY.r_arm.attach( new Red.CurvedArrow( 0.35, [-30, 30], [-1, 0, -1-1], [0.25, 0, 0] ) );
+		
+		manY.pool.material.colorNode = recolorY;
+		
+		Happy.Man.pool = null;
+		var manZ = new Happy.Man( 1.5 );
+		manZ.position.x = 0.8;
+		manZ.position.z = -0.3;
+		manZ.torso.y = -45;
+		manZ.head.y = 25;
+		//manZ.head.attach( new Red.Label( 'Z', 0.8, [0, 0.24, 0] ) );
+		manZ.head.attach( new Red.Label( 'Z', 0.3, [0, 0.12, 0.111], [-15,0,0] ) );
+		manZ.l_wrist.attach( new Red.CurvedArrow( 0.08, [-60, 60], [0, 0, 0], [0.11, 0, 0] ) );
+		manZ.r_wrist.attach( new Red.CurvedArrow( 0.08, [-60, 60], [2, 0, 2], [-0.11, 0, 0] ) );
+		manZ.l_arm.attach( new Red.CurvedArrow( 0.40, [-12, 17], [0, 0, 0], [-0.3, 0, 0] ) );
+		manZ.r_arm.attach( new Red.CurvedArrow( 0.40, [-12, 17], [2, 0, 2], [0.3, 0, 0] ) );
+		
+		manZ.pool.material.colorNode = recolorZ;
+		
+
+
+	
+		
+		// move the people
+		
+		Happy.setAnimationLoop( ( t )=>{
+
+
+			manX.l_arm.x = Happy.regular( t/1000, 0, -40, 40 );
+			manX.l_forearm.x = manX.l_arm.x;
+			manX.r_arm.x = manX.l_arm.x;
+			manX.r_forearm.x = manX.l_forearm.x;
+
+			manY.l_arm.y = Happy.regular( t/500, 4, -10, 40 );
+			manY.r_arm.y = manY.l_arm.y;
+			manY.l_elbow.y = Happy.regular( t/1000, 8, 0, 80 );
+			manY.r_elbow.y = manY.l_elbow.y;
+			manY.l_wrist.y = Happy.regular( t/400, 6, -30, 30 );
+			manY.r_wrist.y = manY.l_wrist.y;
+			
+			manZ.l_arm.z = Happy.regular( t/1000, 2, -40, 20 );
+			manZ.l_wrist.z = Happy.regular( t/400, 3, -40, 40 );
+			manZ.r_arm.z = manZ.l_arm.z;
+			manZ.r_wrist.z = manZ.l_wrist.z;
+
+		} );
+		
+	</script>
+</body>
+</html>
