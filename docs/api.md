@@ -59,8 +59,12 @@ Body part properties. The *bodypart* is the name of a body part, one of these:
 * Right leg: **r_leg**, **r_thigh**, **r_knee**, **r_shin**, **r_ankle**, **r_foot**
 * Left arm: **l_arm**, **l_elbow**, **l_forearm**, **l_wrist**
 * Right arm: **r_arm**, **r_elbow**, **r_forearm**, **r_wrist**
-* Left palm: todo
-* Right palm: todo
+* Left fingers: **l_thumb**, **l_index**, **l_middle**, **l_ring**, **l_pinky**
+* Right fingers: **r_thumb**, **r_index**, **r_middle**, **r_ring**, **r_pinky**
+* Left middle phalanges: **l_index_mid**, **l_middle_mid**, **l_ring_mid**, **l_pinky_mid**
+* Right middle phalanges: **r_index_mid**, **r_middle_mid**, **r_ring_mid**, **r_pinky_mid**
+* Left tip phalanges: **l_thumb_tip**, **l_index_tip**, **l_middle_tip**, **l_ring_tip**, **l_pinky_tip**
+* Right tip phalanges: **r_thumb_tip**, **r_index_tip**, **r_middle_tip**, **r_ring_tip**, **r_pinky_tip**
 
 
 
