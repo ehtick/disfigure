@@ -71,7 +71,9 @@
 
 		// create 2 man for X and Y rotations
 		var manX = new Happy.Man( 1.5 );
-		manX.position.x = -0.2;
+		manX.position.x = -0.25;
+		manX.torso.y = 10;
+		
 		manX.l_arm.y = manX.r_arm.y = 85;
 		manX.l_arm.z = manX.r_arm.z = 0;
 		manX.l_forearm.x = manX.r_forearm.x = -85;
@@ -86,40 +88,43 @@
 		
 		Happy.Man.pool = null;
 		var manY = new Happy.Man( 1.5 );
-		manY.position.x = 0.2;
+		manY.position.x = 0.25;
+		manY.torso.y = -10;
 		manY.l_arm.y = manY.r_arm.y = 85;
 		manY.l_arm.z = manY.r_arm.z = 10;
+		manY.l_forearm.x = manY.r_forearm.x = -10;
 		manY.l_wrist.z = manY.r_wrist.z = 70;
 		manY.head.attach( new Red.Label( 'Y', 0.3, [0, 0.12, 0.111], [-15,0,0] ) );
 
-		manY.l_thumb.attach( new Red.CurvedArrow( 0.1, [-45, 45], [1, 0, 0.6], [0, -0.05, 0] ) );		manY.r_thumb.attach( new Red.CurvedArrow( 0.1, [-45, 45], [-1, 0, -1.6], [0, -0.05, 0] ) );
+		manY.l_thumb_tip.attach( new Red.CurvedArrow( 0.1, [-45, 45], [1, 0, 0.3], [0.01, 0, 0.01] ) );
+		manY.r_thumb_tip.attach( new Red.CurvedArrow( 0.1, [-45, 45], [-1, 0, 2+0.3], [-0.01, 0, 0.01] ) );
 
-		manY.l_index.attach( new Red.CurvedArrow( 0.1, [-5, 35], [1, 0, 0], [-0.04, -0.05, 0] ) );
-		manY.r_index.attach( new Red.CurvedArrow( 0.1, [-5, 35], [-1, 0, 2], [0.04, -0.05, 0] ) );
+		manY.l_index_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [1, 0, 0-0.2] ) );
+		manY.r_index_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [-1, 0, 2-0.2] ) );
 
-		manY.l_middle.attach( new Red.CurvedArrow( 0.1, [-5, 35], [1, 0, 0], [-0.02, -0.05, 0],1 ) );		
-		manY.r_middle.attach( new Red.CurvedArrow( 0.1, [-5, 35], [-1, 0, 2], [0.02, -0.05, 0],1 ) );
+		manY.l_middle_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [1, 0, 0-0.2], [0.02, 0, 0] ) );
+		manY.r_middle_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [-1, 0, 2-0.2], [-0.02, 0, 0] ) );
 
-		manY.l_ring.attach( new Red.CurvedArrow( 0.1, [-5, 35], [-1, 0, 0], [-0.01, -0.05, 0],1 ) );		
-		manY.r_ring.attach( new Red.CurvedArrow( 0.1, [-5, 35], [1, 0, 2], [0.01, -0.05, 0],1 ) );
+		manY.l_ring_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [-1, 0, 0-0.2], [0.02, 0, 0] ) );
+		manY.r_ring_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [1, 0, 2-0.2], [-0.02, 0, 0] ) );
 		
-		manY.l_pinky.attach( new Red.CurvedArrow( 0.1, [-5, 35], [-1, 0, 0], [-0.01, -0.05, 0],1 ) );		
-		manY.r_pinky.attach( new Red.CurvedArrow( 0.1, [-5, 35], [1, 0, 2], [0.01, -0.05, 0],1 ) );
+		manY.l_pinky_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [-1, 0, 0-0.2] ) );		
+		manY.r_pinky_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [1, 0, 2-0.2] ) );
 		
-		manY.l_thumb.attached[0].scale.setScalar(0.3);
-		manY.r_thumb.attached[0].scale.setScalar(0.3);
+		manY.l_thumb_tip.attached[0].scale.setScalar(0.25);
+		manY.r_thumb_tip.attached[0].scale.setScalar(0.25);
 
-		manY.l_index.attached[0].scale.setScalar(0.25);
-		manY.r_index.attached[0].scale.setScalar(0.25);
+		manY.l_index_tip.attached[0].scale.setScalar(0.25);
+		manY.r_index_tip.attached[0].scale.setScalar(0.25);
 
-		manY.l_middle.attached[0].scale.setScalar(0.25);
-		manY.r_middle.attached[0].scale.setScalar(0.25);
+		manY.l_middle_tip.attached[0].scale.setScalar(0.25);
+		manY.r_middle_tip.attached[0].scale.setScalar(0.25);
 
-		manY.l_ring.attached[0].scale.setScalar(0.25);
-		manY.r_ring.attached[0].scale.setScalar(0.25);
+		manY.l_ring_tip.attached[0].scale.setScalar(0.25);
+		manY.r_ring_tip.attached[0].scale.setScalar(0.25);
 
-		manY.l_pinky.attached[0].scale.setScalar(0.25);
-		manY.r_pinky.attached[0].scale.setScalar(0.25);
+		manY.l_pinky_tip.attached[0].scale.setScalar(0.25);
+		manY.r_pinky_tip.attached[0].scale.setScalar(0.25);
 
 		manY.pool.material.colorNode = recolorY;
 			
@@ -131,15 +136,13 @@
 			manX.l_thumb.x = Happy.regular( t/500, 0, -20, 60 );
 			manX.r_thumb.x = manX.l_thumb.x;
 
-			var a = Happy.regular( t/500, 0, -30, 20 );
-			manY.l_thumb.y = a;
+			manY.l_thumb.y = Happy.regular( t/500, 0, -30, 20 );
 			
-			a = Happy.regular( t/500, 0, -2, 10 );
+			var a = Happy.regular( t/500, 0, -2, 10 );
 			manY.l_index.y = manY.l_pinky.y = 3*a;
 			manY.l_middle.y = manY.l_ring.y = a;
 
-			var a = Happy.regular( t/500, 0, -30, 20 );
-			manY.r_thumb.y = a;
+			manY.r_thumb.y = Happy.regular( t/500, 0, -30, 20 );
 
 			a = Happy.regular( t/500, 0, -2, 10 );
 			manY.r_index.y = manY.r_pinky.y = 3*a;
