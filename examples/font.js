@@ -247,8 +247,8 @@ class CurvedArrow extends Group {
 		arr1.position.set( radius*Math.cos(fromAngle), radius*Math.sin(fromAngle), 0 );
 		arr2.position.set( radius*Math.cos(toAngle), radius*Math.sin(toAngle), 0 );
 		
-		arr1.rotation.z = fromAngle+Math.PI;
-		arr2.rotation.z = toAngle;
+		arr1.rotation.z = fromAngle*0.8+Math.PI;
+		arr2.rotation.z = toAngle*0.8;
 		
 		arr1.visible = Math.abs(fromAngle)>0.1;
 		arr2.visible = Math.abs(toAngle)>0.1;

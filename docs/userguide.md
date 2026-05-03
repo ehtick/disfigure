@@ -48,16 +48,17 @@ and `foot`. Hand fingers are `thumb`, `index`, `middle`, `ring` and `pinky`.
 
 The names of symmetrical body parts have prefixes `l_` for left
 and `r_` for right. Leftness and rightness is always in respect to the figure
-itself. Fingers have suffixes `_base`, `_mid` and `_tip` for phalanges (*note:
-thumbs have no middle phalanges*).
+itself. Fingers phalanges are named after the fingers but with suffixes `_mid`
+and `_tip` (*note: thumbs have no middle phalanges*).
 
 ```js
 figure.head        // head
 figure.r_knee      // knee of right leg
+figure.l_index     // index finger of left hand
 figure.l_index_tip // tip phalange of index finger of left hand
 ```
 
-Live examples: [body parts](../examples/figure-parts.html) and [finger phalanges](../examples/figure-fingers.html):
+Live examples: [body parts](../examples/figure-parts.html) and [fingers with phalanges](../examples/figure-fingers.html):
 
 [<img src="../examples/snapshots/figure-parts.jpg" width="48%" border="1">](../examples/figure-parts.html) 
 [<img src="../examples/snapshots/figure-fingers.jpg" width="48%" border="1">](../examples/figure-fingers.html) 
@@ -142,10 +143,10 @@ figure.chest.z = 10;
 figure.waist.z = -30;
 ```
 
-Live examples: [axes of rotations](../examples/motion-axes.html) and [motion of head, chest and waist](../examples/motion-head-chest-waist.html):
+Live examples: [axes of rotations](../examples/motion-axes.html) and [motion of head, chest and waist](../examples/motion-torso.html):
 
 [<img src="../examples/snapshots/motion-axes.jpg" width="48%" border="1">](../examples/motion-axes.html) 
-[<img src="../examples/snapshots/motion-head-chest-waist.jpg" width="48%" border="1">](../examples/motion-head-chest-waist.html) 
+[<img src="../examples/snapshots/motion-torso.jpg" width="48%" border="1">](../examples/motion-torso.html) 
 
 #### Legs and arms
 
@@ -163,8 +164,30 @@ figure.l_elbow.y = 45;
 figure.r_wrist.z = -20;
 ```
 
+Live examples: [motion of legs](../examples/motion-legs.html) and [motion of arms](../examples/motion-arms.html):
+
 [<img src="../examples/snapshots/motion-legs.jpg" width="48%" border="1">](../examples/motion-legs.html) 
 [<img src="../examples/snapshots/motion-arms.jpg" width="48%" border="1">](../examples/motion-arms.html) 
+
+#### Fingers
+
+Only hand fingers are presented as individual body parts. Fingers are `thumb`,
+`index`, `middle`, `ring` and `pinky`. They are always used with prefixes `l_`
+or `r_`. Fingers have phalanges which are identified with sufix `_mid` (for middle)
+and `_tip` (for end) phalange. Note that the thumb has no middle phalange.
+
+``` javascript
+figure.l_thumb.x = 20;
+figure.r_index.z = 45;
+figure.r_index_mid.z = 30;
+figure.r_index_tip.z = 15;
+```
+
+Live examples: [motion of fingers](../examples/motion-fingers.html) and [motion of phalanges](../examples/motion-phalanges.html):
+
+[<img src="../examples/snapshots/motion-fingers.jpg" width="48%" border="1">](../examples/motion-fingers.html) 
+[<img src="../examples/snapshots/motion-phalanges.jpg" width="48%" border="1">](../examples/motion-phalanges.html) 
+
 
 <!--
 

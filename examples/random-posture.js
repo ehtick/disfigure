@@ -64,39 +64,39 @@ function randomPosture( figure, t=Math.random()*100, k=Math.random()*100 ) {
 		figure.r_arm.z = Happy.chaotic(t,k++,-15,60);
 
 
-		figure.l_thumb_base.x = Happy.chaotic(3*t,k++,0,60);
-		figure.l_thumb_base.y = Happy.chaotic(3*t,k++,0,50);
-		figure.l_thumb_base.z = Happy.chaotic(3*t,k++,-15,50);
-		figure.r_thumb_base.x = Happy.chaotic(3*t,k++,0,60);
-		figure.r_thumb_base.y = Happy.chaotic(3*t,k++,0,50);
-		figure.r_thumb_base.z = Happy.chaotic(3*t,k++,-15,50);
+		figure.l_thumb.x = Happy.chaotic(3*t,k++,0,60);
+		figure.l_thumb.y = Happy.chaotic(3*t,k++,0,50);
+		figure.l_thumb.z = Happy.chaotic(3*t,k++,-15,50);
+		figure.r_thumb.x = Happy.chaotic(3*t,k++,0,60);
+		figure.r_thumb.y = Happy.chaotic(3*t,k++,0,50);
+		figure.r_thumb.z = Happy.chaotic(3*t,k++,-15,50);
 		figure.l_thumb_tip.y = Happy.chaotic(3*t,k++,0,90);
 		figure.r_thumb_tip.y = Happy.chaotic(3*t,k++,0,90);
 
-		figure.l_index_base.z = Happy.chaotic(3*t,k++,-10,90);
-		figure.r_index_base.z = Happy.chaotic(3*t,k++,-10,90);
+		figure.l_index.z = Happy.chaotic(3*t,k++,-10,90);
+		figure.r_index.z = Happy.chaotic(3*t,k++,-10,90);
 		figure.l_index_mid.z = Happy.chaotic(3*t,k++,0,90);
 		figure.r_index_mid.z = Happy.chaotic(3*t,k++,0,90);
 		figure.l_index_tip.z = Happy.chaotic(3*t,k++,0,90);
 		figure.r_index_tip.z = Happy.chaotic(3*t,k++,0,90);
 
-		figure.l_middle_base.z = Happy.chaotic(3*t,k++,-10,90);
-		figure.r_middle_base.z = Happy.chaotic(3*t,k++,-10,90);
+		figure.l_middle.z = Happy.chaotic(3*t,k++,-10,90);
+		figure.r_middle.z = Happy.chaotic(3*t,k++,-10,90);
 		figure.l_middle_mid.z = Happy.chaotic(3*t,k++,0,90);
 		figure.r_middle_mid.z = Happy.chaotic(3*t,k++,0,90);
 		figure.l_middle_tip.z = Happy.chaotic(3*t,k++,0,90);
 		figure.r_middle_tip.z = Happy.chaotic(3*t,k++,0,90);
 
 
-		figure.l_ring_base.z = Happy.chaotic(3*t,k++,-10,90);
-		figure.r_ring_base.z = Happy.chaotic(3*t,k++,-10,90);
+		figure.l_ring.z = Happy.chaotic(3*t,k++,-10,90);
+		figure.r_ring.z = Happy.chaotic(3*t,k++,-10,90);
 		figure.l_ring_mid.z = Happy.chaotic(3*t,k++,0,90);
 		figure.r_ring_mid.z = Happy.chaotic(3*t,k++,0,90);
 		figure.l_ring_tip.z = Happy.chaotic(3*t,k++,0,90);
 		figure.r_ring_tip.z = Happy.chaotic(3*t,k++,0,90);
 
-		figure.l_pinky_base.z = Happy.chaotic(3*t,k++,-10,90);
-		figure.r_pinky_base.z = Happy.chaotic(3*t,k++,-10,90);
+		figure.l_pinky.z = Happy.chaotic(3*t,k++,-10,90);
+		figure.r_pinky.z = Happy.chaotic(3*t,k++,-10,90);
 		figure.l_pinky_mid.z = Happy.chaotic(3*t,k++,0,90);
 		figure.r_pinky_mid.z = Happy.chaotic(3*t,k++,0,90);
 		figure.l_pinky_tip.z = Happy.chaotic(3*t,k++,0,90);
@@ -105,17 +105,17 @@ function randomPosture( figure, t=Math.random()*100, k=Math.random()*100 ) {
 
 		var h = Happy.chaotic(3*t,k++,0,10);
 		
-		figure.l_index_base.y = 3*h;
-		figure.r_index_base.y = 3*h;
+		figure.l_index.y = 3*h;
+		figure.r_index.y = 3*h;
 
-		figure.l_middle_base.y = h;
-		figure.r_middle_base.y = h;
+		figure.l_middle.y = h;
+		figure.r_middle.y = h;
 
-		figure.l_ring_base.y = h;
-		figure.r_ring_base.y = h;
+		figure.l_ring.y = h;
+		figure.r_ring.y = h;
 
-		figure.l_pinky_base.y = 3*h;
-		figure.r_pinky_base.y = 3*h;
+		figure.l_pinky.y = 3*h;
+		figure.r_pinky.y = 3*h;
 
 }
 

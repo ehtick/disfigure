@@ -39,22 +39,22 @@
 		man.l_ring_tip.attach( new Red.Label( 'l_ring→', 0.15, [0.062, 0, 0], [90, 180, 0] ) );
 		man.l_pinky_tip.attach( new Red.Label( 'l_pinky→', 0.15, [0.064, 0, 0], [90, 180, 0] ) );
 
-		man.l_thumb_base.attach( new Red.Label( 'base', 0.1, [0, 0.025, 0], [90, 180, -45] ) );
+		//man.l_thumb.attach( new Red.Label( 'base', 0.1, [0, 0.025, 0], [90, 180, -45] ) );
 		man.l_thumb_tip.attach( new Red.Label( 'tip', 0.1, [0.01, 0.015, 0], [90, 180, -30] ) );
 
-		man.l_index_base.attach( new Red.Label( 'base', 0.08, [0.01, 0.02, -0.004], [90, 180, 0] ) );
+		//man.l_index.attach( new Red.Label( 'base', 0.08, [0.01, 0.02, -0.004], [90, 180, 0] ) );
 		man.l_index_mid.attach( new Red.Label( 'mid', 0.08, [0.01, 0.015, -0.003], [90, 180, 0] ) );
 		man.l_index_tip.attach( new Red.Label( 'tip', 0.08, [0.01, 0.013, -0.003], [90, 180, 0] ) );
 		
-		man.l_middle_base.attach( new Red.Label( 'base', 0.08, [0.008, 0.03, -0.004], [90, 180, 0] ) );
+		//man.l_middle.attach( new Red.Label( 'base', 0.08, [0.008, 0.03, -0.004], [90, 180, 0] ) );
 		man.l_middle_mid.attach( new Red.Label( 'mid', 0.08, [0.01, 0.015, -0.003], [90, 180, 0] ) );
 		man.l_middle_tip.attach( new Red.Label( 'tip', 0.08, [0.013, 0.013, -0.003], [90, 180, 0] ) );
 		
-		man.l_ring_base.attach( new Red.Label( 'base', 0.08, [0.01, 0.035, -0.004], [90, 180, 0] ) );
+		//man.l_ring.attach( new Red.Label( 'base', 0.08, [0.01, 0.035, -0.004], [90, 180, 0] ) );
 		man.l_ring_mid.attach( new Red.Label( 'mid', 0.08, [0.006, 0.025, -0.003], [90, 180, 0] ) );
 		man.l_ring_tip.attach( new Red.Label( 'tip', 0.08, [0.011, 0.013, -0.003], [90, 180, 0] ) );
 		
-		man.l_pinky_base.attach( new Red.Label( 'base', 0.07, [0.015, 0.045, -0.004], [90, 180, 0] ) );
+		//man.l_pinky.attach( new Red.Label( 'base', 0.07, [0.015, 0.045, -0.004], [90, 180, 0] ) );
 		man.l_pinky_mid.attach( new Red.Label( 'mid', 0.07, [0.01, 0.035, -0.003], [90, 180, 0] ) );
 		man.l_pinky_tip.attach( new Red.Label( 'tip', 0.07, [0.01, 0.02, -0.003], [90, 180, 0] ) );
 		
@@ -67,13 +67,13 @@
 
 			var s = Math.sin( 2*t );
 
-			man.l_thumb_base.y = 15*s;
+			man.l_thumb.y = 15*s;
 			
-			var spread = 6-2*s;
-			man.l_index_base.y = 3*spread;
-			man.l_middle_base.y = spread;
-			man.l_ring_base.y = spread;
-			man.l_pinky_base.y = 3*spread;
+			var spread = 6+2*s;
+			man.l_index.y = 3*spread;
+			man.l_middle.y = spread;
+			man.l_ring.y = spread;
+			man.l_pinky.y = 3*spread;
 		}
 
 		Happy.setAnimationLoop( animate );

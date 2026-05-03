@@ -30,43 +30,43 @@
 		{"name": "r_elbow", "signs": [0, 1, 0], "parent": "r_arm"},
 		{"name": "r_arm", "signs": [1, 1, -1], "parent": "chest"},
 		
-		{"name": "l_thumb_tip", "signs": [0, 1, 0], "parent": "l_thumb_base"},
-		{"name": "l_thumb_base", "signs": [1, 1, -1], "parent": "l_wrist"},
+		{"name": "l_thumb_tip", "signs": [0, 1, 0], "parent": "l_thumb"},
+		{"name": "l_thumb", "signs": [1, -1, -1], "parent": "l_wrist"},
 		
-		{"name": "r_thumb_tip", "signs": [0, -1, 0], "parent": "r_thumb_base"},
-		{"name": "r_thumb_base", "signs": [1, -1, 1], "parent": "r_wrist"},
+		{"name": "r_thumb_tip", "signs": [0, -1, 0], "parent": "r_thumb"},
+		{"name": "r_thumb", "signs": [1, 1, 1], "parent": "r_wrist"},
 		
 		{"name": "l_index_tip", "signs": [0, 0, -1], "parent": "l_index_mid"},
-		{"name": "l_index_mid", "signs": [0, 0, -1], "parent": "l_index_base"},
-		{"name": "l_index_base", "signs": [0, -1, -1], "parent": "l_wrist"},
+		{"name": "l_index_mid", "signs": [0, 0, -1], "parent": "l_index"},
+		{"name": "l_index", "signs": [0, -1, -1], "parent": "l_wrist"},
 		
 		{"name": "l_middle_tip", "signs": [0, 0, -1], "parent": "l_middle_mid"},
-		{"name": "l_middle_mid", "signs": [0, 0, -1], "parent": "l_middle_base"},
-		{"name": "l_middle_base", "signs": [0, -1, -1], "parent": "l_wrist"},
+		{"name": "l_middle_mid", "signs": [0, 0, -1], "parent": "l_middle"},
+		{"name": "l_middle", "signs": [0, -1, -1], "parent": "l_wrist"},
 		
 		{"name": "l_ring_tip", "signs": [0, 0, -1], "parent": "l_ring_mid"},
-		{"name": "l_ring_mid", "signs": [0, 0, -1], "parent": "l_ring_base"},
-		{"name": "l_ring_base", "signs": [0, 1, -1], "parent": "l_wrist"},
+		{"name": "l_ring_mid", "signs": [0, 0, -1], "parent": "l_ring"},
+		{"name": "l_ring", "signs": [0, 1, -1], "parent": "l_wrist"},
 		
 		{"name": "l_pinky_tip", "signs": [0, 0, -1], "parent": "l_pinky_mid"},
-		{"name": "l_pinky_mid", "signs": [0, 0, -1], "parent": "l_pinky_base"},
-		{"name": "l_pinky_base", "signs": [0, 1, -1], "parent": "l_wrist"},
+		{"name": "l_pinky_mid", "signs": [0, 0, -1], "parent": "l_pinky"},
+		{"name": "l_pinky", "signs": [0, 1, -1], "parent": "l_wrist"},
 		
 		{"name": "r_index_tip", "signs": [0, 0, 1], "parent": "r_index_mid"},
-		{"name": "r_index_mid", "signs": [0, 0, 1], "parent": "r_index_base"},
-		{"name": "r_index_base", "signs": [0, 1, 1], "parent": "r_wrist"},
+		{"name": "r_index_mid", "signs": [0, 0, 1], "parent": "r_index"},
+		{"name": "r_index", "signs": [0, 1, 1], "parent": "r_wrist"},
 		
 		{"name": "r_middle_tip", "signs": [0, 0, 1], "parent": "r_middle_mid"},
-		{"name": "r_middle_mid", "signs": [0, 0, 1], "parent": "r_middle_base"},
-		{"name": "r_middle_base", "signs": [0, 1, 1], "parent": "r_wrist"},
+		{"name": "r_middle_mid", "signs": [0, 0, 1], "parent": "r_middle"},
+		{"name": "r_middle", "signs": [0, 1, 1], "parent": "r_wrist"},
 		
 		{"name": "r_ring_tip", "signs": [0, 0, 1], "parent": "r_ring_mid"},
-		{"name": "r_ring_mid", "signs": [0, 0, 1], "parent": "r_ring_base"},
-		{"name": "r_ring_base", "signs": [0, -1, 1], "parent": "r_wrist"},
+		{"name": "r_ring_mid", "signs": [0, 0, 1], "parent": "r_ring"},
+		{"name": "r_ring", "signs": [0, -1, 1], "parent": "r_wrist"},
 		
 		{"name": "r_pinky_tip", "signs": [0, 0, 1], "parent": "r_pinky_mid"},
-		{"name": "r_pinky_mid", "signs": [0, 0, 1], "parent": "r_pinky_base"},
-		{"name": "r_pinky_base", "signs": [0, -1, 1], "parent": "r_wrist"},
+		{"name": "r_pinky_mid", "signs": [0, 0, 1], "parent": "r_pinky"},
+		{"name": "r_pinky", "signs": [0, -1, 1], "parent": "r_wrist"},
 		
 		{"name": "pos", "signs": [1, 1, 1], "parent": ""},
 		{"name": "data", "signs": [1, 1, 1], "parent": ""}
