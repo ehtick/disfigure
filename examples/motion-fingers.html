@@ -22,7 +22,7 @@
 		// create a default world
 
 		new Happy.World( {ground: !false} );
-		Happy.camera.position.set( 0, 1.5, 1.2 );
+		Happy.camera.position.set( 0, 1.5, 1.4 );
 		Happy.controls.target.y = 1.2;
 
 		// a TSL coloring function to mark body parts
@@ -42,7 +42,7 @@
 		} )();
 
 
-		var recolorY = TSL.Fn( ()=> {
+		var recolorYZ = TSL.Fn( ()=> {
 		
 			var color = TSL.vec3( 1, 1, 1 ),
 				select = TSL.vec3( 0.5, 0.5, 0.5 );
@@ -69,10 +69,11 @@
 		} )();
 
 
-		// create 2 man for X and Y rotations
+		// create 3 men for X, Y and Z rotations
+		
 		var manX = new Happy.Man( 1.5 );
-		manX.position.x = -0.25;
-		manX.torso.y = 10;
+		manX.position.x = -0.4;
+		manX.torso.y = 15;
 		
 		manX.l_arm.y = manX.r_arm.y = 85;
 		manX.l_arm.z = manX.r_arm.z = 0;
@@ -88,46 +89,87 @@
 		
 		Happy.Man.pool = null;
 		var manY = new Happy.Man( 1.5 );
-		manY.position.x = 0.25;
-		manY.torso.y = -10;
 		manY.l_arm.y = manY.r_arm.y = 85;
 		manY.l_arm.z = manY.r_arm.z = 10;
-		manY.l_forearm.x = manY.r_forearm.x = -10;
+		manY.l_forearm.x = manY.r_forearm.x = -20;
 		manY.l_wrist.z = manY.r_wrist.z = 70;
 		manY.head.attach( new Red.Label( 'Y', 0.3, [0, 0.12, 0.111], [-15,0,0] ) );
 
-		manY.l_thumb_tip.attach( new Red.CurvedArrow( 0.1, [-45, 45], [1, 0, 0.3], [0.01, 0, 0.01] ) );
-		manY.r_thumb_tip.attach( new Red.CurvedArrow( 0.1, [-45, 45], [-1, 0, 2+0.3], [-0.01, 0, 0.01] ) );
+		manY.l_thumb_tip.attach( new Red.CurvedArrow( 0.1, [-25, 45], [1, 0, 0.3], [0.01, 0, 0.01] ) );
+		manY.r_thumb_tip.attach( new Red.CurvedArrow( 0.1, [-25, 45], [-1, 0, 2+0.3], [-0.01, 0, 0.01] ) );
 
-		manY.l_index_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [1, 0, 0-0.2] ) );
-		manY.r_index_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [-1, 0, 2-0.2] ) );
+		manY.l_index_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [1, 0, 0-0.2], [-0.01,0,0] ) );
+		manY.r_index_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [-1, 0, 2-0.2], [0.01,0,0] ) );
 
-		manY.l_middle_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [1, 0, 0-0.2], [0.02, 0, 0] ) );
-		manY.r_middle_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [-1, 0, 2-0.2], [-0.02, 0, 0] ) );
+		manY.l_middle_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [1, 0, 0-0.2], [-0.01,0,0] ) );
+		manY.r_middle_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [-1, 0, 2-0.2], [0.01,0,0] ) );
 
-		manY.l_ring_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [-1, 0, 0-0.2], [0.02, 0, 0] ) );
-		manY.r_ring_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [1, 0, 2-0.2], [-0.02, 0, 0] ) );
+		manY.l_ring_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [-1, 0, 0-0.2], [-0.01,0,0] ) );
+		manY.r_ring_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [1, 0, 2-0.2], [0.01,0,0] ) );
 		
-		manY.l_pinky_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [-1, 0, 0-0.2] ) );		
-		manY.r_pinky_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [1, 0, 2-0.2] ) );
+		manY.l_pinky_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [-1, 0, 0-0.2], [-0.01,0,0] ) );		
+		manY.r_pinky_tip.attach( new Red.CurvedArrow( 0.1, [5, 35], [1, 0, 2-0.2], [0.01,0,0] ) );
 		
-		manY.l_thumb_tip.attached[0].scale.setScalar(0.25);
-		manY.r_thumb_tip.attached[0].scale.setScalar(0.25);
+		manY.l_thumb_tip.attached[0].scale.setScalar(0.35);
+		manY.r_thumb_tip.attached[0].scale.setScalar(0.35);
 
-		manY.l_index_tip.attached[0].scale.setScalar(0.25);
-		manY.r_index_tip.attached[0].scale.setScalar(0.25);
+		manY.l_index_tip.attached[0].scale.setScalar(0.35);
+		manY.r_index_tip.attached[0].scale.setScalar(0.35);
 
-		manY.l_middle_tip.attached[0].scale.setScalar(0.25);
-		manY.r_middle_tip.attached[0].scale.setScalar(0.25);
+		manY.l_middle_tip.attached[0].scale.setScalar(0.35);
+		manY.r_middle_tip.attached[0].scale.setScalar(0.35);
 
-		manY.l_ring_tip.attached[0].scale.setScalar(0.25);
-		manY.r_ring_tip.attached[0].scale.setScalar(0.25);
+		manY.l_ring_tip.attached[0].scale.setScalar(0.35);
+		manY.r_ring_tip.attached[0].scale.setScalar(0.35);
 
-		manY.l_pinky_tip.attached[0].scale.setScalar(0.25);
-		manY.r_pinky_tip.attached[0].scale.setScalar(0.25);
+		manY.l_pinky_tip.attached[0].scale.setScalar(0.35);
+		manY.r_pinky_tip.attached[0].scale.setScalar(0.35);
 
-		manY.pool.material.colorNode = recolorY;
+		manY.pool.material.colorNode = recolorYZ;
+
+
+		Happy.Man.pool = null;
+		var manZ = new Happy.Man( 1.5 );
+		manZ.position.x = 0.4;
+		manZ.torso.y = -15;
+
+		manZ.l_arm.y = manZ.r_arm.y = 85;
+		manZ.l_arm.z = manZ.r_arm.z = 0;
+
+		manZ.head.attach( new Red.Label( 'Z', 0.3, [0, 0.12, 0.111], [-15,0,0] ) );
+
+		manZ.l_thumb_tip.attach( new Red.CurvedArrow( 0.1, [-45, 45], [2, 0, 0], [0.02, 0, 0] ) );
+		manZ.r_thumb_tip.attach( new Red.CurvedArrow( 0.1, [-45, 45], [0, 0, 2], [-0.02, 0, 0] ) );
+
+		manZ.l_index_tip.attach( new Red.CurvedArrow( 0.1, [-45, 45], [2, 0, 0] ) );
+		manZ.r_index_tip.attach( new Red.CurvedArrow( 0.1, [-45, 45], [0, 0, 2] ) );
+
+		manZ.l_middle_tip.attach( new Red.CurvedArrow( 0.1, [-45, 45], [2, 0, 0], [0.02, 0, 0] ) );
+		manZ.r_middle_tip.attach( new Red.CurvedArrow( 0.1, [-45, 45], [0, 0, 2], [-0.02, 0, 0] ) );
+
+		manZ.l_ring_tip.attach( new Red.CurvedArrow( 0.1, [-45, 45], [2, 0, 0], [0.02, 0, 0] ) );
+		manZ.r_ring_tip.attach( new Red.CurvedArrow( 0.1, [-45, 45], [0, 0, 2], [-0.02, 0, 0] ) );
+		
+		manZ.l_pinky_tip.attach( new Red.CurvedArrow( 0.1, [-45, 45], [2, 0, 0] ) );		
+		manZ.r_pinky_tip.attach( new Red.CurvedArrow( 0.1, [-45, 45], [0, 0, 2] ) );
+		
+		manZ.l_thumb_tip.attached[0].scale.setScalar(0.35);
+		manZ.r_thumb_tip.attached[0].scale.setScalar(0.35);
+
+		manZ.l_index_tip.attached[0].scale.setScalar(0.35);
+		manZ.r_index_tip.attached[0].scale.setScalar(0.35);
+
+		manZ.l_middle_tip.attached[0].scale.setScalar(0.35);
+		manZ.r_middle_tip.attached[0].scale.setScalar(0.35);
+
+		manZ.l_ring_tip.attached[0].scale.setScalar(0.35);
+		manZ.r_ring_tip.attached[0].scale.setScalar(0.35);
+
+		manZ.l_pinky_tip.attached[0].scale.setScalar(0.35);
+		manZ.r_pinky_tip.attached[0].scale.setScalar(0.35);
 			
+
+		manZ.pool.material.colorNode = recolorYZ;
 		
 		// move the people
 		
@@ -147,6 +189,12 @@
 			a = Happy.regular( t/500, 0, -2, 10 );
 			manY.r_index.y = manY.r_pinky.y = 3*a;
 			manY.r_middle.y = manY.r_ring.y = a;
+
+			manZ.l_thumb.z = manZ.r_thumb.z = Happy.regular( t/500, 0, -60, 60 );
+			manZ.l_index.z = manZ.r_index.z = Happy.regular( t/500, 9.5, -60, 60 );
+			manZ.l_middle.z = manZ.r_middle.z = Happy.regular( t/500, 9, -60, 60 );
+			manZ.l_ring.z = manZ.r_ring.z = Happy.regular( t/500, 8.5, -60, 60 );
+			manZ.l_pinky.z = manZ.r_pinky.z = Happy.regular( t/500, 8, -60, 60 );
 
 /*
 			manY.l_arm.y = Happy.regular( t/500, 4, -10, 40 );
