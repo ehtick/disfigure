@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<body>
+	<header>
+		<h1><b>Disfigure</b></h1>
+		<h3>Directions of motion of phalanges</h3>
+	</header>
+
+	<div id="spinner"></div>
+
+	<script src="importmap.js"></script>
+	<script type="module">
+
+		import * as THREE from 'three';
+		import * as TSL from 'three/tsl';
+		import * as Happy from 'disfigure';
+		import * as Red from 'label';
+
+
+		// create a default world
+
+		new Happy.World( {ground: !false} );
+		Happy.camera.position.set( 0, 1.5, 1.4 );
+		Happy.controls.target.y = 1.2;
+
+		// a TSL coloring function to mark body parts
+
+		var recolorY = TSL.Fn( ()=> {
+		
+			var color = TSL.vec3( 1, 1, 1 ),
+				select = TSL.vec3( 0.5, 0.5, 0.5 );
+			
+			var p = TSL.positionGeometry;
+			
+			// thumb base
+			TSL.If( p.x.abs().add(p.z).sub(0.78).abs().lessThan(0.04).and(p.z.greaterThan(-0.02)) , ()=>{color.assign(select);} );
+			
+			return color;
+			
+		} )();
+
+
+		var recolorZ = TSL.Fn( ()=> {
+		
+			var color = TSL.vec3( 1, 1, 1 ),
+				select = TSL.vec3( 0.5, 0.5, 0.5 );
+			
+			var p = TSL.positionGeometry;
+			
+			// index mid
+			TSL.If( p.x.abs().sub(0.78+0.031).abs().lessThan(0.01).and(p.z.abs().sub(0.05).abs().lessThan(0.010)) , ()=>{color.assign(select);} );
+
+			// middle mid
+			TSL.If( p.x.abs().sub(0.79+0.024).abs().lessThan(0.01).and(p.z.abs().sub(0.0685).abs().lessThan(0.010)) , ()=>{color.assign(select);} );
+
+			// ring mid
+			TSL.If( p.x.abs().sub(0.785+0.025).abs().lessThan(0.01).and(p.z.abs().sub(0.086).abs().lessThan(0.010)) , ()=>{color.assign(select);} );
+
+			// pinky mid
+			TSL.If( p.x.abs().sub(0.78+0.022).abs().lessThan(0.009).and(p.z.abs().sub(0.105).abs().lessThan(0.010)) , ()=>{color.assign(select);} );
+			
+			
+			// index tip
+			TSL.If( p.x.abs().sub(0.78+0.065).abs().lessThan(0.018).and(p.z.abs().sub(0.05).abs().lessThan(0.010)) , ()=>{color.assign(select);} );
+
+			// tipdle tip
+			TSL.If( p.x.abs().sub(0.79+0.055).abs().lessThan(0.015).and(p.z.abs().sub(0.0685).abs().lessThan(0.010)) , ()=>{color.assign(select);} );
+
+			// ring tip
+			TSL.If( p.x.abs().sub(0.785+0.057).abs().lessThan(0.015).and(p.z.abs().sub(0.0865).abs().lessThan(0.010)) , ()=>{color.assign(select);} );
+
+			// pinky tip
+			TSL.If( p.x.abs().sub(0.78+0.052).abs().lessThan(0.015).and(p.z.abs().sub(0.105).abs().lessThan(0.010)) , ()=>{color.assign(select);} );
+
+			return color;
+			
+		} )();
+
+
+		// create 2 men for Y and Z rotations
+		
+		var manY = new Happy.Man( 1.5 );
+		manY.position.x = -0.25;
+		manY.torso.y = 10;
+		
+		manY.l_arm.y = manY.r_arm.y = 80;
+		manY.l_arm.z = manY.r_arm.z = 0;
+		manY.l_forearm.x = manY.r_forearm.x = -75;
+		manY.l_wrist.z = manY.r_wrist.z = -60;
+		manY.head.attach( new Red.Label( 'Y', 0.3, [0, 0.12, 0.111], [-15,0,0] ) );
+		manY.l_thumb_tip.attach( new Red.CurvedArrow( 0.08, [-35, 35], [-1, 0, -0.3] ) );
+		manY.r_thumb_tip.attach( new Red.CurvedArrow( 0.08, [-35, 35], [1, 0, 1.7] ) );
+		
+		manY.l_thumb_tip.attached[0].scale.setScalar(0.4);
+		manY.r_thumb_tip.attached[0].scale.setScalar(0.4);
+		
+		manY.pool.material.colorNode = recolorY;
+		
+
+		Happy.Man.pool = null;
+		var manZ = new Happy.Man( 1.5 );
+		manZ.position.x = 0.25;
+		manZ.torso.y = -10;
+
+		manZ.l_arm.x = manZ.r_arm.x = -30;
+		manZ.l_arm.y = manZ.r_arm.y = 25;
+		manZ.l_arm.z = manZ.r_arm.z = -60;
+		manZ.l_elbow.y = manZ.r_elbow.y = 90;
+//		manZ.l_forearm.x = manZ.r_forearm.x = 20;
+//		manZ.l_wrist.y = manZ.r_wrist.y = 20;
+//		manZ.l_wrist.z = manZ.r_wrist.z = -15;
+
+		manZ.head.attach( new Red.Label( 'Z', 0.3, [0, 0.12, 0.111], [-15,0,0] ) );
+
+		manZ.l_index_tip.attach( new Red.CurvedArrow( 0.16, [-30, 30], [2, 0, 0], [-0.12, 0, 0] ) );
+		manZ.r_index_tip.attach( new Red.CurvedArrow( 0.16, [-30, 30], [0, 0, 2], [0.12, 0, 0] ) );
+
+		manZ.l_middle_tip.attach( new Red.CurvedArrow( 0.16, [-30, 30], [2, 0, 0], [0.02-0.14, 0, 0] ) );
+		manZ.r_middle_tip.attach( new Red.CurvedArrow( 0.16, [-30, 30], [0, 0, 2], [-0.02+0.14, 0, 0] ) );
+
+		manZ.l_ring_tip.attach( new Red.CurvedArrow( 0.16, [-30, 30], [2, 0, 0], [0.02-0.14, 0, 0] ) );
+		manZ.r_ring_tip.attach( new Red.CurvedArrow( 0.16, [-30, 30], [0, 0, 2], [-0.02+0.14, 0, 0] ) );
+		
+		manZ.l_pinky_tip.attach( new Red.CurvedArrow( 0.16, [-30, 30], [2, 0, 0], [-0.12, 0, 0] ) );		
+		manZ.r_pinky_tip.attach( new Red.CurvedArrow( 0.16, [-30, 30], [0, 0, 2], [+0.12, 0, 0] ) );
+		
+		manZ.l_index_tip.attached[0].scale.setScalar(0.25);
+		manZ.r_index_tip.attached[0].scale.setScalar(0.25);
+
+		manZ.l_middle_tip.attached[0].scale.setScalar(0.25);
+		manZ.r_middle_tip.attached[0].scale.setScalar(0.25);
+
+		manZ.l_ring_tip.attached[0].scale.setScalar(0.25);
+		manZ.r_ring_tip.attached[0].scale.setScalar(0.25);
+
+		manZ.l_pinky_tip.attached[0].scale.setScalar(0.25);
+		manZ.r_pinky_tip.attached[0].scale.setScalar(0.25);
+			
+		manZ.l_index_mid.attach( new Red.CurvedArrow( 0.16, [-30, 30], [2, 0, 0], [-0.12, 0, 0] ) );
+		manZ.r_index_mid.attach( new Red.CurvedArrow( 0.16, [-30, 30], [0, 0, 2], [0.12, 0, 0] ) );
+
+		manZ.l_middle_mid.attach( new Red.CurvedArrow( 0.16, [-30, 30], [2, 0, 0], [0.02-0.14, 0, 0] ) );
+		manZ.r_middle_mid.attach( new Red.CurvedArrow( 0.16, [-30, 30], [0, 0, 2], [-0.02+0.14, 0, 0] ) );
+
+		manZ.l_ring_mid.attach( new Red.CurvedArrow( 0.16, [-30, 30], [2, 0, 0], [0.02-0.15, 0, 0] ) );
+		manZ.r_ring_mid.attach( new Red.CurvedArrow( 0.16, [-30, 30], [0, 0, 2], [-0.02+0.15, 0, 0] ) );
+		
+		manZ.l_pinky_mid.attach( new Red.CurvedArrow( 0.16, [-30, 30], [2, 0, 0], [-0.12, 0, 0] ) );		
+		manZ.r_pinky_mid.attach( new Red.CurvedArrow( 0.16, [-30, 30], [0, 0, 2], [+0.12, 0, 0] ) );
+		
+		manZ.l_index_mid.attached[0].scale.setScalar(0.25);
+		manZ.r_index_mid.attached[0].scale.setScalar(0.25);
+
+		manZ.l_middle_mid.attached[0].scale.setScalar(0.25);
+		manZ.r_middle_mid.attached[0].scale.setScalar(0.25);
+
+		manZ.l_ring_mid.attached[0].scale.setScalar(0.25);
+		manZ.r_ring_mid.attached[0].scale.setScalar(0.25);
+
+		manZ.l_pinky_mid.attached[0].scale.setScalar(0.25);
+		manZ.r_pinky_mid.attached[0].scale.setScalar(0.25);
+			
+
+		manZ.pool.material.colorNode = recolorZ;
+		
+		// move the people
+		
+		Happy.setAnimationLoop( ( t )=>{
+
+			manY.l_arm.y = manY.r_arm.y = Happy.regular( t/700, 5, 90, 80 );
+			manY.l_wrist.z = manY.r_wrist.z = Happy.regular( t/700, 2, -50, 50 );
+
+			manY.l_thumb_tip.y = Happy.regular( t/500, 0, 0, 60 );
+			manY.r_thumb_tip.y = manY.l_thumb_tip.y;
+
+			manZ.l_forearm.x = manZ.r_forearm.x = Happy.regular( t/500, 1, -50, 50 );
+			manZ.l_wrist.x = manZ.r_wrist.x = Happy.regular( t/700, 2, -50, 50 );
+			manZ.l_wrist.z = manZ.r_wrist.z = Happy.regular( t/1100, 3, -50, 50 );
+
+			manZ.l_index_tip.z = manZ.r_index_tip.z =
+			manZ.l_index_mid.z = manZ.r_index_mid.z = Happy.regular( t/500, 5, -10, 90 );
+			
+			manZ.l_middle_tip.z = manZ.r_middle_tip.z =
+			manZ.l_middle_mid.z = manZ.r_middle_mid.z = Happy.regular( t/500, 4, -10, 90 );
+			
+			manZ.l_ring_tip.z = manZ.r_ring_tip.z = 
+			manZ.l_ring_mid.z = manZ.r_ring_mid.z = Happy.regular( t/500, 3, -10, 90 );
+			
+			manZ.l_pinky_tip.z = manZ.r_pinky_tip.z = 
+			manZ.l_pinky_mid.z = manZ.r_pinky_mid.z = Happy.regular( t/500, 2, -10, 90 );
+
+		} );
+		
+	</script>
+</body>
+</html>
